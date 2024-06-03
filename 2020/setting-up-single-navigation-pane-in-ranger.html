@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Setting up single navigation pane in Ranger and why it's a good idea | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="http://localhost:4000">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="http://localhost:4000/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="setting-up-single-navigation-pane-in-ranger-and-why-its-a-good-idea">Setting up single navigation pane in Ranger and why it’s a good idea</h1>
+
+<p>By default, Ranger starts in a 3-pane view, which makes it unique but not very practical. Fortunately, this can be easily changed.</p>
+
+<p><em>If you want to skip past gibberish and straight to solution, click <a href="#solution">here</a>.</em></p>
+
+<p>For many years, I used Total Commander (the best file manager on Windows, or at least it used to be). Maximized, I had the classic two-pane design. One day, after buying my first full HD monitor (prehistoric times indeed), I opened the program and realized how much space I was losing by having that second pane. Half of my screen space, to be precise.</p>
+
+<p>The truth is, in that classic Norton Commander design, half the screen is a glorified directory link. Yes, it can be used to compare folders or get a broader multi-directory view, which can help make sense of things.</p>
+
+<p>But those are situational. Most of the time, one pane is important; the other just points to where to copy or move files from. It is a waste of space.</p>
+
+<p>If reference is indeed its main purpose, the second pane might as well have a vertical split option and just hold stackable directory paths, with a pre-selected modifier and a randomly chosen key generated for each one to allow operations to/from these.</p>
+
+<p>This would be a very good use of space and a real lifesaver when working on projects with complex directory structures. But one link taking up half of the screen estate?</p>
+
+<p>This isn’t a problem if someone is used to having maximized applications and alt+tabbing between them. Plenty of that space will be wasted in most programs, but that won’t matter anyway since we decide to focus on one thing at a time. For many people, having multiple things at once makes them lose focus. That’s why distraction-free modes in editors are popular.</p>
+
+<p>I often do multiple things at once and so I’d rather have them next to each other to be able to compare and rewrite code snippets, etc. Often, I have to run different scripts at once and need to see how they perform. And so every bit of space is important.</p>
+
+<p>That’s why, after switching to Linux a few years back, I decided to look for a file manager that would just have one pane… and ended up using the one that has three!</p>
+
+<p>In Ranger’s default view, the parent directory, which is always one keypress away, takes one-third of the space. Another shows the sub-directory. How often is that actually useful?</p>
+
+<p>Some of the most advanced ‘navigators’ I’ve met just use the command line for their daily routines. They get zero information even about the current directory when navigating, and yet not only can they function, but they are absurdly fast with their operations.</p>
+
+<p>Even when we actually need to scan a subfolder for the presence of a file or two, doing a recursive search will be much faster and much less eye-straining. A view of multiple directories at once is a gimmick, something that is there probably because it made the first program of its kind stand out from the crowd.</p>
+
+<p>Since I absolutely loved Ranger from the get-go, I wasn’t going to let this spoil things. Even if there were no option to change it, I would probably stick to it still. Fortunately, this is not the case.</p>
+
+<h2 id="editing-config-file">Editing config file</h2>
+
+<p>Ranger stores configuration in two files: <em>rc.conf</em> (program settings, key bindings) and <em>rifle.conf</em> (file associations). We will be editing the first one.</p>
+
+<p>You can find it in <em>~/.config/ranger</em> directory. If it’s not there, paste this command in console and run it:</p>
+
+<blockquote>
+  <p>ranger –copy-config=all</p>
+</blockquote>
+
+<p>Now both files should be there.</p>
+
+<p>The first setting command that interests us is:</p>
+<blockquote>
+  <p>set viewmode [mode]</p>
+</blockquote>
+
+<p>This command takes one of two mode arguments:</p>
+<ul>
+  <li>miller: the one I mentioned, showing folder’s parent and children folder on both sides</li>
+  <li>multipane: multiple unrelated directory views next to each other</li>
+</ul>
+
+<p>The multipane view puts an equation mark between tabs and panes. If there are no tabs, there is one pane. Every new tab creates a new pane, splitting the available space evenly between all displayed ones.</p>
+
+<p>Another command complements it:</p>
+
+<blockquote>
+  <p>set column_ratios 1</p>
+</blockquote>
+
+<p>It takes 0 to 3 arguments. Giving it 4 or more is not considered properly in code. Setting it up in the config file and then starting Ranger runs it in a broken state.</p>
+
+<p>For example, feeding it ‘1,2,1’ will set the parent and child directory panes to take 50% of the total window width, while the main window in which we navigate will occupy the other 50%. Keep in mind, though, that as of now, it only works for miller mode.</p>
+
+<p>It would be convenient to set it to something like this:</p>
+
+<blockquote>
+  <p>set column_ratios 5,1</p>
+</blockquote>
+
+<p>If <em>multipane</em> was set, this command could only accept two arguments: the first one pointing to the relative size of the currently focused tab, the other to all other unfocused ones.</p>
+
+<p>In <em>miller</em> mode, if we only give it one value, it will just give us one column. And since the one in which we traverse directories is the only one we can’t live without, it is set to be the only one remaining in such a case.</p>
+
+<p>Notice that both setting <em>column_ratios</em> to <em>0</em> and not writing any number at the end will also give the same result.</p>
+
+<p>So, if someone does not ever intend to use tabs, they might just set viewmode to multipane and be done with it, but there’s no need to do that. Today we don’t use it, maybe tomorrow we will. Let’s set it to <em>miller</em> and set <em>column_ratios</em> to <em>1</em>.</p>
+
+<p>That’s not all, though. The problem arises when we hover over a file in Ranger. It’s going to get previewed. Now, half the screen will be occupied by a file each time we encounter a previewable one. Sometimes, that’s useful, but mostly it’s distracting.</p>
+
+<p>The solution is to disable file previews:</p>
+
+<blockquote>
+  <p>set preview_files false</p>
+</blockquote>
+
+<p><a id="solution"></a></p>
+<h2 id="summary">Summary</h2>
+
+<ol>
+  <li>Check if the file <em>rc.conf</em> exists in the path: <em>~/.config/ranger/</em>. If not, paste and execute the following command: <em>ranger –copy-config=all</em>. Now the file should be there.</li>
+  <li>Open it in a text editor</li>
+  <li>Add the following lines inside it:
+    <ul>
+      <li><em>set viewmode miller</em></li>
+      <li><em>set column_ratios 1</em></li>
+      <li><em>set preview_files false</em></li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="but-why-cripple-myself-with-one-pane-when-i-can-have-more">But why cripple myself with one pane when I can have more?</h2>
+
+<p>If removing two panes will leave the user with empty space that they do not intend to populate in any way, it might be better to leave the default 3 panes on (unless the extra ones are distracting).</p>
+
+<p>Even for people who don’t get much use from them but are used to having them always on, it can feel like the navigation is now crippled.</p>
+
+<p>Don’t fret, though. First of all, we have tabs. Switching between them requires a single keystroke.</p>
+
+<p>For copying files/directories, a popular approach is to:</p>
+<ul>
+  <li>Change path to the destination directory</li>
+  <li>Open a new tab</li>
+  <li>Go to some directory</li>
+  <li>Select some objects</li>
+  <li>Yank/copy them</li>
+  <li>Close tab</li>
+  <li>Paste</li>
+</ul>
+
+<p>Or reverse it if the file source directory and not the destination directory is where we want to do the next thing.</p>
+
+<p>It takes the same amount of keystrokes to complete as doing that operation while jumping between panes. We just jump between tabs instead of panes. We lose visibility of a reference folder the entire time but require half the program space to complete it.</p>
+
+<p>For diff purposes, tabbing is great too. We can, for example, check some potentially modified project folder against a backup of the same content and switch between them to quickly see if there are some differences in files. As they take turns occupying the same space, it will be easier to notice differences.</p>
+
+<p>There are better solutions for scenarios like that, but for a quick check, it is often convenient to do it this way.</p>
+
+<p>Second, we can simplify things further. We always move legally downloaded movies to the <em>‘movie’</em> folder, legally downloaded mp3 tracks to the ‘mp3’ folder, etc. Some folders receive a high amount of traffic. Almost everyone has a routine.</p>
+
+<p>Many people who despise file managers and people who use them have bash aliases to folder paths set to allow easy moving. In Ranger, it is also very simple to do.</p>
+
+<p>Ranger adopted one of Vim’s greatest tools - leader keys. No need to press a modifier key (of which there are few) and control its press and release in combination with another key to trigger some operation bound to that particular shortcut. Almost any key can lead, and it doesn’t have to be kept pressed.</p>
+
+<p>And so, we can do this:</p>
+
+<blockquote>
+  <p>map mp shell mv %s /mnt/ssd/books/programming<br />
+map mn shell mv %s /mnt/files/img/nakedpersons<br />
+map ma shell mv %s /mnt/files/music/ambient</p>
+</blockquote>
+
+<p>We select all the books we want to move, then press ‘mp’ and we’re done. No need to go to any folder or open any tabs. A simple two-step operation.</p>
+
+<p>If having two directories next to each other is a necessity at some point, nothing stops us from using a terminal multiplexer. So long as we remember that two separate Ranger instances can’t pass things between them, as Ranger doesn’t start a system daemon that could move that information. Another fantastic file manager, <a href="https://github.com/jarun/nnn">nnn</a>, has that functionality.</p>
+
+<p>The same can be done with copying or any other shell command that takes a list of files and does something to them. Such is the amazing flexibility of the command line, and as a result, of programs that allow sending some input to it for further processing, like Ranger.</p>
+
+<p>Another fantastic tool that supercharges single-pane navigation is history. In rc.conf, we can set:</p>
+
+<blockquote>
+  <p>map h history_go -1<br />
+map H history_go 1</p>
+</blockquote>
+
+<p>By default, the <em>‘h’</em> key is used for navigation in Ranger, as it is in Vim. I am using the Colemak keyboard layout, so for me this key is free, which allows for a nice mnemonic binding. You can set it to any key you have available.</p>
+
+<p>In a default config Ranger use, going back in history will mostly go to the directory from which we came, which will be one level higher or lower in the directory structure. Moving forward will do the opposite and will, of course, only work if we already went back in history (like redo in text editors).</p>
+
+<p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    
+  </body>
+
+</html>

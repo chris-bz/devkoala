@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>JPG compression guide for Linux | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="http://localhost:4000">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="http://localhost:4000/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="jpg-compression-guide-for-linux">JPG compression guide for Linux</h1>
+
+<h2 id="basics">Basics</h2>
+
+<p>Almost all jpg files out there are compressed to some extent. The compression is on a scale of 1 to 100, 1 being most compressed (do not ever go that low!), 100 meaning no compression.</p>
+
+<p>Recompression reduces image quality. Exactly how much it varies. With some images, recompressing 100 times with the same compression level will barely decrease image quality, but other times even a single recompression can introduce ugly artifacts.</p>
+
+<p>That’s why recompression should only be done when changing the compression level by a considerable amount, and hopefully as rarely as possible.</p>
+
+<p>Another important thing is to recompress only to lower levels. Recompressing to a higher level means the image will take more hard disk space, but at best it will still only look as good as it did before the last compression.</p>
+
+<p>Image quality can’t be magically improved by changing to a higher compression level, just like details of a completely blurred image can’t be made sharp just by increasing image sharpness—the sharp contours and exact object colors just aren’t there behind the image, waiting to be exposed.</p>
+
+<p>Recompression to the same quality is almost always a bad idea. If the previous compressor did a terrible job, the damage is done already. We can only go lower on the scale and test if it’s possible to save space while doing a minimum of extra damage.</p>
+
+<p>Usually, the only good reason to recompress is to reduce image quality so it can take less space on the hard disk, thus it can take less space, load faster, and eat less bandwidth. If you don’t have these concerns, don’t compress. You can always compress later, but when image details are lost, they are lost forever.</p>
+
+<h2 id="finding-out-compression-level-of-an-image">Finding out compression level of an image</h2>
+
+<p>You can check the level of jpg file compression by installing Image Magick (more about it soon) and then running this shell command:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">identify <span class="nt">-format</span> <span class="s1">'%Q'</span> filename.jpg</code></pre></figure>
+
+<p>Replace filename with the name you want to inspect.</p>
+
+<p>It is extremely useful for scripting purposes to be able to check for image compression level.</p>
+
+<p>Let’s say we run a forum website with many users who upload many images. We don’t want those images to be just left there on the server.</p>
+
+<p>Going down from 100 compression (no compression) to just 95 rarely produces visible image problems, but it can drastically reduce size!</p>
+
+<p>So, in whichever programming language we’re running on a server, we can write a script to get each incoming image’s compression level and if it’s above a desired number, recompress it with jpegoptim to whichever we want.</p>
+
+<p>You can also check compression level in graphical programs. Look for ‘image properties’ or something similar in your program’s drop-down menus. Some graphic editors ask for compression level each time we save a new image or even re-save an already existing one.</p>
+
+<p>By default, the slider in some of those programs shows the program default for the file extensions, but in others, it shows current image compression. You have to find out for yourself how your program behaves.</p>
+
+<h2 id="saving-uncompressed-image-compressing-with-another-tool">Saving uncompressed image, compressing with another tool</h2>
+
+<p>We’ve established that we want to compress as few times as possible and select the best tool for the job. Let’s go through an example to illustrate that approach.</p>
+
+<p>In another post, I presented a script that (in short) captures screen content to a file. It uses the import tool, which is part of Image Magick.</p>
+
+<p>If you don’t understand part of its command, check the linked article where it is explained in detail. Here, we will use it in concert with another tool.</p>
+
+<p>There are other command line programs whose only purpose is to compress images. For the jpg format, probably the most popular one right now is jpegoptim — and that’s what we’re going with.</p>
+
+<p>If we really want the best image quality for the size, we need to use a specialized tool like that, instead of assuming that the program that produced the image has a good algorithm. It might, it might not. We will use it in this short tutorial.</p>
+
+<p>Jpegoptim probably doesn’t ship with any Linux distro, so you have to install it manually. First, try from your distro’s official repository.</p>
+
+<p>Now, if we order import to save the screen capture to a .jpg file, it will compress it to 85, which is the program default.</p>
+
+<p>But since jpegoptim will do a better job optimizing its quality, we don’t want import to compress it at all. The first compression might seriously worsen image quality.</p>
+
+<p>We can change import’s compression level to any other percentage we want by appending the import command with ‘-quality 95’ (or any other number). We need to order it not to compress. We do that by adding ‘-quality 100’ to the command.</p>
+
+<p>Jpegoptim generally has two modes. The first, default one, optimizes the image, leaving its compression level unchanged. It does not recompress (so no quality loss), but only improves compression to squeeze more out of it.</p>
+
+<p>The second we invoke with the ‘-m’ option. Executing this command:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">jpegoptim <span class="nt">-m70</span> filename.jpg</code></pre></figure>
+
+<p>will recompress filename.jpg with 70% compression, using its own optimized algorithm.</p>
+
+<p>Let’s take a real-life use case. We have a monitor that displays some sort of statistics. Every hour, we need to capture the content of that monitor to a file for reference.</p>
+
+<p>We only want to have the latest reference image, so we want it to always write to the same file, overwriting its content every hour.</p>
+
+<p>Depending on some conditions, we might want to rename the file by hand and move it to another folder with images. And since in that folder files will stay forever, we need to take precautions so one day this folder’s size does not become a problem. We need to compress.</p>
+
+<p>Our Bash script file only needs to contain two lines, plus the path to the interpreter on line one:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/bash</span>
+import <span class="nt">-window</span> root <span class="nt">-crop</span> 2560x1440+0+0 <span class="nt">-quality</span> 100 /path/to/filename.jpg
+jpegoptim <span class="nt">-m90</span> /path/to/filename.jpg</code></pre></figure>
+
+<p>Import captures our 1440p left-most monitor’s screen and saves it to an uncompressed jpg file. Jpegoptim then finishes the work by compressing it.</p>
+
+<p>To generate that image every hour, we save that file and end its name with ‘.sh’. We then go to a command line window, start editing the current user’s crontab file with ‘crontab -e’ and paste that line into it:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">0 <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span>	/path/to/our/script.sh</code></pre></figure>
+
+<h2 id="png-instead-of-jpg">PNG instead of JPG</h2>
+
+<p>What if we want to save to a PNG file instead? In some cases, it’s a better choice. If the image contains transparent background, it’s mandatory since PNG supports it and JPG does not.</p>
+
+<p>Since it’s a popular format, there are many compression tools written for it as well.</p>
+
+<p><strong>pngquant</strong> is one such tool. It is easy to install on many platforms and is even present in Ubuntu’s official repository. To save it to a PNG file, we need to do two things:</p>
+
+<ol>
+  <li>
+    <p>Change the file extension from ‘<em>.jpg</em>’ to ‘<em>.png</em>’ in the line with import command.</p>
+  </li>
+  <li>
+    <p>Replace the jpegoptim command line with this one (remember to change image paths):</p>
+  </li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">pngquant <span class="nt">--quality</span> 90 <span class="nt">--speed</span> 1 <span class="nt">--force</span> <span class="nt">--output</span> /path/to/filename.png /path/to/filename.png</code></pre></figure>
+
+<p>The quality setting is self-explanatory. We set speed to 1 (slowest, but gives the best results).</p>
+
+<p>The ‘force’ option is needed here, as the default pngquant behavior is that it doesn’t overwrite images, and we order the program to save to the same file that it reads from. If we don’t specify the output file, it appends its ending to a filename, and for this example, we need to overwrite the source file.</p>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    
+  </body>
+
+</html>

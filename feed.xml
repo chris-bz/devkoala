@@ -1,0 +1,1391 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-06-03T10:16:36+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">JPG compression guide for Linux</title><link href="http://localhost:4000/2020/jpg-compression-guide-for-linux.html" rel="alternate" type="text/html" title="JPG compression guide for Linux" /><published>2020-09-16T08:01:21+02:00</published><updated>2020-09-16T08:01:21+02:00</updated><id>http://localhost:4000/2020/jpg-compression-guide-for-linux</id><content type="html" xml:base="http://localhost:4000/2020/jpg-compression-guide-for-linux.html"><![CDATA[<h1 id="jpg-compression-guide-for-linux">JPG compression guide for Linux</h1>
+
+<h2 id="basics">Basics</h2>
+
+<p>Almost all jpg files out there are compressed to some extent. The compression is on a scale of 1 to 100, 1 being most compressed (do not ever go that low!), 100 meaning no compression.</p>
+
+<p>Recompression reduces image quality. Exactly how much it varies. With some images, recompressing 100 times with the same compression level will barely decrease image quality, but other times even a single recompression can introduce ugly artifacts.</p>
+
+<p>That’s why recompression should only be done when changing the compression level by a considerable amount, and hopefully as rarely as possible.</p>
+
+<p>Another important thing is to recompress only to lower levels. Recompressing to a higher level means the image will take more hard disk space, but at best it will still only look as good as it did before the last compression.</p>
+
+<p>Image quality can’t be magically improved by changing to a higher compression level, just like details of a completely blurred image can’t be made sharp just by increasing image sharpness—the sharp contours and exact object colors just aren’t there behind the image, waiting to be exposed.</p>
+
+<p>Recompression to the same quality is almost always a bad idea. If the previous compressor did a terrible job, the damage is done already. We can only go lower on the scale and test if it’s possible to save space while doing a minimum of extra damage.</p>
+
+<p>Usually, the only good reason to recompress is to reduce image quality so it can take less space on the hard disk, thus it can take less space, load faster, and eat less bandwidth. If you don’t have these concerns, don’t compress. You can always compress later, but when image details are lost, they are lost forever.</p>
+
+<h2 id="finding-out-compression-level-of-an-image">Finding out compression level of an image</h2>
+
+<p>You can check the level of jpg file compression by installing Image Magick (more about it soon) and then running this shell command:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">identify <span class="nt">-format</span> <span class="s1">'%Q'</span> filename.jpg</code></pre></figure>
+
+<p>Replace filename with the name you want to inspect.</p>
+
+<p>It is extremely useful for scripting purposes to be able to check for image compression level.</p>
+
+<p>Let’s say we run a forum website with many users who upload many images. We don’t want those images to be just left there on the server.</p>
+
+<p>Going down from 100 compression (no compression) to just 95 rarely produces visible image problems, but it can drastically reduce size!</p>
+
+<p>So, in whichever programming language we’re running on a server, we can write a script to get each incoming image’s compression level and if it’s above a desired number, recompress it with jpegoptim to whichever we want.</p>
+
+<p>You can also check compression level in graphical programs. Look for ‘image properties’ or something similar in your program’s drop-down menus. Some graphic editors ask for compression level each time we save a new image or even re-save an already existing one.</p>
+
+<p>By default, the slider in some of those programs shows the program default for the file extensions, but in others, it shows current image compression. You have to find out for yourself how your program behaves.</p>
+
+<h2 id="saving-uncompressed-image-compressing-with-another-tool">Saving uncompressed image, compressing with another tool</h2>
+
+<p>We’ve established that we want to compress as few times as possible and select the best tool for the job. Let’s go through an example to illustrate that approach.</p>
+
+<p>In another post, I presented a script that (in short) captures screen content to a file. It uses the import tool, which is part of Image Magick.</p>
+
+<p>If you don’t understand part of its command, check the linked article where it is explained in detail. Here, we will use it in concert with another tool.</p>
+
+<p>There are other command line programs whose only purpose is to compress images. For the jpg format, probably the most popular one right now is jpegoptim — and that’s what we’re going with.</p>
+
+<p>If we really want the best image quality for the size, we need to use a specialized tool like that, instead of assuming that the program that produced the image has a good algorithm. It might, it might not. We will use it in this short tutorial.</p>
+
+<p>Jpegoptim probably doesn’t ship with any Linux distro, so you have to install it manually. First, try from your distro’s official repository.</p>
+
+<p>Now, if we order import to save the screen capture to a .jpg file, it will compress it to 85, which is the program default.</p>
+
+<p>But since jpegoptim will do a better job optimizing its quality, we don’t want import to compress it at all. The first compression might seriously worsen image quality.</p>
+
+<p>We can change import’s compression level to any other percentage we want by appending the import command with ‘-quality 95’ (or any other number). We need to order it not to compress. We do that by adding ‘-quality 100’ to the command.</p>
+
+<p>Jpegoptim generally has two modes. The first, default one, optimizes the image, leaving its compression level unchanged. It does not recompress (so no quality loss), but only improves compression to squeeze more out of it.</p>
+
+<p>The second we invoke with the ‘-m’ option. Executing this command:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">jpegoptim <span class="nt">-m70</span> filename.jpg</code></pre></figure>
+
+<p>will recompress filename.jpg with 70% compression, using its own optimized algorithm.</p>
+
+<p>Let’s take a real-life use case. We have a monitor that displays some sort of statistics. Every hour, we need to capture the content of that monitor to a file for reference.</p>
+
+<p>We only want to have the latest reference image, so we want it to always write to the same file, overwriting its content every hour.</p>
+
+<p>Depending on some conditions, we might want to rename the file by hand and move it to another folder with images. And since in that folder files will stay forever, we need to take precautions so one day this folder’s size does not become a problem. We need to compress.</p>
+
+<p>Our Bash script file only needs to contain two lines, plus the path to the interpreter on line one:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/bash</span>
+import <span class="nt">-window</span> root <span class="nt">-crop</span> 2560x1440+0+0 <span class="nt">-quality</span> 100 /path/to/filename.jpg
+jpegoptim <span class="nt">-m90</span> /path/to/filename.jpg</code></pre></figure>
+
+<p>Import captures our 1440p left-most monitor’s screen and saves it to an uncompressed jpg file. Jpegoptim then finishes the work by compressing it.</p>
+
+<p>To generate that image every hour, we save that file and end its name with ‘.sh’. We then go to a command line window, start editing the current user’s crontab file with ‘crontab -e’ and paste that line into it:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">0 <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span>	/path/to/our/script.sh</code></pre></figure>
+
+<h2 id="png-instead-of-jpg">PNG instead of JPG</h2>
+
+<p>What if we want to save to a PNG file instead? In some cases, it’s a better choice. If the image contains transparent background, it’s mandatory since PNG supports it and JPG does not.</p>
+
+<p>Since it’s a popular format, there are many compression tools written for it as well.</p>
+
+<p><strong>pngquant</strong> is one such tool. It is easy to install on many platforms and is even present in Ubuntu’s official repository. To save it to a PNG file, we need to do two things:</p>
+
+<ol>
+  <li>
+    <p>Change the file extension from ‘<em>.jpg</em>’ to ‘<em>.png</em>’ in the line with import command.</p>
+  </li>
+  <li>
+    <p>Replace the jpegoptim command line with this one (remember to change image paths):</p>
+  </li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">pngquant <span class="nt">--quality</span> 90 <span class="nt">--speed</span> 1 <span class="nt">--force</span> <span class="nt">--output</span> /path/to/filename.png /path/to/filename.png</code></pre></figure>
+
+<p>The quality setting is self-explanatory. We set speed to 1 (slowest, but gives the best results).</p>
+
+<p>The ‘force’ option is needed here, as the default pngquant behavior is that it doesn’t overwrite images, and we order the program to save to the same file that it reads from. If we don’t specify the output file, it appends its ending to a filename, and for this example, we need to overwrite the source file.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="images" /><category term="linux" /><summary type="html"><![CDATA[JPG compression guide for Linux]]></summary></entry><entry><title type="html">Converting date to ISO 8601 in Python</title><link href="http://localhost:4000/2020/converting-date-to-iso8601-in-python.html" rel="alternate" type="text/html" title="Converting date to ISO 8601 in Python" /><published>2020-09-07T11:53:01+02:00</published><updated>2020-09-07T11:53:01+02:00</updated><id>http://localhost:4000/2020/converting-date-to-iso8601-in-python</id><content type="html" xml:base="http://localhost:4000/2020/converting-date-to-iso8601-in-python.html"><![CDATA[<h1 id="converting-date-to-iso-8601-in-python">Converting date to ISO 8601 in Python</h1>
+
+<h2 id="why-use-iso-8601">Why use ISO 8601?</h2>
+
+<p>No matter which area a programmer works in, he most likely has to deal with dates in some way. Even writing a basic application log benefits from stamping information with dates, so we know when a potential problem occurred, etc.</p>
+
+<p>Unfortunately, dates are a tricky subject. They are often an extra feature that just needs to work but doesn’t. And they can fail for many reasons.</p>
+
+<p>One of the main reasons is incompatibility between different date formats. Sometimes, the month is a word; sometimes it’s a number. The standard order of year, month, and day differs from one country to another.</p>
+
+<p>When the month is a number and it’s 12 or lower, it can be confused with the day number, making it difficult to verify which is which. One month has 30 days, another has 31. February has 28 days… but only 3 years out of 4. All this needs to be considered when dealing with dates.</p>
+
+<p>To alleviate the pain from some of these problems, ISO 8601 was introduced. It is an international standard, an exact way of writing date and time so that there is no confusion.</p>
+
+<p>Having all dates in one format is important for your own projects. When dates are always written the same way, there is no need to convert anything, and they are compatible with each other for future use by default.</p>
+
+<p>It is also important externally. When someone else needs to process them, there is no need to verify what is what or format the string to make it compatible with another company’s internal formatting standard.</p>
+
+<p>Choosing ISO 8601 is also very convenient for the programmer. Most frameworks, modules, etc., that deal with dates use it as the default standard and force the user to first convert the input data string to ISO 8601 before further processing. Such is the case with SQLite, Pandas, Django, and many more.</p>
+
+<p>It is always best practice to stick to one data formatting standard whenever possible. And since ISO 8601 is the most popular standard for date formatting in the world, it is most convenient to stick to it. It makes our dates most compatible with other dates “out there,” saving us from many potential headaches in the future.</p>
+
+<h2 id="what-needs-does-this-converter-address">What needs does this converter address?</h2>
+
+<p>Unfortunately, there is no one correct way to write a converter. It all depends on the context in which it needs to be used, and based on that, the optimal behavior can be different.</p>
+
+<p>For example, in some cases, it is crucial that failure to convert produces an error and instantly stops the program from running to not pollute the data with pseudo-dates or empty strings which have to be addressed quickly to avoid breaking something else.</p>
+
+<p>Other times, it is mandatory that the service continues working and errors are handled silently and gracefully. There is no right or wrong way to write it; it’s all context-dependent.</p>
+
+<p>The converter function below behaves as follows:</p>
+<ul>
+  <li>Deals just with date, not date and time</li>
+  <li>Does not require hint parameters to know the format, it tries to guess which is which</li>
+  <li>Returns None on failure, does not break whatever’s running it</li>
+  <li>When month and day are both numbers, it assumes that month is always the digit on the left side, and day on the right</li>
+  <li>The year is always a four-digit number</li>
+  <li>The month can be either a number, or a word</li>
+  <li>A day can be either a one-digit number or a two-digit number</li>
+  <li>There can be no day, but month and year both have to be present</li>
+</ul>
+
+<p>Make sure that a converter you need meets all the criteria above, or that you have fixes for when it doesn’t.</p>
+
+<p>Below I break apart the code. If you just want the entire thing to copy-paste, click <a href="#full_code">here</a>.</p>
+
+<h2 id="code-breakdown">Code breakdown</h2>
+
+<blockquote>
+  <p>def toiso8601(date):</p>
+</blockquote>
+
+<p>The converter is best written as a function, convenient to keep in a separate Python helper file and import as needed. It takes date, i.e., a string hopefully containing all the ingredients we need.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">def</span> <span class="nf">month_to_digit</span><span class="p">(</span><span class="n">month_as_word</span><span class="p">):</span>
+		<span class="n">months_full</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">january</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">01</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">february</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">02</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">march</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">03</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">april</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">04</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">may</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">05</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">june</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">06</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">july</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">07</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">august</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">08</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">september</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">09</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">october</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">10</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">november</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">11</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">december</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">12</span><span class="sh">'</span><span class="p">}</span>
+		<span class="n">months</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">jan</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">01</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">feb</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">02</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">mar</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">03</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">apr</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">04</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">may</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">05</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">jun</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">06</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">jul</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">07</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">aug</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">08</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">sep</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">09</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">oct</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">10</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">nov</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">11</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">dec</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">12</span><span class="sh">'</span><span class="p">}</span>
+		<span class="n">month_as_word</span> <span class="o">=</span> <span class="n">month_as_word</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span>
+		<span class="k">if</span> <span class="n">month_as_word</span> <span class="ow">in</span> <span class="n">months_full</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+			<span class="n">month_final</span> <span class="o">=</span> <span class="n">months_full</span><span class="p">[</span><span class="n">month_as_word</span><span class="p">]</span>
+		<span class="k">elif</span> <span class="n">month_as_word</span> <span class="ow">in</span> <span class="n">months</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+			<span class="n">month_final</span> <span class="o">=</span> <span class="n">months</span><span class="p">[</span><span class="n">month_as_word</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">ERROR: not a valid date. month word unknown</span><span class="sh">'</span><span class="p">)</span>
+			<span class="n">month_final</span> <span class="o">=</span> <span class="bp">None</span>
+		<span class="k">return</span> <span class="n">month_final</span></code></pre></figure>
+
+<p>First, we write a sub-function that converts the month, written as a word, to a number (still written as a string). This sequence exists twice in our code, so there is no point repeating the whole thing. Instead, we make a function of it and call it when needed.</p>
+
+<p>There are two types of month words popular in writing dates in English. The first one is full words, the second the first 3 letters of each word. In ISO 8601, the month is a two-digit number. So we have to convert.</p>
+
+<p>For that, we have two dictionaries, one for each type. The keys are the month-words, the values are numbers to which they convert.</p>
+
+<p>If it feels right, you can also create one dictionary and test for the full name against the full key name or for the first three letters of the parsed string against the first three letters of each dictionary key, saving us from the need to create the second dictionary. It reduces redundancy in our code but makes the script perform worse.</p>
+
+<p>Notice that the numbers are in quotes. They are strings, first because ‘01’, ‘02’, ‘03’ etc. are not numbers understandable by Python, and second because the entire process is taking string input and outputting another string. There is no reason to switch to any other data type at any point, as sooner or later it would have to be converted back into a string.</p>
+
+<p>If conversion fails (i.e., the word doesn’t match the month name in either dictionary), we set month_final to None. At the end of our function, we make a condition that year, month, and day all have to be set, and only then do we generate and return the final date. Otherwise, we’d let some gibberish word posing as a month pass through to the final string.</p>
+
+<p>There is no ISO 8601 date without a year, and setting it to some default is risky business. You could, for example, decide to go with ‘0000’. If such a year has no reason to exist in our data (let’s say we have a movie database), setting it to such would conform to the ISO 8601 standard while giving us valuable information that that particular piece of data is missing.</p>
+
+<p>In some datasets, the data has to exist, even if our database tool of choice allows setting datetime fields to be empty. This would force us to use a solution like that.</p>
+
+<p>Since for my use case it’s not a problem, if a four-digit number indicating the year is not found, the function informs about the problem, returns None, and that’s the end of it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="n">year</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">\d\d\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="n">year</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">ERROR: not a valid date. year missing</span><span class="sh">'</span><span class="p">)</span>
+		<span class="k">return</span> <span class="bp">None</span>
+	<span class="n">year</span> <span class="o">=</span> <span class="n">year</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></code></pre></figure>
+
+<p>The last line of that chunk of code extracts the string from a regex object. If we had done it earlier (not knowing if the regex found anything), pointing to a sometimes non-existing item would throw an error. That behavior we do not want, as it would force us to use it inside a ‘try’ clause.</p>
+
+<p>After setting up a year variable, we now need to delete this number from the date string and only seek in that new variable. Otherwise, it would extract sub-numbers from it as potential month and day numbers.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="n">date_no_year</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="sh">''</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+	<span class="n">month_day</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">findall</span><span class="p">(</span><span class="sh">'</span><span class="s">\d\d?</span><span class="sh">'</span><span class="p">,</span> <span class="n">date_no_year</span><span class="p">)</span>
+	<span class="n">month_word</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[A-Za-z]{3,}</span><span class="sh">'</span><span class="p">,</span> <span class="n">date_no_year</span><span class="p">)</span></code></pre></figure>
+
+<p>Then, we proceed to look inside that newly cut string for the word indicating month and as many sets of digits as we can find. The combination of these two findings are the basis for our final assessments of what data we have and how to process it.</p>
+
+<p>For that, we use the regex module’s findall and search functions. Both month and day can be single or double-width strings (hence ? by the second one, meaning “0 or 1 of it”). Month words only contain letters, and all the words in both dictionaries are of 3+ length. {3,} means “minimum 3, maximum unspecified. So equal to or higher than 3”. Just like with Python slices when we skip one side.</p>
+
+<p>Being specific here is important. If someone surprises our converter with a peculiar date, like 1969x05x20, our function would still work and omit ‘x’ separators, as they are only of length 1. Not demanding three or more letters in a word, those x-es would be added needlessly as separate ‘month or day’ items and cause the script to fail to fulfill its duty and return None.</p>
+
+<p>Now we get into different scenarios.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">if</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="nf">len</span><span class="p">(</span><span class="n">month_day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="n">month</span> <span class="o">=</span> <span class="nf">month_to_digit</span><span class="p">(</span><span class="n">month_word</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="n">day</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">0</span><span class="sh">'</span> <span class="o">+</span> <span class="n">day</span></code></pre></figure>
+
+<p>First is the case of month being a word (as in containing letters, not in the regex sense, where digits also qualify as word characters) and month_day search returning only one object.</p>
+
+<p>If we have a year, some word, and some digit, it is safe to assume that that word is the month and the digit is the day. So we set up both variables, giving us a first potential complete set of year, month, and day variables.</p>
+
+<p>The last two lines are important. ISO 8601 does not accept single-digit numbers, neither for date nor for time. If the input format is ‘Sep 1, 1995’, the day needs ‘0’ in front of 1.</p>
+
+<p>Because strings are iterable in Python, it is very easy to check for their length, and if it’s 1 (which means the number is most likely 1-9 with no 0 in front), we add it and the day variable is complete.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">elif</span> <span class="ow">not</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="nf">len</span><span class="p">(</span><span class="n">month_day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+		<span class="n">month</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">01</span><span class="sh">'</span></code></pre></figure>
+
+<p>The first alternative check is for no word indicating the month and just a single digit found. In most cases, when we only have a year and a single number, that single number is the month. Nobody writes the year and day of a month that is not specified.</p>
+
+<p>In rare cases, this extra number means the day of the year. This converter is not equipped to deal with such a scenario, and if it is indeed what you have to deal with, you’d have to use Python’s datetime module to convert it to a final date. It is easily achievable once you know this primary tool for dealing with dates in Python.</p>
+
+<p>In many scenarios, when the day is not found, we might want the whole date to be invalid. For my use, I still need the date, which is only used for getting approximate guesses to another object with another date (the ones with the smallest timedelta between them being paired), so a few days off are much less hurtful than not having a date at all.</p>
+
+<p>If you want to not return any date if the day is missing, it is easy to change in this function. Because final date generation will fail if the year, month, or day is not set, all you have to do is change “day = ‘01’” to “day = None” in two places.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">elif</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">month_day</span><span class="p">:</span>
+		<span class="n">month</span> <span class="o">=</span> <span class="nf">month_to_digit</span><span class="p">(</span><span class="n">month_word</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+		<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">01</span><span class="sh">'</span></code></pre></figure>
+
+<p>Next is a straightforward case, where we have a word for the month, but no extra number that would represent the day. Here, again we blindly set the day to the first of the month.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">elif</span> <span class="ow">not</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="nf">len</span><span class="p">(</span><span class="n">month_day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+		<span class="n">month</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+		<span class="n">day</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">0</span><span class="sh">'</span> <span class="o">+</span> <span class="n">day</span></code></pre></figure>
+
+<p>Lack of a word representing the month and two sets of digits indicates both month and day being numbers. As mentioned in the function summary, this part assumes the month number is to the left of the day number. You can reverse this order by setting month to month_day[1] and day to month_day[0].</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">else</span><span class="p">:</span>
+		<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">ERROR: not a valid date</span><span class="sh">'</span><span class="p">)</span>
+		<span class="n">year</span> <span class="o">=</span> <span class="bp">None</span></code></pre></figure>
+
+<p>Finally, we write what to do if all our previous conditions fail. If we got to it, this means that either of these is true:</p>
+<ul>
+  <li>A word representing the month was not found, and the regex was not able to fetch any numbers from the string, leaving us with no data to work with.</li>
+  <li>Besides the year, there were more than two other numbers.</li>
+</ul>
+
+<p>Three digits make it impossible to assess which one is the month and which one is the day. Usually, it means that the string we got is not a date at all, or a date with some unfortunate extra luggage.</p>
+
+<p>One way or the other, under this circumstance, it is best not to make wild guesses and instead call it quits. The print statement will inform us about the problem in the terminal window. Setting year to None will make the final condition fail, as it tests for the presence of year, month, and day. None is faulty in Python, indicating failure, and so the condition is not met.</p>
+
+<p>The final piece of our code checks for the presence of all objects and constructs a string from them.</p>
+
+<p>The last return is silent and applies only when that condition is not met. Every function in Python returns None, if not specified elsewhere. Here, we want to return date, but only if we have all the ingredients. If not, there are no final return instructions, which means the function will return ‘None’.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">if</span> <span class="n">year</span> <span class="ow">and</span> <span class="n">month</span> <span class="ow">and</span> <span class="n">day</span><span class="p">:</span>
+		<span class="n">final_date</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="sh">'</span>
+		<span class="k">return</span> <span class="n">final_date</span></code></pre></figure>
+
+<p>In other words, the final lines could be more redundantly written this way:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="k">if</span> <span class="n">year</span> <span class="ow">and</span> <span class="n">month</span> <span class="ow">and</span> <span class="n">day</span><span class="p">:</span>
+		<span class="n">final_date</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="sh">'</span>
+		<span class="k">return</span> <span class="n">final_date</span>
+	<span class="k">return</span> <span class="bp">None</span></code></pre></figure>
+
+<p>First return reached instantly ends the function, and so it reaches ‘return None’ only if year, word and month are not set to anything truthy.</p>
+
+<p>And here is the entire code:<a id="full_code"></a></p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python">	<span class="kn">import</span> <span class="n">re</span>
+	<span class="k">def</span> <span class="nf">toiso8601</span><span class="p">(</span><span class="n">date</span><span class="p">):</span>
+		<span class="k">def</span> <span class="nf">month_to_digit</span><span class="p">(</span><span class="n">month_as_word</span><span class="p">):</span>
+			<span class="n">months_full</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">january</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">01</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">february</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">02</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">march</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">03</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">april</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">04</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">may</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">05</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">june</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">06</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">july</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">07</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">august</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">08</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">september</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">09</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">october</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">10</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">november</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">11</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">december</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">12</span><span class="sh">'</span><span class="p">}</span>
+			<span class="n">months</span> <span class="o">=</span> <span class="p">{</span><span class="sh">'</span><span class="s">jan</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">01</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">feb</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">02</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">mar</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">03</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">apr</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">04</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">may</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">05</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">jun</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">06</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">jul</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">07</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">aug</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">08</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">sep</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">09</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">oct</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">10</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">nov</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">11</span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">dec</span><span class="sh">'</span><span class="p">:</span><span class="sh">'</span><span class="s">12</span><span class="sh">'</span><span class="p">}</span>
+			<span class="n">month_as_word</span> <span class="o">=</span> <span class="n">month_as_word</span><span class="p">.</span><span class="nf">lower</span><span class="p">()</span>
+			<span class="k">if</span> <span class="n">month_as_word</span> <span class="ow">in</span> <span class="n">months_full</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+				<span class="n">month_final</span> <span class="o">=</span> <span class="n">months_full</span><span class="p">[</span><span class="n">month_as_word</span><span class="p">]</span>
+			<span class="k">elif</span> <span class="n">month_as_word</span> <span class="ow">in</span> <span class="n">months</span><span class="p">.</span><span class="nf">keys</span><span class="p">():</span>
+				<span class="n">month_final</span> <span class="o">=</span> <span class="n">months</span><span class="p">[</span><span class="n">month_as_word</span><span class="p">]</span>
+			<span class="k">else</span><span class="p">:</span>
+				<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">ERROR: not a valid date. month word unknown</span><span class="sh">'</span><span class="p">)</span>
+				<span class="n">month_final</span> <span class="o">=</span> <span class="bp">None</span>
+			<span class="k">return</span> <span class="n">month_final</span>
+
+		<span class="n">year</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">\d\d\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+		<span class="k">if</span> <span class="ow">not</span> <span class="n">year</span><span class="p">:</span>
+			<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">ERROR: not a valid date. year missing</span><span class="sh">'</span><span class="p">)</span>
+			<span class="k">return</span> <span class="bp">None</span>
+		<span class="n">year</span> <span class="o">=</span> <span class="n">year</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+		<span class="n">date_no_year</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">sub</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="sh">''</span><span class="p">,</span> <span class="n">date</span><span class="p">)</span>
+
+		<span class="n">month_day</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">findall</span><span class="p">(</span><span class="sh">'</span><span class="s">\d\d?</span><span class="sh">'</span><span class="p">,</span> <span class="n">date_no_year</span><span class="p">)</span>
+		<span class="n">month_word</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[A-Za-z]{3,}</span><span class="sh">'</span><span class="p">,</span> <span class="n">date_no_year</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="nf">len</span><span class="p">(</span><span class="n">month_day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">month</span> <span class="o">=</span> <span class="nf">month_to_digit</span><span class="p">(</span><span class="n">month_word</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+			<span class="n">day</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="k">if</span> <span class="nf">len</span><span class="p">(</span><span class="n">day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+				<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">0</span><span class="sh">'</span> <span class="o">+</span> <span class="n">day</span>
+		<span class="k">elif</span> <span class="ow">not</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="nf">len</span><span class="p">(</span><span class="n">month_day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+			<span class="n">month</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">01</span><span class="sh">'</span>
+		<span class="k">elif</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">month_day</span><span class="p">:</span>
+			<span class="n">month</span> <span class="o">=</span> <span class="nf">month_to_digit</span><span class="p">(</span><span class="n">month_word</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+			<span class="n">day</span> <span class="o">=</span> <span class="sh">'</span><span class="s">01</span><span class="sh">'</span>
+		<span class="k">elif</span> <span class="ow">not</span> <span class="n">month_word</span> <span class="ow">and</span> <span class="nf">len</span><span class="p">(</span><span class="n">month_day</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+			<span class="n">month</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+			<span class="n">day</span> <span class="o">=</span> <span class="n">month_day</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="nf">print</span><span class="p">(</span><span class="sh">'</span><span class="s">ERROR: not a valid date</span><span class="sh">'</span><span class="p">)</span>
+			<span class="n">year</span> <span class="o">=</span> <span class="bp">None</span>
+
+		<span class="k">if</span> <span class="n">year</span> <span class="ow">and</span> <span class="n">month</span> <span class="ow">and</span> <span class="n">day</span><span class="p">:</span>
+			<span class="n">final_date</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="sh">'</span>
+			<span class="k">return</span> <span class="n">final_date</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="date" /><category term="iso8601" /><category term="python" /><summary type="html"><![CDATA[Converting date to ISO 8601 in Python]]></summary></entry><entry><title type="html">CMUS music player review</title><link href="http://localhost:4000/2020/cmus-music-player-review.html" rel="alternate" type="text/html" title="CMUS music player review" /><published>2020-09-01T11:03:28+02:00</published><updated>2020-09-01T11:03:28+02:00</updated><id>http://localhost:4000/2020/cmus-music-player-review</id><content type="html" xml:base="http://localhost:4000/2020/cmus-music-player-review.html"><![CDATA[<h1 id="cmus-music-player-review">CMUS music player review</h1>
+
+<div class="sidenote">
+version reviewed: 2.7.0<br />
+installed on: Linux Mint 19
+</div>
+
+<p><img src="http://localhost:4000/assets/img/articles/cmus-music-player-review/cmus1.png" alt="CMUS library view" /></p>
+
+<p>CMUS is probably the most popular terminal-based music player for Unix operating systems. The competition is almost non-existent, and even from that small pool, some applications do not look to meet the same needs CMUS addresses (some basically play a single specified track and that’s it).</p>
+
+<p>Despite being very satisfied with my previous player, DeadBeef, I was eager to look for something that could be fully controlled from within by keyboard, and thus free up various system-wide (and Ranger-wide) playback shortcuts with one application shortcut, and give all the commands from inside the program inside the terminal window. Which, of course, has its advantages over graphical interface.</p>
+
+<p>DeadBeef already comes chock-full of keyboard shortcuts, including specialized ones that you’ll struggle to find in most music players, like remove currently played file from disk, or look it up on last.fm. Spoiled for choice, I was coming with high expectations.</p>
+
+<h2 id="views">Views</h2>
+
+<p>By pressing numbers 1-7, we switch between different tabs, which in CMUS are called ‘views’. First one is tree view (aka. library), second is sorted library, third is playlist, fourth is queue. We get three options for three different scenarios, depending on how long do we plan on keeping the file on the list:</p>
+<ul>
+  <li>library is for long-term  additions that is supposed to reflect all the music we have on disk (or at least the part of it which we want to have quick access to)</li>
+  <li>playlist is for ‘current’ use</li>
+  <li>queue is a list that takes priority - whatever is added there is going to be played immediately after the currently played track and only after</li>
+</ul>
+
+<p>Majority of users will spend majority of time either in library view, or playlist view, depending of course on which they find more convenient.</p>
+
+<p>The librarians will find separate playback queue extremely useful. Since in library, an order of tracks is predetermined on loading, it is very convenient to press whatever key we have bound to the win-add-q command to add it to music queue. This way, we use library to play entire albums and in between we add to queue whatever music we scavenge outside the current album’s directory.</p>
+
+<p>On the other hand, using queue for playlistians is not as useful. In playlist, we set whatever order of tracks played ourselves. And so queue view doesn’t address the natural limitations of library view. We end up splitting our playlist into two for no reason.</p>
+
+<p>A better solution for people who use playlist as their primary queuing tool would be to have an extra ‘insert into playlist after currently played track” command for cmus-remote. Unfortunately, you’d struggle to find it in almost all music players out there and it’s a very handy feature that would completely remove any need to use queue view for most playlist users.</p>
+
+<p>The version 2.7.0, which I installed from official repository, is missing an ability to set the default view on program startup. As a playlist user, I have to manually focus the player and press ‘3’ on each system startup to switch from an empty library window to playlist view.</p>
+
+<p><img src="http://localhost:4000/assets/img/articles/cmus-music-player-review/cmus2.png" alt="CMUS playlist view" /></p>
+
+<p>An auto-detect feature would be nice as well - if playlist is populated, but library is empty, start with playlist view. If both are empty, but queue contains tracks, focus queue view on startup.</p>
+
+<p>An auto-switch to view when adding to it would also solve this problem, but is missing too. (edit: in version 2.8.0, there is a new cmus command ‘start_view’, which probably solves the problem)</p>
+
+<h2 id="speed">Speed</h2>
+
+<p>One of the reasons why someone might want to switch to a terminal-based application is speed. Perhaps the user has a very old laptop and wants to make it usable, but the modern bulky applications slow it down too much.</p>
+
+<p>With music players for people with large music libraries on their hard drives, this is very relevant. Many programs perform well with single playlists and up-to-medium-size libraries, but once the going gets tough, they can start forever and crush often, searching is extremely slow etc.</p>
+
+<p>A program that is displayed in a terminal emulator window does not necessarily have to be fast (Kakoune being a good example), but most of the time switching to a text interface helps to increase system performance on old computers.</p>
+
+<p>Here, CMUS delivers. It can handle ridiculously large playlists with ease. Searching works like a breeze, too. If performance is your primary concern, switching to CMUS is definitely worth considering.</p>
+
+<h2 id="key-bindings">Key bindings</h2>
+
+<p>Just like so many other terminal applications, CMUS is somewhat inspired by VIM when it comes to navigation. You can move up and downwith home row keys, quit the program with ‘:q’.</p>
+
+<p>It is possible to move selected track up or down, switch views, increase/decrease volume, pause/unpause, control playback, mark tracks for operations, execute shell commands and more.</p>
+
+<p>Together with options, keybindings reside in a config file. Conveniently, this file is editable from inside the program as one of views. You can reach it by pressing ‘7’. Lines are highlighted same as tracks are in other views. We roll down or up to reach the line we want to edit and press enter. A colon followed by the command to change set to current value is displayed at the bottom, enabling us to edit.</p>
+
+<p>The operation needs to be finished by pressing enter. That means if we screw up, we have to correct, because whatever we accept with enter will stay in config.</p>
+
+<p>The program checks for validity of input only for options. If it gets the value that doesn’t exist, it reverts to last correct setting. If we edit a boolean field and we insert non-bolean value, whatever that is, it will display an error and then set the option’s value to false, since we just fed it something that is not allowed, which boolean translates to false. It doesn’t matter if it was true or false before.</p>
+
+<p>When binding keys to commands, there is no check. Any gibberish will be accepted and the error will show only after pressing the bound key.</p>
+
+<h2 id="string-formatting">String formatting</h2>
+
+<p>CMUS offers surprising flexibility in what is displayed in each field in each view (and in program title, which is very important for some applications).</p>
+
+<p>It gives access to many tag variables and lets the user format them in any way he sees fit. Here, the program is as good as they come. You’d struggle to find a music player that gives you more freedom to shape the way tag data is displayed.</p>
+
+<h2 id="tag-viewingediting">Tag viewing/editing</h2>
+
+<p>And yet, it doesn’t have an option to display full tag, even just for mp3 files.</p>
+
+<p>Tag-editing duties are usually split between two programs: tag editor for bulk operations and music player for single corrections. I see a misspelled artist name in player window, I edit this file to make a quick correction in-place.</p>
+
+<p>No need to start another terminal session, find the directory and write full command pointing to a file just to remove one ‘d’ from the end of an artist string.</p>
+
+<p>You could argue that perhaps the user should leave tag editing duties to his tag editor, but that would be sacrificing convenience for ideology. And it’s a poor argument, the file tag is read and displayed by the program already. Whatever tags are read by the player are then potentially scrobbled. It’s not a separate case.</p>
+
+<p>But there is no argument for not letting the user view the tag in full. This is really a basic, elemental feature that, just like equaliser, everybody takes for granted in a music player. I doubt many people, when researching a potential change of their music software, checks for the presence of the two, instead taking it for granted.</p>
+
+<p>Notice that there is a a plugin for editing tags, just like there is for playing a random track. How good it is, I don’t know. Even if they are great, this functionality needs to be integrated into the base software.</p>
+
+<h2 id="file-browsing">File browsing</h2>
+
+<p>Ranger offers too much convenience with file management to delegate some of it to CMUS’ file browser. For me, it’s most convenient to select either single track, multiple tracks, or a folder and then order CMUS to either play or enqueue it (append it to the bottom of current playlist).</p>
+
+<p>People who operate this way will find file browser useless, and in CMUS that browser is a first-class citizen, by default available by pressing ‘5’ on keyboard. Built browser will always have its limitations compared to a piece of software that is dedicated to just this task. Same for people who navigate their hard drives directly in command line, spoiled for endless customization possibilities.</p>
+
+<p>Of course, it’s not a problem in any way, as it doesn’t take any unnecessary space and the access to it can be unbound. Whoever likes using it has the option to use it. And some internal file pointer had to be developed anyway.</p>
+
+<h2 id="issuing-commands-from-outside-cmus">Issuing commands from outside CMUS</h2>
+
+<p>Here’s where things get complicated. Every time CMUS starts, a tool named cmus-remote starts as well. It enables us to control playback, volume control and few other things through a socket, from outside the program. This way, we can, for example, configure custom wireless remote to jump between tracks on a playlist without the need to do it on keyboard.</p>
+
+<p>List of commands is short, and they are stripped in functionality compared to how other players react to particular commands.</p>
+
+<p>For example, the convention is that using the equivalent of ‘cmus-remote filename.mp3’ (directly giving the program a file to work with) does all these:</p>
+<ul>
+  <li>stops current playback</li>
+  <li>clears current playlist</li>
+  <li>adds the pointed file</li>
+  <li>focuses it</li>
+  <li>starts playback</li>
+</ul>
+
+<p>In CMUS, this command just adds it to the bottom of whatever place we point to. (library, playlist or queue). It does not automatically switch, nor start playback. Whether switching 5-step convenient shortcut for a simple enqueue as default is a good choice, it is of course a matter of preferences. But the above is default in most applications for a reason. Most people prefer it that way.</p>
+
+<p>Most CMUS commands refuse to offer anything extra. ‘–next’ doesn’t switch to next file and begin playback, it just switches to next file. This enables, for example, hopping 5 positions down without hearing the beginning of each track. But it is a very mild inconvenience to which people are used to and comes at a cost in other contexts.</p>
+
+<p>Good design choice was to make ‘–next’ loop playlist. If we are at the last position in the playlist and give that command, it will start from the beginning. It saves us from traversing the entire playlist, or having a separate command to ‘go to top’.</p>
+
+<p>I may be scanning an album for a good track I remember from youth. And so I have to issue –next command followed by –play command. Not this track. Another –next, another –play.</p>
+
+<p>Most ‘nexts’ will most likely be the cases of “don’t want this, play me the next one” and here again we’re taxed with either double keystrokes for that common use case, or writing a separate shortcut/programming a separate button for it, One way, or the other, not good.</p>
+
+<p>And things get more complicated.</p>
+
+<p>Currently played track remains being one no matter what. If I pause playback and then clear whatever list I’m using for playback, it is somewhat logical that the paused track remains present and ready to continue playback, despite removing it from a list in which it was played. After all, we just paused it, the pointer sits somewhere between its start and end.</p>
+
+<p><img src="http://localhost:4000/assets/img/articles/cmus-music-player-review/cmus3.png" alt="CMUS options view" /></p>
+
+<p>But when the track is stopped and then the playlist is cleared, I am giving two commands to get rid of it, and yet when I add some new music and order a ‘–play’ command, it doesn’t start playing the first track from the freshly added ones. Instead, it starts the last played one from the beginning!</p>
+
+<p>We are past it twice, already have a new batch ready for playback, but the player doesn’t want to let go of the past. Hence, instead of ‘cmus-remote –clear –play sometrack.mp3’, the command to produce behavior surely desired by majority of users has a mandatory ‘–next’. We have to use next to point to a first object from the list.</p>
+
+<p>And since ‘next’ does not imply “and start playback”, if we want it, we have to ensure it. This litters large part of commands we’ll be issuing with ‘–play’, because if entire playlist had finished playing before we added new objects to it, the playback got stopped.</p>
+
+<p>And in CMUS’ commands logic, if it was playing, switching tracks also continues playing. If it wasn’t, switching will not play. Switching is just switching. It doesn’t concern itself with playback status. Sounds good on paper, in practice it is a big annoyance.</p>
+
+<p>Look at this command from DeadBeef:</p>
+
+<blockquote>
+  <p>–play-pause       Start playback if stopped, toggle pause otherwise</p>
+</blockquote>
+
+<p>Simple conditional logic and very convenient to use. In CMUS, if you say play, it plays if it isn’t already. You say stop, it stops if it’s not stopped already. You can toggle play with pause, but not with stop.</p>
+
+<p>Another nice DeadBeef command absent in CMUS, particularly interesting for people who like to gamble, is:</p>
+
+<blockquote>
+  <p>–random           Random song in playlist</p>
+</blockquote>
+
+<p>’–seek’ is a single exception from the trend here. ‘seek +10’ will move the playback 10 seconds forward. We can seek backwards, for example with ‘seek -20’ to go twice that length in the opposite direction. A cherry on top is ‘seek 30’ (ie. without an operator in front) that enables us to jump to the 30th second of that track. A rare need for sure, but it’s always nice that we have this possibility.</p>
+
+<p>Armed with so much flexibility, we can program a remote so that, for example, we have 3 seek options: +3s/-3s, +10s/-10s and +60s/-60s, giving us ingredients for a beefy remote.</p>
+
+<h2 id="bugs">Bugs</h2>
+
+<p>I did not have the opportunity to test CMUS on another machine, but on mine cmus-remote is extremely unreliable. I remotely control behavior of many programs and scripts and no software ever misbehaves, but CMUS does that all the time.</p>
+
+<p>For some time, I thought there is something in the way program acts that I don’t understand, and so I tested various command combinations either as a single command, or in chain, but in the end everything failed. There was no reliable way to set cmus-remote for player control.</p>
+
+<p>Ranger’s rifle.conf file contains default applications, so the file manager knows what to run when it encounters a file with a particular extension. We can set it up to do some action in CMUS, by executing ‘cmus-remote –clear –next –play – “$1”’. It clears the playlist, adds the track, switches to it and begins playback… or at least is does so some of the time.</p>
+
+<p>Other times it adds the file, but does not switch to it and begins playback of the last-played track.</p>
+
+<p>Because every ‘–next’ has a chance to miss bigger than even more adventurous RPG players might now want to gamble on, we can work around it by issuing the same command 4 times. I did test it 50 times and not once has it failed.</p>
+
+<p>The problem arises when we are adding more than one file. With one, it’s not a problem since it either switches to that one file or not and ultimately it does. But with more than one, if each next succeeds, the selection travels further and further! Or at least it would, as even one ‘–next’ can move the cursor down by a random number.</p>
+
+<p>Outside of this behavior, I haven’t encountered any other bugs, but this one alone makes the program completely unusable for me. If you decide to install it, right away go to a folder that contains multiple mp3 files, add them to playlist with ‘cmus-remote *’ and then start ordering ‘cmus-remote –next’ and see if it switches one position down each time.</p>
+
+<p>Because if it doesn’t, well… good luck using the program ;)</p>
+
+<h2 id="errors">Errors</h2>
+
+<p>Errors are being displayed at the penultimate line in terminal window, by default in a dark red color (customizable, as colors of all other types of objects). Unfortunately, they don’t timeout, but stay there until we do anything inside the player window.</p>
+
+<p>For playlist users, it is an annoyance, since they will be issuing most commands through cmus-remote and not touch terminal window directly.</p>
+
+<p>You can play 10 albums, clear playlist 10 times, pause and unpause 100 times, and that ancient error will still be there for no reason.</p>
+
+<h2 id="equalizer">Equalizer</h2>
+
+<p>Again, for some reason, it’s missing! For music player, it is an absolute must. My headphones, for example, have a very bad default sound, but when tweaked in an equalizer, they can sound pretty good. Without the ability to play with frequencies, I am forced to use system-wide solutions, which I do not mind, but many people will.</p>
+
+<p>Some of those solutions are obscure, some are hard to wrap head around, some produce artifacts and choke on sound when processor is running some taxing script.</p>
+
+<p>PulseEffects is a very nice system set of tools (assuming someone uses PulseAudio) that contains an equalizer. Combining it with CMUS puts the user in a potentially weird space - a terminal-based music player backed by a graphical interface equalizer. Some choose terminal applications for the sake of them being terminal applications, in which case an extra graphical dependency make the switch a no-go.</p>
+
+<p>For people willing to go this route, there may be a nasty surprise awaiting: PulseEffects fails to start as service on some distributions, requiring always having a graphical interface present to work.</p>
+
+<h2 id="summary">Summary</h2>
+
+<p>I had high hopes regarding CMUS, to the point of blindly switching to it from a program which, like already mentioned, I was very satisfied with. Unfortunately, its many problems and shortcomings made it impossible to use and after a week I gave up looking for solutions and went back to DeadBeef.</p>
+
+<p>If on your machine cmus-remote commands work as intended and lack of equalizer and tag viewer/editor are irrelevant to you, then you may still want to try it out. Because outside of those issues, everything works like a charm.</p>
+
+<p>Unfortunately, for me each one of those is a dealbreaker, and all together make CMUS unarmed for daily use.</p>]]></content><author><name>Chris</name></author><category term="audio" /><category term="cmus" /><category term="review" /><summary type="html"><![CDATA[CMUS music player review]]></summary></entry><entry><title type="html">Setting up single navigation pane in Ranger and why it’s a good idea</title><link href="http://localhost:4000/2020/setting-up-single-navigation-pane-in-ranger.html" rel="alternate" type="text/html" title="Setting up single navigation pane in Ranger and why it’s a good idea" /><published>2020-06-22T13:31:14+02:00</published><updated>2020-06-22T13:31:14+02:00</updated><id>http://localhost:4000/2020/setting-up-single-navigation-pane-in-ranger</id><content type="html" xml:base="http://localhost:4000/2020/setting-up-single-navigation-pane-in-ranger.html"><![CDATA[<h1 id="setting-up-single-navigation-pane-in-ranger-and-why-its-a-good-idea">Setting up single navigation pane in Ranger and why it’s a good idea</h1>
+
+<p>By default, Ranger starts in a 3-pane view, which makes it unique but not very practical. Fortunately, this can be easily changed.</p>
+
+<p><em>If you want to skip past gibberish and straight to solution, click <a href="#solution">here</a>.</em></p>
+
+<p>For many years, I used Total Commander (the best file manager on Windows, or at least it used to be). Maximized, I had the classic two-pane design. One day, after buying my first full HD monitor (prehistoric times indeed), I opened the program and realized how much space I was losing by having that second pane. Half of my screen space, to be precise.</p>
+
+<p>The truth is, in that classic Norton Commander design, half the screen is a glorified directory link. Yes, it can be used to compare folders or get a broader multi-directory view, which can help make sense of things.</p>
+
+<p>But those are situational. Most of the time, one pane is important; the other just points to where to copy or move files from. It is a waste of space.</p>
+
+<p>If reference is indeed its main purpose, the second pane might as well have a vertical split option and just hold stackable directory paths, with a pre-selected modifier and a randomly chosen key generated for each one to allow operations to/from these.</p>
+
+<p>This would be a very good use of space and a real lifesaver when working on projects with complex directory structures. But one link taking up half of the screen estate?</p>
+
+<p>This isn’t a problem if someone is used to having maximized applications and alt+tabbing between them. Plenty of that space will be wasted in most programs, but that won’t matter anyway since we decide to focus on one thing at a time. For many people, having multiple things at once makes them lose focus. That’s why distraction-free modes in editors are popular.</p>
+
+<p>I often do multiple things at once and so I’d rather have them next to each other to be able to compare and rewrite code snippets, etc. Often, I have to run different scripts at once and need to see how they perform. And so every bit of space is important.</p>
+
+<p>That’s why, after switching to Linux a few years back, I decided to look for a file manager that would just have one pane… and ended up using the one that has three!</p>
+
+<p>In Ranger’s default view, the parent directory, which is always one keypress away, takes one-third of the space. Another shows the sub-directory. How often is that actually useful?</p>
+
+<p>Some of the most advanced ‘navigators’ I’ve met just use the command line for their daily routines. They get zero information even about the current directory when navigating, and yet not only can they function, but they are absurdly fast with their operations.</p>
+
+<p>Even when we actually need to scan a subfolder for the presence of a file or two, doing a recursive search will be much faster and much less eye-straining. A view of multiple directories at once is a gimmick, something that is there probably because it made the first program of its kind stand out from the crowd.</p>
+
+<p>Since I absolutely loved Ranger from the get-go, I wasn’t going to let this spoil things. Even if there were no option to change it, I would probably stick to it still. Fortunately, this is not the case.</p>
+
+<h2 id="editing-config-file">Editing config file</h2>
+
+<p>Ranger stores configuration in two files: <em>rc.conf</em> (program settings, key bindings) and <em>rifle.conf</em> (file associations). We will be editing the first one.</p>
+
+<p>You can find it in <em>~/.config/ranger</em> directory. If it’s not there, paste this command in console and run it:</p>
+
+<blockquote>
+  <p>ranger –copy-config=all</p>
+</blockquote>
+
+<p>Now both files should be there.</p>
+
+<p>The first setting command that interests us is:</p>
+<blockquote>
+  <p>set viewmode [mode]</p>
+</blockquote>
+
+<p>This command takes one of two mode arguments:</p>
+<ul>
+  <li>miller: the one I mentioned, showing folder’s parent and children folder on both sides</li>
+  <li>multipane: multiple unrelated directory views next to each other</li>
+</ul>
+
+<p>The multipane view puts an equation mark between tabs and panes. If there are no tabs, there is one pane. Every new tab creates a new pane, splitting the available space evenly between all displayed ones.</p>
+
+<p>Another command complements it:</p>
+
+<blockquote>
+  <p>set column_ratios 1</p>
+</blockquote>
+
+<p>It takes 0 to 3 arguments. Giving it 4 or more is not considered properly in code. Setting it up in the config file and then starting Ranger runs it in a broken state.</p>
+
+<p>For example, feeding it ‘1,2,1’ will set the parent and child directory panes to take 50% of the total window width, while the main window in which we navigate will occupy the other 50%. Keep in mind, though, that as of now, it only works for miller mode.</p>
+
+<p>It would be convenient to set it to something like this:</p>
+
+<blockquote>
+  <p>set column_ratios 5,1</p>
+</blockquote>
+
+<p>If <em>multipane</em> was set, this command could only accept two arguments: the first one pointing to the relative size of the currently focused tab, the other to all other unfocused ones.</p>
+
+<p>In <em>miller</em> mode, if we only give it one value, it will just give us one column. And since the one in which we traverse directories is the only one we can’t live without, it is set to be the only one remaining in such a case.</p>
+
+<p>Notice that both setting <em>column_ratios</em> to <em>0</em> and not writing any number at the end will also give the same result.</p>
+
+<p>So, if someone does not ever intend to use tabs, they might just set viewmode to multipane and be done with it, but there’s no need to do that. Today we don’t use it, maybe tomorrow we will. Let’s set it to <em>miller</em> and set <em>column_ratios</em> to <em>1</em>.</p>
+
+<p>That’s not all, though. The problem arises when we hover over a file in Ranger. It’s going to get previewed. Now, half the screen will be occupied by a file each time we encounter a previewable one. Sometimes, that’s useful, but mostly it’s distracting.</p>
+
+<p>The solution is to disable file previews:</p>
+
+<blockquote>
+  <p>set preview_files false</p>
+</blockquote>
+
+<p><a id="solution"></a></p>
+<h2 id="summary">Summary</h2>
+
+<ol>
+  <li>Check if the file <em>rc.conf</em> exists in the path: <em>~/.config/ranger/</em>. If not, paste and execute the following command: <em>ranger –copy-config=all</em>. Now the file should be there.</li>
+  <li>Open it in a text editor</li>
+  <li>Add the following lines inside it:
+    <ul>
+      <li><em>set viewmode miller</em></li>
+      <li><em>set column_ratios 1</em></li>
+      <li><em>set preview_files false</em></li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="but-why-cripple-myself-with-one-pane-when-i-can-have-more">But why cripple myself with one pane when I can have more?</h2>
+
+<p>If removing two panes will leave the user with empty space that they do not intend to populate in any way, it might be better to leave the default 3 panes on (unless the extra ones are distracting).</p>
+
+<p>Even for people who don’t get much use from them but are used to having them always on, it can feel like the navigation is now crippled.</p>
+
+<p>Don’t fret, though. First of all, we have tabs. Switching between them requires a single keystroke.</p>
+
+<p>For copying files/directories, a popular approach is to:</p>
+<ul>
+  <li>Change path to the destination directory</li>
+  <li>Open a new tab</li>
+  <li>Go to some directory</li>
+  <li>Select some objects</li>
+  <li>Yank/copy them</li>
+  <li>Close tab</li>
+  <li>Paste</li>
+</ul>
+
+<p>Or reverse it if the file source directory and not the destination directory is where we want to do the next thing.</p>
+
+<p>It takes the same amount of keystrokes to complete as doing that operation while jumping between panes. We just jump between tabs instead of panes. We lose visibility of a reference folder the entire time but require half the program space to complete it.</p>
+
+<p>For diff purposes, tabbing is great too. We can, for example, check some potentially modified project folder against a backup of the same content and switch between them to quickly see if there are some differences in files. As they take turns occupying the same space, it will be easier to notice differences.</p>
+
+<p>There are better solutions for scenarios like that, but for a quick check, it is often convenient to do it this way.</p>
+
+<p>Second, we can simplify things further. We always move legally downloaded movies to the <em>‘movie’</em> folder, legally downloaded mp3 tracks to the ‘mp3’ folder, etc. Some folders receive a high amount of traffic. Almost everyone has a routine.</p>
+
+<p>Many people who despise file managers and people who use them have bash aliases to folder paths set to allow easy moving. In Ranger, it is also very simple to do.</p>
+
+<p>Ranger adopted one of Vim’s greatest tools - leader keys. No need to press a modifier key (of which there are few) and control its press and release in combination with another key to trigger some operation bound to that particular shortcut. Almost any key can lead, and it doesn’t have to be kept pressed.</p>
+
+<p>And so, we can do this:</p>
+
+<blockquote>
+  <p>map mp shell mv %s /mnt/ssd/books/programming<br />
+map mn shell mv %s /mnt/files/img/nakedpersons<br />
+map ma shell mv %s /mnt/files/music/ambient</p>
+</blockquote>
+
+<p>We select all the books we want to move, then press ‘mp’ and we’re done. No need to go to any folder or open any tabs. A simple two-step operation.</p>
+
+<p>If having two directories next to each other is a necessity at some point, nothing stops us from using a terminal multiplexer. So long as we remember that two separate Ranger instances can’t pass things between them, as Ranger doesn’t start a system daemon that could move that information. Another fantastic file manager, <a href="https://github.com/jarun/nnn">nnn</a>, has that functionality.</p>
+
+<p>The same can be done with copying or any other shell command that takes a list of files and does something to them. Such is the amazing flexibility of the command line, and as a result, of programs that allow sending some input to it for further processing, like Ranger.</p>
+
+<p>Another fantastic tool that supercharges single-pane navigation is history. In rc.conf, we can set:</p>
+
+<blockquote>
+  <p>map h history_go -1<br />
+map H history_go 1</p>
+</blockquote>
+
+<p>By default, the <em>‘h’</em> key is used for navigation in Ranger, as it is in Vim. I am using the Colemak keyboard layout, so for me this key is free, which allows for a nice mnemonic binding. You can set it to any key you have available.</p>
+
+<p>In a default config Ranger use, going back in history will mostly go to the directory from which we came, which will be one level higher or lower in the directory structure. Moving forward will do the opposite and will, of course, only work if we already went back in history (like redo in text editors).</p>
+
+<p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="navigation" /><category term="ranger" /><summary type="html"><![CDATA[Setting up single navigation pane in Ranger and why it’s a good idea]]></summary></entry><entry><title type="html">Ranger configuration extras</title><link href="http://localhost:4000/2020/ranger-configuration-extras.html" rel="alternate" type="text/html" title="Ranger configuration extras" /><published>2020-04-01T22:43:18+02:00</published><updated>2020-04-01T22:43:18+02:00</updated><id>http://localhost:4000/2020/ranger-configuration-extras</id><content type="html" xml:base="http://localhost:4000/2020/ranger-configuration-extras.html"><![CDATA[<h1 id="ranger-configuration-extras">Ranger configuration extras</h1>
+
+<p>Ranger is probably the single most powerful file manager application on any operating system.</p>
+
+<p>It can be customized to the point of practically being a system-wide remote, one tool that can do anything. In this regard, it’s a very neat extension of the command line in Linux.</p>
+
+<p>Because of that, almost every Ranger config file I’ve stumbled upon contains at least an interesting line or two. I’ve used the application for a few years already, but feel like there’s a lot that still needs attention. For example, a convenient way of dealing with archives of all sorts, or different file information views, depending on a particular need.</p>
+
+<p>Below are some of my favorite additions to the <em>rc.conf</em> file. You can usually find it in <em>~/.config/ranger/</em> folder. If it’s not there, run this command in the command line: <em>ranger –copy-config=all</em>, which should create it.</p>
+
+<p>Just paste the quoted lines wherever you see fit inside that file, but keep in mind that some of those commands invoke programs you will have to install.</p>
+
+<h2 id="keyboard-layout-change">Keyboard layout change</h2>
+
+<p>Using alternative keyboard layouts can be very painful for that person’s friends and family. If they sometimes need to operate on this person’s machine, after each session they might hate that person a little bit more.</p>
+
+<p>Dvorak and Colemak are the unsung heroes of filesystem encryption, making all attempts to search YouTube or find something on Google fruitless, unless someone’s brain knows the layout. Even with keycaps being changed accordingly.</p>
+
+<p>In order to help those poor people, we can set up an easy keyboard layout change to and from the basic QWERTY US layout to any we want. For that, we need to install <em>setxkbmap</em> with our package manager. For Ubuntu users, the command to paste in the command line is:</p>
+
+<blockquote>
+  <p>sudo apt-get install setxkbmap</p>
+</blockquote>
+
+<p>Then, insert these two lines to <em>rc.conf</em>:</p>
+
+<blockquote>
+  <p>map Ku shell setxkbmap -variant ,us<br />
+map Kc shell setxkbmap -variant colemak</p>
+</blockquote>
+
+<p><em>‘Ku’</em> and <em>“Kc’</em> are my key combinations. You can set them to whatever you have unmapped. Then you need to restart Ranger, and whenever you want to change the layout, you just use those key combinations.</p>
+
+<h2 id="mp3-file-tag-preview">MP3 file tag preview</h2>
+
+<p>Sometimes, it is convenient to check the content of an MP3 tag. For example, a track we have on the hard drive might just have the artist and title in its filename, but we want to quickly check from which album it is or which year it was released.</p>
+
+<p>Opening a browser for a Rate Your Music/Discogs/etc. check might take longer than getting to our music directory, quickly locating that file and pressing a key to see its tag contents.</p>
+
+<p>For that, we’re going to need a CLI tag viewer. I highly recommend <a href="https://github.com/nicfit/eyeD3">eyeD3</a>, available both as a CLI app and an importable Python library. So, first in the command line:</p>
+
+<blockquote>
+  <p>sudo apt install eyed3</p>
+</blockquote>
+
+<p>And in Ranger config file:</p>
+
+<blockquote>
+  <p>map T shell clear; eyeD3 %s; read -p “———-press ENTER to continue———–”</p>
+</blockquote>
+
+<p>We are making a 3-step operation here:</p>
+<ol>
+  <li>Clear the terminal window, so that tag information can be the only thing displayed, so we don’t have to strain our eyes looking for it.</li>
+  <li>Pass the selected file(s) to eyeD3 for tag preview.</li>
+  <li>Use <em>read</em> to display some information.</li>
+</ol>
+
+<p>We need step 3, <em>read</em> with <em>-p</em> option (prompt). It waits for user input, enabling us to view the tag before coming back to Ranger.</p>
+
+<p>Otherwise, we’d have to quit Ranger, display the tag, and start it again manually. Without the <em>-p</em> option, Ranger would display tag information and then instantly come back, requiring photographic memory coupled with Spiderman instincts to pick up the information we want. It would only be visible for a fraction of a second.</p>
+
+<p>Notice that you can select multiple desired files, just like you normally mark them for operations in Ranger, and for each of them, tag information will be displayed in vertical order. Very handy.</p>
+
+<h2 id="mp3-player-playback-control">MP3 player playback control</h2>
+
+<p>In my opinion, it is much better to have system-wide playback control shortcuts than narrowing it down to a specific application. This way, we can change tracks while the monitor is off and never have to worry about what’s focused, even if we spend the majority of time in our file manager.</p>
+
+<p>If you don’t have any free system-wide available key combinations for that purpose, you can let Ranger do the ordering. As long as your music player accepts playback commands from a terminal session (if it doesn’t, you need to change your music player).</p>
+
+<p>Ordering the player to start playback of hovered/selected file(s) is as simple as setting up your default music application in Ranger’s <em>rifle.conf</em> file. But maybe we want to enqueue instead of play?</p>
+
+<p>In this case, we have to check what playback control commands a particular player accepts. Most applications will give such information when starting up from a terminal window with <em>-h</em> (short for <em>‘help’</em>) added at the end.</p>
+
+<p>In DeadBeef, enqueuing is done with the <em>–queue</em> parameter. The entire command looks like this:</p>
+
+<blockquote>
+  <p>map de chain shell deadbeef –queue %s; mark_files all=True val=False</p>
+</blockquote>
+
+<p>You need to replace it with your player of choice and its equivalent command (which might very well be exactly the same).</p>
+
+<p>The second part is also important. Ranger has a nasty habit of leaving selections after operations and no way to change that behavior, as far as I know. There is an option to drop all selections when leaving a folder, but it doesn’t work in my version.</p>
+
+<p>It is not a problem though because we can slap the above <em>mark_files</em> command whenever we want to unselect after an operation and skip it whenever we don’t, giving us full control.</p>
+
+<h2 id="starting-twitch-streams">Starting Twitch streams</h2>
+
+<p><em>youtube-dl</em> is a great tool to download YouTube videos, but it can also be used in concert with <a href="https://mpv.io/">MPV</a> to play its videos or playback Twitch streams.</p>
+
+<p>For that, we of course first need to have both MPV and youtube-dl installed. Then, it’s as simple as adding one line for each stream to <em>rc.conf</em>:</p>
+
+<blockquote>
+  <p>map qan shell killall mpv; mpv https://www.twitch.tv/boxerpete &lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<p>The first part is optional and it kills all MPV instances. Since I want to play a stream now, first I want to end playback if something is already on, as I’m not going to watch two things at once.</p>
+
+<p>Then I’m starting MPV with the Twitch streamer URL address. The player automatically invokes youtube-dl and begins stream playback.</p>
+
+<p>In order not to freeze Ranger until stream playback is finished, which could be in 23 hours and 59 minutes in the case of a 24-hour stream, we need to order it to start as a separate process, hence the line ending.</p>
+
+<p>Or are you like me and sometimes watch beautiful places on webcams while working, to cheat yourself that you’re not sitting inside a dark cave until the work is done?</p>
+
+<blockquote>
+  <p>map qge shell mpv https://www.youtube.com/watch?v=yMSc-qqW3To –no-audio –no-resume-playback &lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<h2 id="open-with">Open with…</h2>
+
+<p>Default applications often don’t meet all our requirements for file handling. We might be using one application for the default action but also need another option for marginal cases.</p>
+
+<p>Take images, for example. For casual users, the default action could be to open them in an image viewer. Sometimes, we might need to edit them, carve something out, and send it to someone? It’s good to prepare for such cases:</p>
+
+<blockquote>
+  <p>map wp shell pinta %s&lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<p><a href="https://www.pinta-project.com/">Pinta</a> is a simple image editor for Linux. It is an equivalent of the old <em>Paint Shop Pro</em> on Windows, back before Corel bought them.</p>
+
+<p>For simple modifications like slicing particular areas out of an image, there is no point in starting any graphical powerhouse, as we’d waste a lot of time looking at the loading screen while the program computes stuff we will not need.</p>
+
+<p>Maybe I need to open a file in an editor I’m not using daily:</p>
+
+<blockquote>
+  <p>map us shell subl %s</p>
+</blockquote>
+
+<p>Sublime Text spawns a separate process by default, so it doesn’t require a command ending to make it so.</p>
+
+<p>Another use is to start a program with a specified geometry. I want to start the MPV player, but want it on my second 4:3 monitor:</p>
+
+<blockquote>
+  <p>map uv shell mpv –geometry=1280x1024+1920+0 %s&lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<p>We could add <em>–fs</em> before sending output to <em>/dev/null</em> to also start the program in full screen, but my experience is that it’s bugged and sometimes fullscreens on the first monitor, sometimes on the second.</p>
+
+<p>Omitting it and specifying geometry is successful 100% of the time and there is no practical difference. It can be annoying if someone often click-drags the player window by accident (fullscreen prevents moving the window around). But in this case, it’s just better to disable it, with the exception of someone using a mouse and click-dragging the MPV window by accident. If that is your problem, just add this line to your <em>mpv.conf</em>:</p>
+
+<blockquote>
+  <p>no-window-dragging</p>
+</blockquote>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="ranger" /><summary type="html"><![CDATA[Ranger configuration extras]]></summary></entry><entry><title type="html">Setting up a screen capturing script in Linux</title><link href="http://localhost:4000/2020/setting-up-a-screen-capturing-script-in-linux.html" rel="alternate" type="text/html" title="Setting up a screen capturing script in Linux" /><published>2020-03-28T11:13:54+01:00</published><updated>2020-03-28T11:13:54+01:00</updated><id>http://localhost:4000/2020/setting-up-a-screen-capturing-script-in-linux</id><content type="html" xml:base="http://localhost:4000/2020/setting-up-a-screen-capturing-script-in-linux.html"><![CDATA[<h1 id="setting-up-a-screen-capturing-script-in-linux">Setting up a screen capturing script in Linux</h1>
+
+<p>Microsoft Windows has evolved significantly from the days when pressing the “Print Screen” key simply copied the desktop image to the clipboard, requiring users to manually paste it into an image editor to save it. Today, Windows 10 offers the <em>Snipping Tool</em> and <em>Snip &amp; Sketch</em>, providing various methods to capture parts of the screen. Despite having two tools for the same task, which indicates some unfinished business, Microsoft has streamlined the screenshot process.</p>
+
+<p>Most Linux distributions now also come with robust screenshot tools. However, if you use a niche window manager that lacks this functionality or if your built-in tool stops working, you can still capture screenshots using some basic knowledge and a single tool, which may already be installed by default on your system.</p>
+
+<p>This tutorial will explain how to set up a screenshot script in the <em>i3</em> window manager.</p>
+
+<h2 id="what-does-this-script-do">What does this script do?</h2>
+
+<ol>
+  <li>
+    <p>Pressing the <strong>Print Screen</strong> Key: Captures the entire screen and saves it to an image file in a specified location.</p>
+  </li>
+  <li>
+    <p>Pressing the <strong>Scroll Lock</strong> Key: Captures the screen, saves it, and then opens the saved image in an editor of your choice.</p>
+  </li>
+</ol>
+
+<p><small>
+It is a common task to screen capture something, some video stream we’re watching perhaps. But before we post it online, we want to mark some interesting part of our screen with a circle, or point to it with an ugly-looking arrow.
+Instantly opening image editor is a lot more convenient than saving the image to disk, then manually navigating to the folder in which the image resides and opening it. If that’s not enough, we would usually need to use the ‘open with’ option if plain image viewer and not editor is set as the default program for executing images.
+</small></p>
+
+<p>After pressing the Print Screen key, the script first checks the folder in which we save capture files if any already exist. If they do, it takes the number of the newest one (the one with biggest number), increments that number by one and saves our new screen capture with that number.</p>
+
+<p>In other words, if you already have print-screen1.jpg and print-screen3.jpg (let’s assume 2 has been deleted in the meantime), the script will create print-screen4.jpg instead of substituting print-screen1.jpg, or creating print-screen2.jpg.</p>
+
+<p>If there are no print-screen[num] files in folder, it creates print-screen1.jpg.</p>
+
+<p>This is hands-down the best default behavior, as it retains chronology and prevents sometimes unwanted file loss.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>We will use Bash as our shell language and import from <a href="https://imagemagick.org/index.php">ImageMagick</a>, a powerful image processing tool. ImageMagick is available in most system repositories and can be installed easily.</p>
+
+<p><small>Either of the two programs is worth getting to know it if you deal with images a lot and feel like you could automate some of your tasks. IM has slightly more robust tools, GM can perform faster in some scenarios. We will work with IM’s import.</small></p>
+
+<p>One example of its use is having <em>*watch</em> monitor a particular folder where we save memes (the most important images on anyone’s HDD). We can order ImageMagick tools to check if the maximum resolution is not bigger than something and, if it is, reduce it to a sensible maximum.</p>
+
+<p>Next, the script could check if those meme files have a compression level higher than, let’s say, <em>90</em>, and if they do, compress them to <em>90</em> to save disk space. Then, we could automatically move those files to our final meme directory.</p>
+
+<p>This is a very basic example, but it already shows how useful this set of tools can be.</p>
+
+<p>You will most likely find ImageMagick in your system repository. It is spelled <em>imagemagick</em>.</p>
+
+<h2 id="code">Code</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
+<span class="nv">ps_numb</span><span class="o">=</span><span class="si">$(</span><span class="nb">ls</span> <span class="nt">-v</span> /path/to/print-screens/ | <span class="nb">grep </span>print-screen | <span class="nb">tail</span> <span class="nt">-n1</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s1">'\d\d?(?=\.png)'</span><span class="si">)</span>
+<span class="nv">ps_numb</span><span class="o">=</span><span class="k">$((</span><span class="nv">$ps_numb</span> <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
+import <span class="nt">-window</span> root <span class="nt">-crop</span> 1920x1080+0+0 /path/to/print-screens/print-screen<span class="k">${</span><span class="nv">ps_numb</span><span class="k">}</span>.png</code></pre></figure>
+
+<h2 id="code-explanation">Code explanation</h2>
+
+<p>Thanks to piping, we accomplish many tasks in our first actual line of code:</p>
+<ul>
+  <li><strong>ls -v</strong> - ‘<em>ls</em>’ lists files in specified directory, ‘<em>-v</em>’ makes sure numbers are sorted properly (with default sorting, for example, 100 is before 2… because 1 is smaller than 2. we do not want that!)</li>
+  <li><strong>grep</strong> - searches directory list for files/directories containing a string <em>print-screen</em></li>
+  <li><strong>tail -n1</strong> - ‘<em>tail</em>’ displays last lines of our result list, ‘<em>-n1’</em> narrows it down to just last line, which we’ve made sure is the one with the biggest number</li>
+  <li><strong>grep -Po…</strong> - grep extracts single or double digit number from that filename (you can append a second ‘<em>\d?</em>’ if for some reason you can end up with 100+ files).</li>
+  <li><strong>(?=.png)</strong> - it is a lookahead, meaning we only look for digits which are immediately followed by ‘.png’.</li>
+</ul>
+
+<p>That lookahead is a safety measure against directories that contain the string ‘<em>print-screen</em>’. The script may one day encounter such a directory, but it is not likely to encounter a directory named […]print-screen[num][maybenum].png[…].</p>
+
+<p>Even if such a rare thing happens, the script will create a file with one number higher than the number in this directory, assuming there are no print-screen files with higher numbers. This is a rare worst-case scenario and still not hazardous.</p>
+
+<p>The second line does arithmetic (which we enable with double parentheses). It adds one to append that number to the filename later. If you want a different numbering order, you can change it easily here.</p>
+
+<p><small>
+Bash can take dynamic typing to extremes, as is the case here. If the previous line returns nothing (if there are no print-screen files in our folder, or the last sorted one has no digits followed by <em>‘.png’</em>), the next line takes that nothing and converts it to something arithmetically viable, because it now sits inside double parentheses, which are used for arithmetic operations. Because there is no data (or false, or an empty string), that data is converted to 0 to make it viable in the world of mathematics. And 0+1 gives 1, saving us from writing our script in a more complicated way to ensure that if there are no print-screen files, a proper number for a new filename is still generated.
+</small></p>
+
+<p>Notice the file extension in the second and fourth lines. Change it to any image format you want and test it to ensure that the import tool supports such a format.</p>
+
+<p>The third line is where the magic happens. The <em>import</em> tool is told to capture the main display window with the <em>-window root</em> option.</p>
+
+<p>Just like <em>xwininfo</em>, <em>xprop</em>, and many other useful X tools, import waits for a user click to specify the window for capture. But we don’t want to capture just one program window, but the entire screen, and we want it to happen automatically instead of requiring us to click each time. That’s why we have to be specific.</p>
+
+<p>If you only have one monitor, you can safely remove the <em>-crop 1920x1080+0+0</em> part. I have two monitors, the first one set to 1080p resolution. <em>import</em> with <em>-window root</em> captures content from all monitors into one glued-together image. I want to get the left-most monitor’s content only, so after capturing, I need to crop it to the position and dimensions of my first monitor.</p>
+
+<p>That is why the script specifies geometry (you can read more about geometry in this article). Most people only have one monitor, and while the script will work for them as well, they won’t need that bit of code.</p>
+
+<p>But because it’s there, it will also work for people with more than one monitor. If yours has a different resolution than 1920x1080, change those numbers. If you don’t want the left-most monitor’s contents, replace ‘+0+0’ with the proper starting pixel location.</p>
+
+<h2 id="binding-the-script-to-a-key">Binding the script to a key</h2>
+
+<p>As mentioned at the start, if your window manager is not i3, search for how to add system-wide keyboard shortcuts in your Linux distribution/window manager.</p>
+
+<p>Usually, you can set a key to execute a command. Instead of a system command, point to a file (with the full path, so the system knows where to look for it).</p>
+
+<p>In i3, that operation is very simple. Edit this file: <em>~/.config/i3/config</em>, and add these two lines:</p>
+
+<blockquote>
+  <p>bindsym Print exec /path/to/file.sh<br />
+bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to/save/image.jpg; pinta /location/to/save/image.jpg”</p>
+</blockquote>
+
+<p>As far as I know, i3 can only execute single statement, so to execute two, we need to sneak them in as one command inside quotes.</p>
+
+<p>Editing does not require automatic numbering of the following files. After all, we capture, edit, and save each time. Therefore, we only use the import command here and not the entire script. Be sure it is called with the exact same options and parameters as inside your script if you want to capture the same screen area.</p>
+
+<p>The <em>Print</em> and <em>Scroll Lock</em> keys can be changed to any other ones you want. A list of popular names and how to easily get any key name you want that i3 understands can be found <a href="http://xahlee.info/linux/linux_show_keycode_keysym.html">here</a>.</p>
+
+<p>Remember that binding a key or key combination directly in the window manager usually means no application can use it. Otherwise, one key could potentially execute multiple unrelated actions, leaving the user in a state of confusion.</p>
+
+<p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="printscreen" /><summary type="html"><![CDATA[Setting up a screen capturing script in Linux]]></summary></entry><entry><title type="html">Writing a local audio scrobbling script in Bash</title><link href="http://localhost:4000/2020/writing-a-local-audio-scrobbling-script-in-bash.html" rel="alternate" type="text/html" title="Writing a local audio scrobbling script in Bash" /><published>2020-02-20T21:43:18+01:00</published><updated>2020-02-20T21:43:18+01:00</updated><id>http://localhost:4000/2020/writing-a-local-audio-scrobbling-script-in-bash</id><content type="html" xml:base="http://localhost:4000/2020/writing-a-local-audio-scrobbling-script-in-bash.html"><![CDATA[<h1 id="writing-a-local-audio-scrobbling-script-in-bash">Writing a local audio scrobbling script in Bash</h1>
+
+<h2 id="lastfm-vs-local-scrobbling">Last.fm vs local scrobbling</h2>
+<p>Once merged with <strong>Audioscrobbler</strong>, <strong>Last.fm</strong> became the leading tool for tracking music history and probably remains so to this day, despite being considerably less popular now than it used to be.</p>
+
+<p>One of the reasons it became so popular was because it added a social dimension to music tracking. We can start a conversation about an interesting track we’ve both discovered recently, or a concert which, as it turns out, we both attended.</p>
+
+<p>But what if someone doesn’t care about all that and just wants to track their history and store it? In that case, there is probably no reason to keep something as precious as a lifetime of our musical adventures only on a remote server.</p>
+
+<p>That applies even if the company is trustworthy. And people behind Last.fm, both before and after <a href="https://techcrunch.com/2007/05/30/cbs-acquires-lastfm-for-280m/?guccounter=1">the CBS takeover</a>, have not given us any reasons to doubt them.</p>
+
+<p>Anything can happen to a website though. A disgruntled employee on his way out might <a href="http://www.digitaljournal.com/article/249311">erase large portion of its data</a>.</p>
+
+<p>Just to be safe, we might want to download our entire listening history. In the case of Last.fm, this isn’t always easy. The service itself used to provide a way to download all user data, but for years that option has been gone.</p>
+
+<p>There are other websites that can extract it. But if our history contains hundreds of thousands of items, there is a big chance downloading those large files will fail at some point. Fetching data through those kinds of websites also takes a lot of time.</p>
+
+<p>When our history is out there with no backups, even if that company has many backups on different servers, we can’t really be 100% sure that our data is safe. It needs to be backed up somehow.</p>
+
+<p>If downloading Last.fm user history fails, the only option left is to write a script that will extract that data from their website, page by page. That can be tens of thousands of pages… and now we have to know web scraping.</p>
+
+<p>But it can’t just be a script that we run once and are done with it. It needs to check for new scrobbles periodically, so we lose as little data as possible.</p>
+
+<p>In other words, if we want to continue using a remote scrobbling service, but also want a regular and reliable backup plan for our data, we’re in a world of trouble.</p>
+
+<p>Why not write our own script and store our musical history on our very own disk, right under our noses? Backing it up further from a local file for 100% safety is so much simpler and faster, too.</p>
+
+<p>We won’t need any application that might spy on us, to which we might one day lose the password by accident, or which might stop working at some point due to some peculiar bug.</p>
+
+<p>And we need it to be able to scrobble, or our listening history comes to a halt until the problem is solved. Do we stop listening to anything until we manage to fix it, just to keep historical accuracy? That would be a questionable solution to a problem that we could do without.</p>
+
+<p>A local script means every time the system is on, scrobbling is on. 100% reliability. Let’s explore other arguments for it.</p>
+
+<h2 id="advantages-of-local-scrobbling">Advantages of local scrobbling</h2>
+
+<ul>
+  <li>The script is just a few lines long, possible to fully understand quickly even for someone who has just started learning Bash.</li>
+  <li>Once everything is set up, it always works. If problematic strings are properly escaped/removed, nothing will break our script.</li>
+  <li>Data can be stored in any format we want. In case we change our mind at some point, converting it to another format using regex is very easy.</li>
+  <li>With a minor modification of this script, we can set up a local SQL server and directly feed it scrobbled data. Keep in mind that if you don’t plan to do advanced stuff with that data, choosing a database over a plain CSV file for storage is overkill.</li>
+  <li>We decide which tag fields should be stored.</li>
+  <li>Deleting unwanted items is as simple and powerful as our editor allows, as opposed to a click-fest if we decide to do it through a website.</li>
+  <li>Even decade-long logs still won’t take more than a dozen megabytes, which by today’s storage standards is zero.</li>
+  <li>We can extract whatever statistical information from it; imagination is the limit (but we have to do the work).</li>
+</ul>
+
+<h2 id="requirements">Requirements</h2>
+
+<ol>
+  <li>
+    <p>This tutorial uses Bash inside Linux as the environment of choice. We will be issuing system commands, which is always more natural from Unix shell languages than from other programming languages. The latter usually require importing system libraries first and might produce code that is harder to read.</p>
+  </li>
+  <li>
+    <p>For local scrobbling to be an easy ride, you have to use a music player that supports editing its title. The popular standard is for the player to display currently played track’s tag information as the application title. We need to be able to change from which tag fields we get the information.</p>
+
+    <p>If you intend to use graphical application and don’t care about library, <a href="https://deadbeef.sourceforge.io/">DeadBeef</a> comes highly recommended. For console interface, <a href="https://cmus.github.io/">CMUS</a> is another choice. This tutorial will work with DeadBeef.</p>
+  </li>
+  <li>
+    <p>You will need to download <strong>wmctrl</strong>. Your system package manager most likely has it. It is a small, very fast and very useful tool. I recommend getting to know it as it makes many interesting system scripts possible.</p>
+  </li>
+</ol>
+
+<h2 id="configuring-deadbeef">Configuring DeadBeef</h2>
+<p>Go to <strong>Edit</strong> -&gt; <strong>Preferences</strong> -&gt; <strong>GUI/MISC</strong> -&gt; <strong>Player</strong></p>
+
+<p>In the ‘<em>Titlebar text while playing</em>’ field, replace the current string with:</p>
+
+<blockquote>
+  <p>deadbeef: %artist%;%album%;%title%;%year%;%length%</p>
+</blockquote>
+
+<p>…or any tags you want, in any order. The beginning part is important, as we will be identifying the program title by a string ‘deadbeef: ‘, so it has to be there.</p>
+
+<p>You might want to change it to something more unique to never match that title elsewhere (in case you one day visit a website whose title contains <em>‘deadbeef: ‘</em> or a similar situation). If you decide to do so, remember to change it to something identical both in DeadBeef options and in line 4 of the script.</p>
+
+<p>In the <em>‘Titlebar text while stopped’</em> field, replace the current string with:</p>
+
+<blockquote>
+  <p>deadbeef - not playing</p>
+</blockquote>
+
+<p>It is important that there is no <em>‘deadbeef: ‘</em> string here, as a different string is a signal that DeadBeef is not playing. If we’d add a colon here, the script would assume that DeadBeef is playing and that <em>’- not playing’</em> is another currently playing track that needs to be added to a scrobbling history file.</p>
+
+<h2 id="csv-as-our-storage-format-of-choice">CSV as our storage format of choice</h2>
+
+<p>Semicolons between tags decrease readability, but we are going to make our log a CSV file, with semicolons instead of commas.</p>
+
+<p>And so, to make our life easier, DeadBeef will be displaying tag information already formatted for CSV file writing. A CSV file is like a table, with each line being a row and cell items divided by a comma, semicolon, or any other symbol you choose. Tab is another good option.</p>
+
+<p>We no longer have COMMA separated values, so it’s not a CSV file anymore, strictly speaking. But the idea is the same, so we keep calling it that anyway.</p>
+
+<p>Even though it doesn’t look pretty (compare it to <em>YAML</em>, for example), we keep using it for practical reasons. If we ever intend to analyze that data in any way (most popular artist this year, most listened to track ever…), parsing a CSV file is kid’s play.</p>
+
+<p>YAML is the best option for readability, but files can be considerably larger because of it and it can be a nightmare to parse. CSV is simple and reliable.</p>
+
+<p>Because the format is very popular, many frameworks, libraries, and other tools have CSV importing/exporting built-in. We won’t have to do any additional work to prepare the data ahead of our tasks. With YAML, we might as well need to hire an assistant parser ;)</p>
+
+<p>Remember that the character you chose as a field separator can’t be present inside your music tags, or it will mess up your data. It’s good when all music tracks get pre-cleaned before being played for the first time. Check the article list on this blog; I will write such a script and post it here sooner or later.</p>
+
+<h2 id="breaking-apart-the-script">Breaking apart the script</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
+<span class="nv">last_title_path</span><span class="o">=</span><span class="s1">'/path/to/scrobble-last.log'</span></code></pre></figure>
+
+<p>We start by pointing to the Bash interpreter, which usually is in the main bin folder. Then, we create a variable that points to a string representing the path to a file that stores the last scrobbled track.</p>
+
+<p>We could store the last scrobbled track in memory to avoid disk writes. An average of one disk write every 3 or 4 minutes is not exactly the case of machine cruelty, and it won’t have any impact on our hard disk lifespan. And if we write to disk, we don’t have to be afraid of losing data on reboot, etc.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do</span></code></pre></figure>
+
+<p>This is a common programming use for an infinite loop. The idea is to start the script on system startup and repeat some sequence of events forever. For that, we need a loop that under no condition ever breaks.</p>
+
+<p>‘While’ checks for something being true (or truthy, depending on the language). True is always true; it’s not going to change at iteration 131. It guarantees the loop will run until terminated from outside (like the kill command or system reboot).</p>
+
+<p>The entire sequence of code will be executed line after line, after which the next loop iteration will start, i.e., it will begin to execute the entire sequence again.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">curr_title</span><span class="o">=</span><span class="si">$(</span>wmctrl <span class="nt">-l</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s2">"(?&lt;=deadbeef: ).+"</span><span class="si">)</span>
+<span class="o">=</span><span class="si">$(</span><span class="nb">head</span> <span class="nt">-n1</span> <span class="nv">$last_title_path</span><span class="si">)</span></code></pre></figure>
+
+<p>The logic of the script is that every 5 seconds, we will check current track against previously played one and only if it’s different, we will put it in log.</p>
+
+<p>Wmctrl has a useful <em>‘-l’</em> argument, which lists all graphical windows currently open on all our monitors. It also states on which monitor each window currently resides and, what interests us here, program title.</p>
+
+<p>We wrap the system command in ‘<em>$()</em>’ and make variable point to its output. The command first lists all open windows, and then pipes it through grep. For the latter, we specify two options:</p>
+<ul>
+  <li>‘<em>-P</em>’, which changes default regex engine to Perl’s (best Regex version). it needs to be specified because the default grep regex engine does not support lookbehind</li>
+  <li>‘<em>-o</em>’, which only returns what regex matches, and not a whole line in which regex match was found</li>
+</ul>
+
+<p>A variable representing previously played track is set by printing it through <em>head</em> with the ‘<em>-n1</em>’ option. By default, head prints the first ten lines of a specified file. We just want one line, the first one, which the ‘<em>-n</em>’ option secures.</p>
+
+<p>We can’t just <strong>cat</strong> the whole file, because then we’d also get the newline. We don’t want it, so we have to remove it one way or the other.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"</span><span class="nv">$prev_title</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span></code></pre></figure>
+
+<p>After defining all the necessary variables, we get to the heart of our script. First, we check if the music player is playing anything, or the second test would produce an error and break our script if it doesn’t.</p>
+
+<p>Then, we check if the currently played track is different from the last played one.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$last_title_path</span><span class="s2">"</span></code></pre></figure>
+
+<p>The next step is to replace the last played one with the currently played one inside our scrobble-last.log file. We need to compare future playback against this track from now on.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">date</span> +<span class="s1">'%Y.%m.%d;%H:%M'</span><span class="si">)</span><span class="s2">;</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s1">'/path/to/scrobbles.csv'</span></code></pre></figure>
+
+<p>Here, we’re constructing the final string and appending it to our main scrobbling file. The desired format features date and time in front, either together in <a href="https://devkoala.com/2020/converting-date-to-iso8601-in-python.html">ISO 8601</a> format, or split by another separator (in our case, a semicolon).</p>
+
+<p>It is convenient to keep it separate from date, as we might want to also extract hourly statistics. Having them separate saves us from additional step of extracting it from another field when we need it.</p>
+
+<p>Our file entries are added chronologically, so it’s good to have time of addition in front. And since date and time are always same width, readability does not suffer.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sleep </span>5</code></pre></figure>
+
+<p>Before closing the <em>if</em> statement and the loop, we instruct the script to sleep for 5 seconds. You can choose any other time interval. Linux’s sleep program is very flexible (unlike Python’s, for example), allowing not only seconds as a unit. The smallest unit (in theory) and the program default is seconds, though.</p>
+
+<p>We can even use floats, so you can set the sleep time to 0.1 seconds to get ten checks every second, providing 50 times greater resolution than our default and producing near-instant additions to the log. It is a trivial task for the processor, so you don’t have to worry about performance.</p>
+
+<p>For me, 5 seconds is precise enough. It’s going to check everything anyway (unless all you listen to is grindcore), and a few seconds of delay are completely irrelevant for the statistical operations I perform on the scrobbled data.</p>
+
+<p>One case where setting a lower time interval is important is when we need statistics of unfinished tracks. Then, we’d have to calculate the time difference between the beginning of playback of one file and the beginning of playback of the following one to see if it’s shorter than the track length and by how much.</p>
+
+<p>If we need that <em>“by how much,”</em> a few seconds will seriously screw up the data, so sleep needs a very low value.</p>
+
+<h2 id="final-script">Final script</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
+<span class="nv">last_title_path</span><span class="o">=</span><span class="s1">'/path/to/scrobble-last.log'</span>
+<span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
+	</span><span class="nv">curr_title</span><span class="o">=</span><span class="si">$(</span>wmctrl <span class="nt">-l</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s2">"(?&lt;=deadbeef: ).+"</span><span class="si">)</span>
+	<span class="nv">prev_title</span><span class="o">=</span><span class="si">$(</span><span class="nb">head</span> <span class="nt">-n1</span> <span class="nv">$last_title_path</span><span class="si">)</span>
+	<span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"</span><span class="nv">$prev_title</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+		</span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$last_title_path</span><span class="s2">"</span>
+		<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">date</span> +<span class="s1">'%Y.%m.%d;%H:%M'</span><span class="si">)</span><span class="s2">;</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s1">'/path/to/scrobbles.csv'</span>
+	<span class="k">fi
+	</span><span class="nb">sleep </span>5
+<span class="k">done</span></code></pre></figure>
+
+<h2 id="making-the-script-run-on-system-startup">Making the script run on system startup</h2>
+
+<p>We want the script to always run whenever the system is up.</p>
+
+<p>The alternatives are to either remember to manually start it before playback (impractical) or have the script monitor the music player for the beginning of playback, turning itself on when playback starts and off when playback stops (pointless).</p>
+
+<p>While technically the second solution is cleaner, it has no practical meaning and introduces a mechanism that could break if we don’t prepare for some rare exotic scenario bound to happen sooner or later.</p>
+
+<p>In any modern operating system, many things are happening in the background every second. The addition of another tool performing such a trivial task is irrelevant.</p>
+
+<p>After we have our script in a file, we need to make it run on system startup. There are many options for that. Below are two popular ones.</p>
+
+<h3 id="put-it-in-crontab">Put it in crontab</h3>
+
+<p>The crontab file contains instructions for running applications. Every Linux user profile has its crontab file. We can specify the precise time when we want to run something, specify days of the week when we need it to run, run it every x minutes, and more.</p>
+
+<p>It is a very flexible tool and needs to be, since Linux is mainly used for servers, and servers often need complex task schedules.</p>
+
+<p>One special use in crontab is to replace all the normal specifications of when it needs to be run with ‘<em>@reboot</em>’, so the command is executed on system startup and only then. In the case of our <em>scrobbler.sh</em> file, the entry looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">@reboot	/path/to/scrobbler.sh</code></pre></figure>
+
+<p>That line needs to be added to the user crontab file, which can be edited by writing this command in console:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">crontab <span class="nt">-e</span></code></pre></figure>
+
+<p>‘<em>e</em>’ is short for ‘<em>edit</em>’. It doesn’t matter which line you put it in.</p>
+
+<h3 id="order-window-manager-to-run-it-on-startup">Order window manager to run it on startup</h3>
+
+<p>Window managers often have configuration files which are loaded on system startup. In those files, we can order starting up of applications, so they run on startup as well. This way, we ensure that every time we load window manager, the script gets loaded as well, which is what we want.</p>
+
+<p>I am using <strong>i3</strong>, in which I need to edit <em>~/.config/i3/config</em> file and add this line to it:</p>
+
+<blockquote>
+  <p>exec /path/to/scrobbler.sh</p>
+</blockquote>
+
+<h2 id="limitations">Limitations</h2>
+
+<p>One feature this script lacks is the ability to detect the same track being played multiple times in a row.</p>
+
+<p>As the script is designed, if we listen to the same track for half a day, it does not see the track change, and therefore it cannot detect repeated plays.</p>
+
+<p>This is one area where scrobbler applications perform better. Remember that we’re comparing them to 11 lines of code. 😉</p>
+
+<p>Since I wanted to write a basic scrobbler, I did not implement checking for track repeats. I’m sure there are many ways to solve this problem, but I can’t find one that’s good enough and short enough to implement into the script while still keeping it simple.</p>
+
+<p>One solution is to convert track length to seconds (so we get a single integer for comparison) and then monitor if the playback of that track spans more than its length. The first time it does, we append the log with another instance of that track.</p>
+
+<p>That solution is not perfect, though. If we pause the track midway for 2 hours and then resume it, the script will add a second line to the log even though we’ve been listening to it once.</p>
+
+<p>Another thing is that services like Last.fm have many algorithms for filling out the missing data. If tags contain misspelled information, they check against some database to find a guaranteed match and correct it. We don’t have to do this; it gets done automatically.</p>
+
+<p>With our solution, everything inside the tags is logged directly, so it is our responsibility to make sure the data is correct. It’s more work, but it gives better results than an automated guessing game.</p>
+
+<p>Let’s give an example of such mistake. Generally, some popular band’s popular track should always be scrobbled as coming from its main popular album, but it’s sometimes logged as coming from an EP also containing it, a single which alsy was released, or one of dozen compilation albums that were released years after the original album containing was.</p>
+
+<p>And so in this case we get wrong album and date can also be way off.</p>
+
+<p>Yet another problem is logging playback from services like Spotify. Popular services of this kind support scrobbling to Last.fm. It will get logged the same as if we were listening through the music player. This script obviously doesn’t have that functionality.</p>
+
+<p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>]]></content><author><name>Chris</name></author><category term="bash" /><category term="linux" /><category term="scrobbling" /><summary type="html"><![CDATA[Writing a local audio scrobbling script in Bash]]></summary></entry><entry><title type="html">Using commands to resize programs in Linux</title><link href="http://localhost:4000/2020/using-commands-to-resize-programs-in-linux.html" rel="alternate" type="text/html" title="Using commands to resize programs in Linux" /><published>2020-01-14T13:45:20+01:00</published><updated>2020-01-14T13:45:20+01:00</updated><id>http://localhost:4000/2020/using-commands-to-resize-programs-in-linux</id><content type="html" xml:base="http://localhost:4000/2020/using-commands-to-resize-programs-in-linux.html"><![CDATA[<h1 id="using-commands-to-resize-programs-in-linux">Using commands to resize programs in Linux</h1>
+
+<p>Neither Linux nor Windows remembers the window size and position for applications.</p>
+
+<p>A minority of programs retain their dimensions and position upon exit. For the rest, it feels as if a mischievous spirit is deciding randomly: “Where should we put it this time?”</p>
+
+<p>It is disappointing that such a basic and important feature is still largely ignored by developers of both operating systems. As a result, we must rely on separate tools to address this issue while less significant concerns are prioritized.</p>
+
+<p>In this article, we will explore options to modify window sizes and positions using commands and scripts.</p>
+
+<h2 id="geometry">Geometry</h2>
+
+<p>Occasionally, Linux applications support setting geometry, which more than solves this problem, but only for those specific apps.</p>
+
+<p>Geometry is a special string containing four numbers:</p>
+<ul>
+  <li>Window width</li>
+  <li>Window height</li>
+  <li>Starting position in pixels from left screen border</li>
+  <li>Starting position in pixels from top screen border</li>
+</ul>
+
+<p>We can append this special geometry string to some programs when we start them from command line. This functionality must be implemented by the developer within the app.</p>
+
+<p>There are also programs that can set any graphical window’s parameters through special commands. The following article explains both methods in detail.</p>
+
+<p>The first two parameters determine window’s size vertically and horizontally, while the other two specify where the top-left corner of the application is on our monitor. Here’s an example:</p>
+
+<blockquote>
+  <p>1200x600+20+0</p>
+</blockquote>
+
+<p>Assuming we have a 1080p monitor, its exact resolution is 1920x1080. Here, the program window is being set to 1200 pixels wide and 600 pixels high. It will occupy a considerable amount of space on our monitor.</p>
+
+<p>The third number indicates that we want our program to be 20 pixels from the left border of our monitor. The last number means it will start at pixel 0 from the top. In other words, there will be no space between our program’s top border and the monitor’s top border.</p>
+
+<p>Notice the two pluses at the end. We can either put ‘+’ or ‘-‘ in front of each of the last two numbers. Plus means ‘pixels from the left edge of the screen’, while minus means ‘pixels from the right edge of the screen’.</p>
+
+<p>Sometimes it is more convenient to align our windows from the right side, so it is great that we have this flexibility.</p>
+
+<p>Of course, pixels then align towards the left side, just like when we get an order to move our piece of furniture 20 cm from the right wall; we move it to the left instead of trying to demolish the wall and put it inside.</p>
+
+<p>Without the option to align from the right side with minuses, if we wanted to set it 20 pixels from the right, we’d have to calculate each time: current monitor resolution - (window width + 20px). It would be very cumbersome to do this.</p>
+
+<p>Not all window managers on Linux support geometry, so make sure that the one in your distribution does before starting to tinker with it. Fortunately, all the popular ones (and many less popular ones) do, so it is likely that yours does too.</p>
+
+<p>Another thing to consider is that some window managers have different window ‘states’. For example, in i3, windows can be either floating or tiling. Geometry only works for floating windows. However, if you’re using a tiling window manager, you are likely doing so intentionally and already know about this distinction.</p>
+
+<p>As mentioned at the beginning of this article, some programs support setting geometry at startup. In those cases, the magic formula almost always looks like this shell command:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mpv <span class="nt">--geometry</span><span class="o">=</span>1280x1024+1920+0 </code></pre></figure>
+
+<p>It is super useful for multi-monitor setups. Sometimes, we want to start the player on monitor one. Tutorials, we might want to watch on monitor 2, a TV show on our TV, which is set up as monitor 3.</p>
+
+<p>We can have different commands to start the same player in these different contexts, which is more powerful than system-wide memory of last known window state (which nevertheless needs to be implemented).</p>
+
+<h2 id="getting-window-geometry">Getting window geometry</h2>
+
+<p>Finding out exact position and dimensions of our window does not require print-screening entire desktop and then probing it in an image editor.</p>
+
+<p>It’s very simple. We just resize the window to our liking, position it where we want on our screen and run a command to find out its dimensions.</p>
+
+<p>For that, a program called <strong>xwininfo</strong> is needed. It has many more uses than just geometry, but since right now it is all we need, we enter this command into our console:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xwininfo | <span class="nb">grep </span>geometry</code></pre></figure>
+
+<p>This is super useful for multi-monitor setups. Sometimes, we want to start the player on monitor one. For tutorials, we might want to watch on monitor two, and a TV show on our TV, which is set up as monitor three.</p>
+
+<p>We can have different commands to start the same player in these different contexts, which is much more powerful than system-wide memory of the last known window state (which still needs to be implemented).</p>
+
+<h2 id="introduction-to-wmctrl">Introduction to wmctrl</h2>
+
+<p>Many people who work on their computers have a small set of programs they run each time they start working. For entertainment, they often use a different set of programs.</p>
+
+<p>Some applications need to have different window properties during work than during leisure. For example, a terminal emulator window could be smaller during leisure time to give more screen space to the internet browser, but larger during work hours when Vim or Kakoune needs to be run inside it.</p>
+
+<p>With Linux, the sky is the limit, and we can create extremely convenient shortcuts to instantly get the desktop setup we want.</p>
+
+<p>The tool that makes this possible is wmctrl. It is a simple, lightning-fast application that looks for specified windows on our desktop and gives them various behavior commands, like maximizing, changing geometry, closing, and even changing the title.</p>
+
+<p>First, we need to install it using our Linux distro’s package manager of choice. In the case of Ubuntu/Mint, the command is:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>apt <span class="nb">install </span>wmctrl</code></pre></figure>
+
+<p>Let’s start by changing the geometry of a single window. We’ll need to provide wmctrl with some identification so it knows which window we want to modify. The previously used xwininfo command can also be used here.</p>
+
+<p>Type this in your console window:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xwininfo | <span class="nb">grep</span> <span class="s2">"Window id"</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s1">'(?&lt;=").+(?=")'</span></code></pre></figure>
+
+<p>…and then click on the window you want. You should get the window title in your console.</p>
+
+<p>The command may look complicated if you don’t understand regex and piping, but in reality, it’s simple. It filters the output of xwininfo to get the line where the title resides and then extracts it from inside the brackets so that the full title is the only thing displayed.</p>
+
+<p>It is easier and faster to go these extra two piping steps to get just what we want. Additionally, we can point a bash variable to it or save it to a file for future use.</p>
+
+<p>The full command may not work in some edge cases (like a browser with a focused tab containing brackets in the page title). If it doesn’t work for you, just write xwininfo in your console, and the title will be inside brackets next to the Window id number.</p>
+
+<p>Write down that title. Now, let’s look at wmctrl syntax for changing window geometry:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wmctrl <span class="nt">-r</span> TITLE <span class="nt">-e</span> GEOMETRY</code></pre></figure>
+
+<p>One last obstacle: wmctrl does not accept geometry in its standard format. You have to take those four numbers and rearrange them to fit wmctrl’s standard, which is:</p>
+
+<blockquote>
+  <p>GRAVITY,PX_FROM_LEFT,PX_FROM_TOP,WIDTH,HEIGHT</p>
+</blockquote>
+
+<p>As you can see, wmctrl takes another item right at the beginning.</p>
+
+<p>That first number is gravity, which specifies the alignment or source of reference for the moved window. You most likely don’t need to understand what it is and can always set it to 0. Just remember to include it. You can safely skip the next section describing how it works.</p>
+
+<h2 id="gravity-details">Gravity details</h2>
+
+<p>We don’t use pluses and minuses to specify if the window should move “to the right from the left side of the screen” or “to the left from the right side of the screen.”</p>
+
+<p>Instead, we use a compass-like reference point. The screen has four cardinal directions (north, south, east, west) and four intercardinal directions (northeast, northwest, etc.).</p>
+
+<p>A value of 0 refers to the system default, typically north-west, meaning alignment from the top-left corner of the screen. A gravity value of 3 (north-east) aligns the window from the top-right corner, similar to using negative numbers when setting geometry.</p>
+
+<p>Below are the codes for all 8 gravity directions. Note that many window managers do not support this feature and will default to the system setting regardless of the value provided.</p>
+
+<blockquote>
+  <p>NorthWest (1), North (2), NorthEast (3), West (4), Center (5), East (6), SouthWest (7), South (8), SouthEast (9) and Static (10)</p>
+</blockquote>
+
+<h2 id="wmctrl-traps">Wmctrl traps</h2>
+
+<p>Read this part if your wmctrl command does nothing, or if you intend to use it often and want to know some caveats in advance.</p>
+
+<p>Let’s look at an example of a wmctrl command:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wmctrl <span class="nt">-r</span> <span class="s2">"Sublime Text"</span> <span class="nt">-e</span> 0,30,20,800,1080</code></pre></figure>
+
+<p>The program first generates a list of currently existing windows, finds the first title that contains a string specified within brackets, and then sets it to gravity 0, position from the left 30px, position from the top 20px, window width 800px, and window height 1080px.</p>
+
+<p>Because only the first found item gets adjusted, if we have a few windows which are really one program, only one of them will be done, and each next command given will still reposition just that one window.</p>
+
+<p>Another potential issue is that windows can have surprising titles sometimes. Browsers troll the most if we seek inside the window title.</p>
+
+<p>A website we are visiting might have a “Sublime Text registered version cost” title, which could result in your Firefox having a “Sublime Text registered version cost - Mozilla Firefox” title whenever that particular tab is focused.</p>
+
+<p>If those 3 conditions were met:</p>
+<ul>
+  <li>The title we order wmctrl to search for is ‘Sublime Text’</li>
+  <li>The browser is higher in wmctrl’s item search order than Sublime Text (and so would be checked first)</li>
+  <li>The title of the currently focused Firefox tab includes a string ‘Sublime Text’</li>
+</ul>
+
+<p>…then wmctrl would adjust Firefox’s parameters instead of Sublime Text’s.</p>
+
+<p>There are multiple ways to solve that problem:</p>
+<ol>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Use wmctrl with ‘-x’ to search WM_CLASS instead of the title, and that you can find with the ‘xprop</td>
+          <td>grep WM_CLASS’ command (followed by clicking a desired application window, just like with xwininfo).</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Use it with the ‘-F’ option to match the exact string to the letter, instead of looking for the string inside the app title (‘Sublime Text’ only matches if the application title is ‘Sublime Text’, it will fail if it is ‘How much does Sublime Text cost - Mozilla Firefox’).</li>
+  <li>Change conflicting application titles right before searching (for example: ‘wmctrl -r “ - Mozilla Firefox” -N Firefox’ and Sublime Text resizing wmctrl command right after).</li>
+</ol>
+
+<p>If you are playing title guessing games in your scripts, it is generally a good idea to set application titles to some unique strings that are not likely to get falsely matched (for example: ‘:.:BROWSER:.:’, ‘:.:EDITOR:.:’, ‘:.:MP3PLAYER:.:’…) in all applications that give an option to change their titles. Many do, many don’t ;)</p>
+
+<p>If you can’t, it is good practice to order your resizing commands starting from applications most likely to cause conflicts (i.e., those whose names dynamically change based on file opened, website visited, etc.), through less likely to do so, with the ones which never will (due to constant unique name) at the bottom. For the last ones, the order doesn’t matter.</p>
+
+<p>For each that can cause problems, follow the line in which you resize with the line that changes that same program’s name (the mentioned ‘-N’, you can see it below in an example file). This will ensure that the application won’t cause any conflicts.</p>
+
+<p>Don’t worry if you have to do a lot of title renaming - both repositioning and renaming are trivial operations from your processor’s point of view. You will never see any performance hit, no matter how old your computer is and how many windows you shuffle around.</p>
+
+<p>Again, many apps offer an option to set a permanent app title and your fixing attempts should start there. Some even allow having different titles when starting them with different profiles. A fantastic terminal emulator called Tilix is a good example.</p>
+
+<h2 id="creating-a-script-file-to-resize-multiple-windows">Creating a script file to resize multiple windows</h2>
+
+<p>Each wmctrl command only changes one window, so we need to invoke as many commands as windows we need changed.</p>
+
+<p>To contain all these instructions, we will use a bash script. Traditionally, in its first line we need to point to the interpreter. Most often, the line you need is:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span></code></pre></figure>
+
+<p>Then, in each line a separate wmctrl command. No need for a colon, semicolon, or any other sign by line end. Just one command in each line.</p>
+
+<p>The quickest way to write such a script is to set up exactly the desktop layout we want. Align everything so it looks perfect. Then, use the mentioned xwininfo commands to get each window’s geometry and title. Write everything down.</p>
+
+<p>Next, write wmctrl commands. Remember to convert geometry strings (WIDTHxHEIGHT+FROMLEFT+FROMTOP) to the format that wmctrl accepts (0,FROMLEFT,FROMTOP,WIDTH,HEIGHT) in each command.</p>
+
+<p>A complete example winresize.sh file looks like this:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
+wmctrl <span class="nt">-r</span> Firefox <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> Firefox <span class="nt">-N</span> Firefox
+wmctrl <span class="nt">-r</span> <span class="s1">'Sublime Text'</span> <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> qBittorrent <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> <span class="s1">'Google Chrome'</span> <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> <span class="s1">'Tor Browser'</span> <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> Kid3 <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> Pinta <span class="nt">-e</span> 0,394,17,1510,1044
+wmctrl <span class="nt">-r</span> LibreOffice <span class="nt">-e</span> 0,394,17,1510,1044
+wmctrl <span class="nt">-r</span> QuiteRSS <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> easystroke <span class="nt">-e</span> 0,942,18,961,1042
+wmctrl <span class="nt">-r</span> Telegram <span class="nt">-e</span> 0,16,95,359,605
+wmctrl <span class="nt">-r</span> deadbeef <span class="nt">-e</span> 0,16,720,359,340</code></pre></figure>
+
+<p>Don’t forget to order them from most conflicting to least conflicting and follow each problematic application with another wmctrl command that renames it. Above, you see me doing it with Firefox.</p>
+
+<h2 id="making-convenient-shortcuts-for-resizing">Making convenient shortcuts for resizing</h2>
+
+<p>The final step is to set up a way to execute our new script at will. Below are the main 3 categories of options we have.</p>
+
+<ol>
+  <li>Create a bash alias for execution of that file (in file <em>~/.bash_aliases</em> add line: <em>resizer=’/path/to/script.sh’</em>), source that file (or restart the system if you don’t know how) and then execute it from console by writing <em>‘resizer’</em></li>
+  <li>Set up a system-wide keyboard shortcut for that script (different for every window manager, in i3 it’s as simple as adding this line: <em>‘bindsym F9 exec /path/to/script.sh’</em>)</li>
+  <li>Create a mouse gesture to execute a script (easily achieved with easystroke, choosing ‘command’ option and then in command just pasting /full/path/to/our/script.sh</li>
+</ol>
+
+<p>And voila! We now can reshape all our desktop with something as simple as a single command, pressing of a key, or a mouse gesture. We can create as many of those files and shortcuts as we want.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="linux" /><summary type="html"><![CDATA[Using commands to resize programs in Linux]]></summary></entry></feed>

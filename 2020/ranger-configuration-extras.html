@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Ranger configuration extras | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="http://localhost:4000">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="http://localhost:4000/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="ranger-configuration-extras">Ranger configuration extras</h1>
+
+<p>Ranger is probably the single most powerful file manager application on any operating system.</p>
+
+<p>It can be customized to the point of practically being a system-wide remote, one tool that can do anything. In this regard, it’s a very neat extension of the command line in Linux.</p>
+
+<p>Because of that, almost every Ranger config file I’ve stumbled upon contains at least an interesting line or two. I’ve used the application for a few years already, but feel like there’s a lot that still needs attention. For example, a convenient way of dealing with archives of all sorts, or different file information views, depending on a particular need.</p>
+
+<p>Below are some of my favorite additions to the <em>rc.conf</em> file. You can usually find it in <em>~/.config/ranger/</em> folder. If it’s not there, run this command in the command line: <em>ranger –copy-config=all</em>, which should create it.</p>
+
+<p>Just paste the quoted lines wherever you see fit inside that file, but keep in mind that some of those commands invoke programs you will have to install.</p>
+
+<h2 id="keyboard-layout-change">Keyboard layout change</h2>
+
+<p>Using alternative keyboard layouts can be very painful for that person’s friends and family. If they sometimes need to operate on this person’s machine, after each session they might hate that person a little bit more.</p>
+
+<p>Dvorak and Colemak are the unsung heroes of filesystem encryption, making all attempts to search YouTube or find something on Google fruitless, unless someone’s brain knows the layout. Even with keycaps being changed accordingly.</p>
+
+<p>In order to help those poor people, we can set up an easy keyboard layout change to and from the basic QWERTY US layout to any we want. For that, we need to install <em>setxkbmap</em> with our package manager. For Ubuntu users, the command to paste in the command line is:</p>
+
+<blockquote>
+  <p>sudo apt-get install setxkbmap</p>
+</blockquote>
+
+<p>Then, insert these two lines to <em>rc.conf</em>:</p>
+
+<blockquote>
+  <p>map Ku shell setxkbmap -variant ,us<br />
+map Kc shell setxkbmap -variant colemak</p>
+</blockquote>
+
+<p><em>‘Ku’</em> and <em>“Kc’</em> are my key combinations. You can set them to whatever you have unmapped. Then you need to restart Ranger, and whenever you want to change the layout, you just use those key combinations.</p>
+
+<h2 id="mp3-file-tag-preview">MP3 file tag preview</h2>
+
+<p>Sometimes, it is convenient to check the content of an MP3 tag. For example, a track we have on the hard drive might just have the artist and title in its filename, but we want to quickly check from which album it is or which year it was released.</p>
+
+<p>Opening a browser for a Rate Your Music/Discogs/etc. check might take longer than getting to our music directory, quickly locating that file and pressing a key to see its tag contents.</p>
+
+<p>For that, we’re going to need a CLI tag viewer. I highly recommend <a href="https://github.com/nicfit/eyeD3">eyeD3</a>, available both as a CLI app and an importable Python library. So, first in the command line:</p>
+
+<blockquote>
+  <p>sudo apt install eyed3</p>
+</blockquote>
+
+<p>And in Ranger config file:</p>
+
+<blockquote>
+  <p>map T shell clear; eyeD3 %s; read -p “———-press ENTER to continue———–”</p>
+</blockquote>
+
+<p>We are making a 3-step operation here:</p>
+<ol>
+  <li>Clear the terminal window, so that tag information can be the only thing displayed, so we don’t have to strain our eyes looking for it.</li>
+  <li>Pass the selected file(s) to eyeD3 for tag preview.</li>
+  <li>Use <em>read</em> to display some information.</li>
+</ol>
+
+<p>We need step 3, <em>read</em> with <em>-p</em> option (prompt). It waits for user input, enabling us to view the tag before coming back to Ranger.</p>
+
+<p>Otherwise, we’d have to quit Ranger, display the tag, and start it again manually. Without the <em>-p</em> option, Ranger would display tag information and then instantly come back, requiring photographic memory coupled with Spiderman instincts to pick up the information we want. It would only be visible for a fraction of a second.</p>
+
+<p>Notice that you can select multiple desired files, just like you normally mark them for operations in Ranger, and for each of them, tag information will be displayed in vertical order. Very handy.</p>
+
+<h2 id="mp3-player-playback-control">MP3 player playback control</h2>
+
+<p>In my opinion, it is much better to have system-wide playback control shortcuts than narrowing it down to a specific application. This way, we can change tracks while the monitor is off and never have to worry about what’s focused, even if we spend the majority of time in our file manager.</p>
+
+<p>If you don’t have any free system-wide available key combinations for that purpose, you can let Ranger do the ordering. As long as your music player accepts playback commands from a terminal session (if it doesn’t, you need to change your music player).</p>
+
+<p>Ordering the player to start playback of hovered/selected file(s) is as simple as setting up your default music application in Ranger’s <em>rifle.conf</em> file. But maybe we want to enqueue instead of play?</p>
+
+<p>In this case, we have to check what playback control commands a particular player accepts. Most applications will give such information when starting up from a terminal window with <em>-h</em> (short for <em>‘help’</em>) added at the end.</p>
+
+<p>In DeadBeef, enqueuing is done with the <em>–queue</em> parameter. The entire command looks like this:</p>
+
+<blockquote>
+  <p>map de chain shell deadbeef –queue %s; mark_files all=True val=False</p>
+</blockquote>
+
+<p>You need to replace it with your player of choice and its equivalent command (which might very well be exactly the same).</p>
+
+<p>The second part is also important. Ranger has a nasty habit of leaving selections after operations and no way to change that behavior, as far as I know. There is an option to drop all selections when leaving a folder, but it doesn’t work in my version.</p>
+
+<p>It is not a problem though because we can slap the above <em>mark_files</em> command whenever we want to unselect after an operation and skip it whenever we don’t, giving us full control.</p>
+
+<h2 id="starting-twitch-streams">Starting Twitch streams</h2>
+
+<p><em>youtube-dl</em> is a great tool to download YouTube videos, but it can also be used in concert with <a href="https://mpv.io/">MPV</a> to play its videos or playback Twitch streams.</p>
+
+<p>For that, we of course first need to have both MPV and youtube-dl installed. Then, it’s as simple as adding one line for each stream to <em>rc.conf</em>:</p>
+
+<blockquote>
+  <p>map qan shell killall mpv; mpv https://www.twitch.tv/boxerpete &lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<p>The first part is optional and it kills all MPV instances. Since I want to play a stream now, first I want to end playback if something is already on, as I’m not going to watch two things at once.</p>
+
+<p>Then I’m starting MPV with the Twitch streamer URL address. The player automatically invokes youtube-dl and begins stream playback.</p>
+
+<p>In order not to freeze Ranger until stream playback is finished, which could be in 23 hours and 59 minutes in the case of a 24-hour stream, we need to order it to start as a separate process, hence the line ending.</p>
+
+<p>Or are you like me and sometimes watch beautiful places on webcams while working, to cheat yourself that you’re not sitting inside a dark cave until the work is done?</p>
+
+<blockquote>
+  <p>map qge shell mpv https://www.youtube.com/watch?v=yMSc-qqW3To –no-audio –no-resume-playback &lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<h2 id="open-with">Open with…</h2>
+
+<p>Default applications often don’t meet all our requirements for file handling. We might be using one application for the default action but also need another option for marginal cases.</p>
+
+<p>Take images, for example. For casual users, the default action could be to open them in an image viewer. Sometimes, we might need to edit them, carve something out, and send it to someone? It’s good to prepare for such cases:</p>
+
+<blockquote>
+  <p>map wp shell pinta %s&lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<p><a href="https://www.pinta-project.com/">Pinta</a> is a simple image editor for Linux. It is an equivalent of the old <em>Paint Shop Pro</em> on Windows, back before Corel bought them.</p>
+
+<p>For simple modifications like slicing particular areas out of an image, there is no point in starting any graphical powerhouse, as we’d waste a lot of time looking at the loading screen while the program computes stuff we will not need.</p>
+
+<p>Maybe I need to open a file in an editor I’m not using daily:</p>
+
+<blockquote>
+  <p>map us shell subl %s</p>
+</blockquote>
+
+<p>Sublime Text spawns a separate process by default, so it doesn’t require a command ending to make it so.</p>
+
+<p>Another use is to start a program with a specified geometry. I want to start the MPV player, but want it on my second 4:3 monitor:</p>
+
+<blockquote>
+  <p>map uv shell mpv –geometry=1280x1024+1920+0 %s&lt;/dev/null &amp;&gt;/dev/null &amp;</p>
+</blockquote>
+
+<p>We could add <em>–fs</em> before sending output to <em>/dev/null</em> to also start the program in full screen, but my experience is that it’s bugged and sometimes fullscreens on the first monitor, sometimes on the second.</p>
+
+<p>Omitting it and specifying geometry is successful 100% of the time and there is no practical difference. It can be annoying if someone often click-drags the player window by accident (fullscreen prevents moving the window around). But in this case, it’s just better to disable it, with the exception of someone using a mouse and click-dragging the MPV window by accident. If that is your problem, just add this line to your <em>mpv.conf</em>:</p>
+
+<blockquote>
+  <p>no-window-dragging</p>
+</blockquote>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    
+  </body>
+
+</html>
