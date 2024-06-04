@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-04T10:40:07+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">JPG compression guide for Linux</title><link href="https://www.devkoala.com/2020/jpg-compression-guide-for-linux.html" rel="alternate" type="text/html" title="JPG compression guide for Linux" /><published>2020-09-16T08:01:21+02:00</published><updated>2020-09-16T08:01:21+02:00</updated><id>https://www.devkoala.com/2020/jpg-compression-guide-for-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/jpg-compression-guide-for-linux.html"><![CDATA[<h1 id="jpg-compression-guide-for-linux">JPG compression guide for Linux</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-04T10:44:57+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">JPG compression guide for Linux</title><link href="https://www.devkoala.com/2020/jpg-compression-guide-for-linux.html" rel="alternate" type="text/html" title="JPG compression guide for Linux" /><published>2020-09-16T08:01:21+02:00</published><updated>2020-09-16T08:01:21+02:00</updated><id>https://www.devkoala.com/2020/jpg-compression-guide-for-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/jpg-compression-guide-for-linux.html"><![CDATA[<h1 id="jpg-compression-guide-for-linux">JPG compression guide for Linux</h1>
 
 <h2 id="basics">Basics</h2>
 
@@ -336,7 +336,7 @@ version reviewed: 2.7.0<br />
 installed on: Linux Mint 19
 </div>
 
-<p><img src="https://www.devkoala.com//assets/img/articles/cmus-music-player-review/cmus1.png" alt="CMUS library view" /></p>
+<p><img src="https://www.devkoala.com/assets/img/articles/cmus-music-player-review/cmus1.png" alt="CMUS library view" /></p>
 
 <p>CMUS is probably the most popular terminal-based music player for Unix operating systems. The competition is almost non-existent, and even from that small pool, some applications do not look to meet the same needs CMUS addresses (some basically play a single specified track and that’s it).</p>
 
@@ -363,7 +363,7 @@ installed on: Linux Mint 19
 
 <p>The version 2.7.0, which I installed from official repository, is missing an ability to set the default view on program startup. As a playlist user, I have to manually focus the player and press ‘3’ on each system startup to switch from an empty library window to playlist view.</p>
 
-<p><img src="https://www.devkoala.com//assets/img/articles/cmus-music-player-review/cmus2.png" alt="CMUS playlist view" /></p>
+<p><img src="https://www.devkoala.com/assets/img/articles/cmus-music-player-review/cmus2.png" alt="CMUS playlist view" /></p>
 
 <p>An auto-detect feature would be nice as well - if playlist is populated, but library is empty, start with playlist view. If both are empty, but queue contains tracks, focus queue view on startup.</p>
 
@@ -450,7 +450,7 @@ installed on: Linux Mint 19
 
 <p>Currently played track remains being one no matter what. If I pause playback and then clear whatever list I’m using for playback, it is somewhat logical that the paused track remains present and ready to continue playback, despite removing it from a list in which it was played. After all, we just paused it, the pointer sits somewhere between its start and end.</p>
 
-<p><img src="https://www.devkoala.com//assets/img/articles/cmus-music-player-review/cmus3.png" alt="CMUS options view" /></p>
+<p><img src="https://www.devkoala.com/assets/img/articles/cmus-music-player-review/cmus3.png" alt="CMUS options view" /></p>
 
 <p>But when the track is stopped and then the playlist is cleared, I am giving two commands to get rid of it, and yet when I add some new music and order a ‘–play’ command, it doesn’t start playing the first track from the freshly added ones. Instead, it starts the last played one from the beginning!</p>
 
