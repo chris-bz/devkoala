@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Guide to responsive design tools in CSS | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="https://www.devkoala.com/">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="https://www.devkoala.com/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
+
+<p>Before smartphones became popular, almost entire web browsing traffic was on PCs.</p>
+
+<p>Despite only one device needing to be taken in consideration when designing a website, web designers still didn’t have an easy task on their hands. Some people had a 800x600 screen resolution, others 1024x768, others 1280x1024. Different viewports needed to be addressed and, as opposed to today, there weren’t exactly that many tools at our disposals to properly do so.</p>
+
+<p>One of the early heavily abused properties for the task was min/max-height/width, both present in CSS 1.0 specification. It allowed to create different limitations to items. This helped in adjusting page elements to different screens.</p>
+
+<p>While helping to <em>“constrain”</em> items, it was obviously limited. Ok, the element can be <em>this</em> big, but then what?</p>
+
+<h2 id="css-21-additions">CSS 2.1 additions</h2>
+
+<p>2010 was probably the year when smartphones entered internet browsing market big time. In that year, <em>3.8%</em> traffic was mobile. Those devices that now everyone <a href="https://blabbermouth.net/news/max-cavalera-why-i-dont-have-a-cell-phone">except Max Cavalera</a> has in a pocket were beginning to serve more and more extra roles outside of plain talking. And the most important of its all new emerging roles was browsing the web.</p>
+
+<p>In the year 2011, <em>8.5%</em> web traffic was mobile. More than double the amount in one year! One year later it went up to <em>13.2%</em>, a <em>55%</em> increase. A team behind CSS knew well where the market is going and that it’s their responsibility to addressed the needs related to this market expansion.</p>
+
+<p>One of the most notable additions in CSS 2.1 was the support for <strong>media queries</strong>. Media queries allowed developers to apply different styles based on the characteristics of the device or viewport, such as screen resolution, orientation, and aspect ratio. This feature enabled the creation of responsive layouts that could adapt to different screen sizes and orientations.</p>
+
+<p>While being a game changer, using media queries still produced many problems.</p>
+
+<p>First one that comes to mind is that in order to accomodate all more and less popular screen sizes, plenty of rules has to be written. It can take quite some time to set everything up. And when making some major redisigning, often all of that has to be changed! So the code is annoying to both navigate and change.</p>
+
+<p>Second problem is that designing based on media queries often leaves annoying blindspots. When resizing browser on a high resolution desktop, entire design <em>“snaps”</em> once crossing a defined threshold (for examle <em>min-width</em> of <em>1024px</em>).</p>
+
+<p>One motivation for such setup could be that at 1024px the font size/image size/side panel size etc. becomes so unbearable to watch that it has to be changed to a new now-good-looking arrangement. But what if someone has high desktop resolution and browser occupying only part of the screen?</p>
+
+<p>That person’s browser can then have the width right below the min-width property, right where the design is the ugliest, right before the change for the better. And so it could be a visitor left in a state of disgust and leaving the site ASAP before even beginning to read the content.</p>
+
+<p>We can mitigate that by creating more rules, more trigger points. This makes the blindspots less ugly, but also requires more time for code creation and maintenance.</p>
+
+<p>After CSS 2.0, the number of different types of developments that needed to be done became so big that <strong>World Wide Web Consortium</strong> started splitting more and more of the work. By the time of CSS 2.1 birth in 2001, a small portion of modules was already going their own separate ways, despite the standard still having a formal version.</p>
+
+<h2 id="css-30-additions">CSS 3.0 additions</h2>
+
+<p>In 2005, the CSS3 module publishing process began, with individual modules like Selectors, Color, Values and Units, etc. being developed and released independently.</p>
+
+<p>Version 3.0 brought some game-changing additions to responsive design. The two biggest ones were <strong>Flexbox</strong> and <strong>Grid</strong>.</p>
+
+<p>Flexbox enabled super-easy creation of 1D page elements while CSS Grid 2D structures. Both made many tasks trivial and targetted one of the biggest problems of html development: endless mazes of <em>&lt;div&gt;</em> tags in code.</p>
+
+<p>With Flexbox, splitting a horizontal space among few different objects was as simple as appending to each object’s CSS properties <em>‘flex:’</em> followed by a number. And those proportions were of course scaling infinitely in both ways.</p>
+
+<p>Grid, on the other hand, became the go-to tool for creating a more complex designs of big news outlets, magazinet and the likes, where multiple different cubes can be stacked next to each other in different proportions with very little code to manage it.</p>
+
+<p>The Units section of W3C also introduced units frequently used in responsive design - <em>vw</em> (short of <em>viewport width</em>), <em>vh</em> (<em>viewport height</em>), and <em>rem</em> (<em>root em</em>).</p>
+
+<p>Of the three, viewport width is the most important one in the context of this article. Having viewport width as direct reference point for size of any element on page is really a game changer.</p>
+
+<p>CSS 3.0 introduced a plenthora of various functions, some of which very potent in responsive design. One notable example is <strong>calc()</strong> function. On paper, it’s just a calculator, so what could it possibly offer when creating websites that need so scale perfectly?</p>
+
+<p>Adding fixed value to a relative one can make sure we can get infinitely scaling <em>vw</em> element if need be while also setting up a base provided by fixed value. Relative unit doesn’t amount to much in tiny viewport, but fixed value covers for that shortcoming. And so we have a solid size for small displays while the relative one keeps us safe no matter how large viewport gets.</p>
+
+<p>Sometimes the “growth curve” is not to our liking (the object gets big too fast or too slow as the screen gets wider etc.). Adjusting this curve with extra parameters using calc() function can help there. It can be time consuming to find two or three values which scale perfectly across the whole spectrum, but at the end it allows perfect scaling across the whole viewport spectrum, impossible to achieve with single unit, whichever we may choose for the task.</p>
+
+<p><em>CSS Values and Units Module Level 4</em> standard introduced multiple wonderful tools, like the <strong>min()</strong> and <strong>max()</strong> functions, which seek to replace or compliment media queries.</p>
+
+<p><em>min()</em> allows to choose the smallest number from the list of different numbers. When giving the function vw, percentage values etc. often we don’t consider the fact that someone out there might be watching the webpage in resolution multiple times bigger than we think our max users are having.</p>
+
+<p>The website (or some of its elements like text) need to stop growing at some point in order not to start looking grotesque. min() enables us to set things up using relative units, with a sanity value (like <em>3000px</em>) to make sure that the element never stretches more than that.</p>
+
+<p>As the function looks for the smallest parameter, when our responsive design element reaches 3001px, it becomes bigger than 3000px and so no longer selected as parameter.</p>
+
+<p><em>max()</em> does exactly the same thing in opposite direction, as the name implies, and often serves to capture the limit of the shrinking instead of stretching.</p>
+
+<p>The <em>clamp()</em> function takes a more sophisticated approach to controlling values. Instead of managing extremes on just one side of the spectrum, it covers both sides.</p>
+
+<p>It takes three parameters: a minimum value, the value itself, and a maximum value. The middle value is relative, and the minimum and maximum values provide limits that the function enforces. If the value falls below the minimum, it is clamped to the minimum value. If it falls above the maximum, it is clamped to the maximum value.</p>
+
+<p>Another useful addition to CSS is the <picture> tag. It acts as a container for multiple images. Instead of resizing one large image across all viewports and penalizing users with smaller screens by making them download a larger-than-necessary image, different versions of the image can be selected based on conditions similar to media queries.</picture></p>
+
+<p>This allows the appropriate image to be loaded depending on the screen size.</p>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    <script async data-id="101455210" src="//static.getclicky.com/js"></script>
+  </body>
+
+</html>
