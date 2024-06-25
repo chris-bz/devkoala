@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Writing a local Windows audio scrobbler | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="https://www.devkoala.com/">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="https://www.devkoala.com/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
+
+<p>The practice of listening to MP3 files and maintaining an MP3 collection is certainly a thing of the past now. In fact, if we asked a few tech-savvy teenagers what an MP3 file is, some wouldn’t even know.</p>
+
+<p>Services such as Spotify and Tidal have replaced manually searching for, downloading, and cataloguing music, much like Netflix and Disney+ have obliterated the pay-per-view and rental VOD market.</p>
+
+<p>As with every technology out there, there are a few dinosaurs who refuse to give up old habits for various reasons, the author of this blog being one of them.</p>
+
+<p>Having a private collection of files offers the same benefits as general local storage offers over cloud solutions: instant direct access, ability to edit and cut out content with ease, no need for an internet connection, and more.</p>
+
+<p>Local scrobbling perfectly compliments local playback. Last.fm, Libre.fm, and the like are nice while they last, but they are not profitable and therefore can be discontinued any day.</p>
+
+<p>By writing a local scrobbling application, we have full control over which tag fields are logged and how the file looks. It can then be backed up with ease.</p>
+
+<p>In this article, we’re going to write a scrobbling application using Python for the Windows operating system. It will run continuously while we are logged in. It will listen to changes in Foobar playback and log those changes to a file according to our specified logic.</p>
+
+<p>A few years ago, I wrote another article that does the same thing for graphical Linux, using the DeaDBeeF player and written in Bash. If you need a Linux version, <a href="https://devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html">here</a> is a link to the article.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ol>
+  <li><strong>Python</strong>. Python. This ever-popular programming language is a first choice when it comes to many tasks. Due to its simplicity and readability, it is certainly a joy to write in compared to most other languages.</li>
+</ol>
+
+<p>Download the latest Python version from the official Python website <a href="https://www.python.org/downloads/">here</a>.</p>
+
+<ol>
+  <li><strong>foobar 2000</strong>. One of the easiest ways to make a local audio scrobbling script is to monitor an audio player’s title string, extract data from it, manipulate it, and store it in a file. There aren’t that many MP3 players for Windows, let alone ones that allow us to manipulate their title. Of the very few, foobar2000 is the best, so it is our choice.</li>
+</ol>
+
+<p><a href="https://www.foobar2000.org/download">Here</a> is a link to the download section of the official foobar2000 website.</p>
+
+<h2 id="configuring-foobar-2000">Configuring Foobar 2000</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/writing-a-local-windows-audio-scrobbler/foobar2000-options.png" alt="Foobar setting location" /></p>
+
+<p>The version I am using as of the time of writing this article is 2.1.4.</p>
+
+<p>Go to <em>Preferences</em> by either pressing <em>Ctrl+p</em> or through <em>File -&gt; Preferences</em>. In the left menu tree select <em>Display</em>, then select <em>Default User Interface</em> under it.</p>
+
+<p>In the <em>Playback state display formatting</em> section, you need to edit the <em>Window title</em> field. Replace whatever you find there with:</p>
+<blockquote>
+  <p><em>%artist% -.- %album% -.- %title% -.- %date% -.- %length% -.- %playback_time%</em></p>
+</blockquote>
+
+<p>As you can see, foobar2000 has many different tags encapsulated between percentage signs. Putting ‘ -.- ‘ is our choice. A distinct combination of strings has to be used so that the script can later extract data between them. Using the selected solution generally guarantees this. There is a very low chance that this particular string is going to appear in artist, album, or title tags.</p>
+
+<p>On the other hand, it doesn’t look horrible (although it’s certainly not pretty), which is also important because if our Windows taskbar is configured to show icons and program titles instead of just icons, we are going to be looking at it every time the artist tag field of the currently played song in foobar2000 is short enough.</p>
+
+<h2 id="breaking-apart-the-script">Breaking apart the script</h2>
+
+<p>Let’s get down to it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span></code></pre></figure>
+
+<p>The imports section is quite straightforward, befitting a miniscule script.</p>
+
+<p><a href="https://pypi.org/project/PyGetWindow/">PyGetWindow</a> is the only module which is not built-in. Thanks to it, we get access to titles of all programs that are currently running. Download it from the command line with this command:</p>
+
+<blockquote>
+  <p>pip install pygetwindow</p>
+</blockquote>
+
+<p>Next, we define 3 functions to aid us in the audio scrobbling process:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
+	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">title</span></code></pre></figure>
+
+<p>foobar2000 adds the string <em>’ [foobar2000]’</em> at the end of the program title, and it’s non-negotiable. Therefore, we have a convenient string to search for in order to isolate foobar2000 from other applications and get the playback data.</p>
+
+<p>This function uses PyGetWindow to iterate through all the currently opened window titles and give us foobar2000.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
+	<span class="k">return</span> <span class="n">seconds_full</span></code></pre></figure>
+
+<p>In the script, playback time is important because we’re going to be constantly comparing the previously stored time with the current one in order to detect if the track has changed. To effectively do this comparison, it’s easiest to convert minutes to seconds by multiplying the value representing minutes by 60 and adding it to the value representing seconds.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
+	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
+	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
+	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stripe</span></code></pre></figure>
+
+<p>Once we get our title, there are a few things that need to be done with it:</p>
+
+<p>First, our <em>’ -.- ‘</em> separator needs to be replaced with the CSV separator needed for the scrobbling file. <em>’;’</em> is a considerably safer choice than a comma, because commas are very frequent in tags while semicolons are not.</p>
+
+<p>Next, there needs to be a timestamp at the beginning of each scrobble to indicate when that scrobble took place. Python’s datetime module provides a simple solution for this.</p>
+
+<p>After we get the datetime object, we format it according to a practical specification. Year is followed by month, which is then followed by day, then after a semicolon we get the current hour and minute of the day. A semicolon at the end prepares the string for the actual tag stripe.</p>
+
+<p>Finally, we add the timestamp to the tag content, remove unnecessary stuff from the end of the string, and return the complete scrobble line.</p>
+
+<p>After defining functions, we form starting variables:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span></code></pre></figure>
+
+<p><em>csv_file_location</em> needs to be set to a path on your drive where the scrobbling file is to be stored.</p>
+
+<p>Setting up <em>time_played_past</em> and <em>time_played_current</em> is just priming the pump before the action starts. In other words, we set up initial values for the script to have something to work with.</p>
+
+<p><em>time_played_past</em> is needed once when the script initiates. For playback logging to be registered, the variable stores 9999 “seconds” so when we begin playback, <em>time_played_current</em> has a lower number. This means a track has been changed - if the same track were still playing, that number would go up, not down.</p>
+
+<p>The number going down indicates changing of the track or restarting the currently played track. One way or another, it is a sign to add that new item to our scrobble history.</p>
+
+<p>We use <em>while True:</em> for the contained code to run infinitely. We want the script to be always on and always listening for new playback changes.</p>
+
+<p>Because the code is simple and extremely lightweight, it doesn’t slow down the system by any noticeable amount. In fact, it probably wouldn’t even if we were running it 500 times in parallel.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span></code></pre></figure>
+
+<p>The script begins to move by checking if among all currently opened windows there is one whose title contains the string representing foobar2000.</p>
+
+<p>Just to make sure that we don’t have accidentally opened a website or a document which contains that very string and could fool our script, we add a second condition for further execution - the string has to contain our chosen tag separator in foobar2000. A situation where both of these conditions are met and the string captured is still not a foobar2000 player is probably as improbable as winning the national lottery five times in a row ;)</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span></code></pre></figure>
+
+<p>As explained before, in order to compare current playback time with the last tick, we need to feed time to a function that does just that. For that, we first extract the part of the string which contains playback time and then extract it from that line.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
+	<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
+	<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+		<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span></code></pre></figure>
+
+<p>Making changes to a scrobble file is guarded behind a condition that the currently played file plays for fewer seconds than our last stored state.</p>
+
+<p>When the condition is met, we use the function that converts the foobar2000 title to a final CSV-ready stripe (line). After that, we append that stripe to our file whose location is stored in <em>csv_file_location</em>.</p>
+
+<p>The program cycle then needs two more actions to complete.</p>
+
+<p>First, the variable <em>time_played_past</em> needs to get the value of <em>time_played_current</em>. In other words, our variable to which we will compare the next playback state needs to be updated.</p>
+
+<p>Finally, we order the script to sleep for 3 seconds. The amount of time which is best depends on the habits of a particular user. One person changes tracks 20 times per minute, another presses play after adding a big playlist and never tinkers with playback until the program is shut down. The value must be chosen depending on your habits.</p>
+
+<p>Below is the code for the entire script. If you don’t know how to make the script run permanently in the background in Windows, please refer to a guide which I will be adding shortly.</p>
+
+<h2 id="code-for-the-entire-script">Code for the entire script</h2>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+
+<span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
+	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">title</span>
+
+
+<span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
+	<span class="k">return</span> <span class="n">seconds_full</span>
+
+
+<span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
+	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
+	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
+	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stripe</span>
+
+
+
+<span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+	<span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span>
+		<span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
+			<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
+			<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+				<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
+
+		<span class="n">time_played_past</span> <span class="o">=</span> <span class="n">time_played_current</span>
+	<span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></code></pre></figure>
+
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    <script async data-id="101455210" src="//static.getclicky.com/js"></script>
+  </body>
+
+</html>

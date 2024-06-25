@@ -1,4 +1,211 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-06-24T11:01:59+02:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Guide to responsive design tools in CSS</title><link href="http://localhost:4000/2021/guide-to-responsive-design-tools-in-css.html" rel="alternate" type="text/html" title="Guide to responsive design tools in CSS" /><published>2021-02-01T10:13:28+01:00</published><updated>2021-02-01T10:13:28+01:00</updated><id>http://localhost:4000/2021/guide-to-responsive-design-tools-in-css</id><content type="html" xml:base="http://localhost:4000/2021/guide-to-responsive-design-tools-in-css.html"><![CDATA[<h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-25T21:19:09+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Writing a local Windows audio scrobbler</title><link href="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html" rel="alternate" type="text/html" title="Writing a local Windows audio scrobbler" /><published>2024-02-15T14:13:00+01:00</published><updated>2024-02-15T14:13:00+01:00</updated><id>https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler</id><content type="html" xml:base="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html"><![CDATA[<h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
+
+<p>The practice of listening to MP3 files and maintaining an MP3 collection is certainly a thing of the past now. In fact, if we asked a few tech-savvy teenagers what an MP3 file is, some wouldn’t even know.</p>
+
+<p>Services such as Spotify and Tidal have replaced manually searching for, downloading, and cataloguing music, much like Netflix and Disney+ have obliterated the pay-per-view and rental VOD market.</p>
+
+<p>As with every technology out there, there are a few dinosaurs who refuse to give up old habits for various reasons, the author of this blog being one of them.</p>
+
+<p>Having a private collection of files offers the same benefits as general local storage offers over cloud solutions: instant direct access, ability to edit and cut out content with ease, no need for an internet connection, and more.</p>
+
+<p>Local scrobbling perfectly compliments local playback. Last.fm, Libre.fm, and the like are nice while they last, but they are not profitable and therefore can be discontinued any day.</p>
+
+<p>By writing a local scrobbling application, we have full control over which tag fields are logged and how the file looks. It can then be backed up with ease.</p>
+
+<p>In this article, we’re going to write a scrobbling application using Python for the Windows operating system. It will run continuously while we are logged in. It will listen to changes in Foobar playback and log those changes to a file according to our specified logic.</p>
+
+<p>A few years ago, I wrote another article that does the same thing for graphical Linux, using the DeaDBeeF player and written in Bash. If you need a Linux version, <a href="https://devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html">here</a> is a link to the article.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ol>
+  <li><strong>Python</strong>. Python. This ever-popular programming language is a first choice when it comes to many tasks. Due to its simplicity and readability, it is certainly a joy to write in compared to most other languages.</li>
+</ol>
+
+<p>Download the latest Python version from the official Python website <a href="https://www.python.org/downloads/">here</a>.</p>
+
+<ol>
+  <li><strong>foobar 2000</strong>. One of the easiest ways to make a local audio scrobbling script is to monitor an audio player’s title string, extract data from it, manipulate it, and store it in a file. There aren’t that many MP3 players for Windows, let alone ones that allow us to manipulate their title. Of the very few, foobar2000 is the best, so it is our choice.</li>
+</ol>
+
+<p><a href="https://www.foobar2000.org/download">Here</a> is a link to the download section of the official foobar2000 website.</p>
+
+<h2 id="configuring-foobar-2000">Configuring Foobar 2000</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/writing-a-local-windows-audio-scrobbler/foobar2000-options.png" alt="Foobar setting location" /></p>
+
+<p>The version I am using as of the time of writing this article is 2.1.4.</p>
+
+<p>Go to <em>Preferences</em> by either pressing <em>Ctrl+p</em> or through <em>File -&gt; Preferences</em>. In the left menu tree select <em>Display</em>, then select <em>Default User Interface</em> under it.</p>
+
+<p>In the <em>Playback state display formatting</em> section, you need to edit the <em>Window title</em> field. Replace whatever you find there with:</p>
+<blockquote>
+  <p><em>%artist% -.- %album% -.- %title% -.- %date% -.- %length% -.- %playback_time%</em></p>
+</blockquote>
+
+<p>As you can see, foobar2000 has many different tags encapsulated between percentage signs. Putting ‘ -.- ‘ is our choice. A distinct combination of strings has to be used so that the script can later extract data between them. Using the selected solution generally guarantees this. There is a very low chance that this particular string is going to appear in artist, album, or title tags.</p>
+
+<p>On the other hand, it doesn’t look horrible (although it’s certainly not pretty), which is also important because if our Windows taskbar is configured to show icons and program titles instead of just icons, we are going to be looking at it every time the artist tag field of the currently played song in foobar2000 is short enough.</p>
+
+<h2 id="breaking-apart-the-script">Breaking apart the script</h2>
+
+<p>Let’s get down to it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span></code></pre></figure>
+
+<p>The imports section is quite straightforward, befitting a miniscule script.</p>
+
+<p><a href="https://pypi.org/project/PyGetWindow/">PyGetWindow</a> is the only module which is not built-in. Thanks to it, we get access to titles of all programs that are currently running. Download it from the command line with this command:</p>
+
+<blockquote>
+  <p>pip install pygetwindow</p>
+</blockquote>
+
+<p>Next, we define 3 functions to aid us in the audio scrobbling process:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
+	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">title</span></code></pre></figure>
+
+<p>foobar2000 adds the string <em>’ [foobar2000]’</em> at the end of the program title, and it’s non-negotiable. Therefore, we have a convenient string to search for in order to isolate foobar2000 from other applications and get the playback data.</p>
+
+<p>This function uses PyGetWindow to iterate through all the currently opened window titles and give us foobar2000.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
+	<span class="k">return</span> <span class="n">seconds_full</span></code></pre></figure>
+
+<p>In the script, playback time is important because we’re going to be constantly comparing the previously stored time with the current one in order to detect if the track has changed. To effectively do this comparison, it’s easiest to convert minutes to seconds by multiplying the value representing minutes by 60 and adding it to the value representing seconds.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
+	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
+	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
+	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stripe</span></code></pre></figure>
+
+<p>Once we get our title, there are a few things that need to be done with it:</p>
+
+<p>First, our <em>’ -.- ‘</em> separator needs to be replaced with the CSV separator needed for the scrobbling file. <em>’;’</em> is a considerably safer choice than a comma, because commas are very frequent in tags while semicolons are not.</p>
+
+<p>Next, there needs to be a timestamp at the beginning of each scrobble to indicate when that scrobble took place. Python’s datetime module provides a simple solution for this.</p>
+
+<p>After we get the datetime object, we format it according to a practical specification. Year is followed by month, which is then followed by day, then after a semicolon we get the current hour and minute of the day. A semicolon at the end prepares the string for the actual tag stripe.</p>
+
+<p>Finally, we add the timestamp to the tag content, remove unnecessary stuff from the end of the string, and return the complete scrobble line.</p>
+
+<p>After defining functions, we form starting variables:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span></code></pre></figure>
+
+<p><em>csv_file_location</em> needs to be set to a path on your drive where the scrobbling file is to be stored.</p>
+
+<p>Setting up <em>time_played_past</em> and <em>time_played_current</em> is just priming the pump before the action starts. In other words, we set up initial values for the script to have something to work with.</p>
+
+<p><em>time_played_past</em> is needed once when the script initiates. For playback logging to be registered, the variable stores 9999 “seconds” so when we begin playback, <em>time_played_current</em> has a lower number. This means a track has been changed - if the same track were still playing, that number would go up, not down.</p>
+
+<p>The number going down indicates changing of the track or restarting the currently played track. One way or another, it is a sign to add that new item to our scrobble history.</p>
+
+<p>We use <em>while True:</em> for the contained code to run infinitely. We want the script to be always on and always listening for new playback changes.</p>
+
+<p>Because the code is simple and extremely lightweight, it doesn’t slow down the system by any noticeable amount. In fact, it probably wouldn’t even if we were running it 500 times in parallel.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span></code></pre></figure>
+
+<p>The script begins to move by checking if among all currently opened windows there is one whose title contains the string representing foobar2000.</p>
+
+<p>Just to make sure that we don’t have accidentally opened a website or a document which contains that very string and could fool our script, we add a second condition for further execution - the string has to contain our chosen tag separator in foobar2000. A situation where both of these conditions are met and the string captured is still not a foobar2000 player is probably as improbable as winning the national lottery five times in a row ;)</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span></code></pre></figure>
+
+<p>As explained before, in order to compare current playback time with the last tick, we need to feed time to a function that does just that. For that, we first extract the part of the string which contains playback time and then extract it from that line.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
+	<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
+	<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+		<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span></code></pre></figure>
+
+<p>Making changes to a scrobble file is guarded behind a condition that the currently played file plays for fewer seconds than our last stored state.</p>
+
+<p>When the condition is met, we use the function that converts the foobar2000 title to a final CSV-ready stripe (line). After that, we append that stripe to our file whose location is stored in <em>csv_file_location</em>.</p>
+
+<p>The program cycle then needs two more actions to complete.</p>
+
+<p>First, the variable <em>time_played_past</em> needs to get the value of <em>time_played_current</em>. In other words, our variable to which we will compare the next playback state needs to be updated.</p>
+
+<p>Finally, we order the script to sleep for 3 seconds. The amount of time which is best depends on the habits of a particular user. One person changes tracks 20 times per minute, another presses play after adding a big playlist and never tinkers with playback until the program is shut down. The value must be chosen depending on your habits.</p>
+
+<p>Below is the code for the entire script. If you don’t know how to make the script run permanently in the background in Windows, please refer to a guide which I will be adding shortly.</p>
+
+<h2 id="code-for-the-entire-script">Code for the entire script</h2>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+
+<span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
+	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">title</span>
+
+
+<span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
+	<span class="k">return</span> <span class="n">seconds_full</span>
+
+
+<span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
+	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
+	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
+	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stripe</span>
+
+
+
+<span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+	<span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span>
+		<span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
+			<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
+			<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+				<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
+
+		<span class="n">time_played_past</span> <span class="o">=</span> <span class="n">time_played_current</span>
+	<span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="audio" /><category term="python" /><summary type="html"><![CDATA[Writing a local Windows audio scrobbler]]></summary></entry><entry><title type="html">Guide to responsive design tools in CSS</title><link href="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html" rel="alternate" type="text/html" title="Guide to responsive design tools in CSS" /><published>2021-02-01T10:13:28+01:00</published><updated>2021-02-01T10:13:28+01:00</updated><id>https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css</id><content type="html" xml:base="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html"><![CDATA[<h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
 
 <p>Before smartphones became popular, almost entire web browsing traffic was on PCs.</p>
 
@@ -68,7 +275,7 @@
 
 <p>Another useful addition to CSS is the <picture> tag. It acts as a container for multiple images. Instead of resizing one large image across all viewports and penalizing users with smaller screens by making them download a larger-than-necessary image, different versions of the image can be selected based on conditions similar to media queries.</picture></p>
 
-<p>This allows the appropriate image to be loaded depending on the screen size.</p>]]></content><author><name>Chris</name></author><category term="css" /><category term="html" /><summary type="html"><![CDATA[Guide to responsive design tools in CSS]]></summary></entry><entry><title type="html">JPG compression guide for Linux</title><link href="http://localhost:4000/2020/jpg-compression-guide-for-linux.html" rel="alternate" type="text/html" title="JPG compression guide for Linux" /><published>2020-09-16T08:01:21+02:00</published><updated>2020-09-16T08:01:21+02:00</updated><id>http://localhost:4000/2020/jpg-compression-guide-for-linux</id><content type="html" xml:base="http://localhost:4000/2020/jpg-compression-guide-for-linux.html"><![CDATA[<h1 id="jpg-compression-guide-for-linux">JPG compression guide for Linux</h1>
+<p>This allows the appropriate image to be loaded depending on the screen size.</p>]]></content><author><name>Chris</name></author><category term="css" /><category term="html" /><summary type="html"><![CDATA[Guide to responsive design tools in CSS]]></summary></entry><entry><title type="html">JPG compression guide for Linux</title><link href="https://www.devkoala.com/2020/jpg-compression-guide-for-linux.html" rel="alternate" type="text/html" title="JPG compression guide for Linux" /><published>2020-09-16T08:01:21+02:00</published><updated>2020-09-16T08:01:21+02:00</updated><id>https://www.devkoala.com/2020/jpg-compression-guide-for-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/jpg-compression-guide-for-linux.html"><![CDATA[<h1 id="jpg-compression-guide-for-linux">JPG compression guide for Linux</h1>
 
 <h2 id="basics">Basics</h2>
 
@@ -173,7 +380,7 @@ jpegoptim <span class="nt">-m90</span> /path/to/filename.jpg</code></pre></figur
 
 <p>The quality setting is self-explanatory. We set speed to 1 (slowest, but gives the best results).</p>
 
-<p>The ‘force’ option is needed here, as the default pngquant behavior is that it doesn’t overwrite images, and we order the program to save to the same file that it reads from. If we don’t specify the output file, it appends its ending to a filename, and for this example, we need to overwrite the source file.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="images" /><category term="linux" /><summary type="html"><![CDATA[JPG compression guide for Linux]]></summary></entry><entry><title type="html">Converting date to ISO 8601 in Python</title><link href="http://localhost:4000/2020/converting-date-to-iso8601-in-python.html" rel="alternate" type="text/html" title="Converting date to ISO 8601 in Python" /><published>2020-09-07T11:53:01+02:00</published><updated>2020-09-07T11:53:01+02:00</updated><id>http://localhost:4000/2020/converting-date-to-iso8601-in-python</id><content type="html" xml:base="http://localhost:4000/2020/converting-date-to-iso8601-in-python.html"><![CDATA[<h1 id="converting-date-to-iso-8601-in-python">Converting date to ISO 8601 in Python</h1>
+<p>The ‘force’ option is needed here, as the default pngquant behavior is that it doesn’t overwrite images, and we order the program to save to the same file that it reads from. If we don’t specify the output file, it appends its ending to a filename, and for this example, we need to overwrite the source file.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="images" /><category term="linux" /><summary type="html"><![CDATA[JPG compression guide for Linux]]></summary></entry><entry><title type="html">Converting date to ISO 8601 in Python</title><link href="https://www.devkoala.com/2020/converting-date-to-iso8601-in-python.html" rel="alternate" type="text/html" title="Converting date to ISO 8601 in Python" /><published>2020-09-07T11:53:01+02:00</published><updated>2020-09-07T11:53:01+02:00</updated><id>https://www.devkoala.com/2020/converting-date-to-iso8601-in-python</id><content type="html" xml:base="https://www.devkoala.com/2020/converting-date-to-iso8601-in-python.html"><![CDATA[<h1 id="converting-date-to-iso-8601-in-python">Converting date to ISO 8601 in Python</h1>
 
 <h2 id="why-use-iso-8601">Why use ISO 8601?</h2>
 
@@ -399,14 +606,14 @@ jpegoptim <span class="nt">-m90</span> /path/to/filename.jpg</code></pre></figur
 
 		<span class="k">if</span> <span class="n">year</span> <span class="ow">and</span> <span class="n">month</span> <span class="ow">and</span> <span class="n">day</span><span class="p">:</span>
 			<span class="n">final_date</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">month</span><span class="si">}</span><span class="s">-</span><span class="si">{</span><span class="n">day</span><span class="si">}</span><span class="sh">'</span>
-			<span class="k">return</span> <span class="n">final_date</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="date" /><category term="iso8601" /><category term="python" /><summary type="html"><![CDATA[Converting date to ISO 8601 in Python]]></summary></entry><entry><title type="html">CMUS music player review</title><link href="http://localhost:4000/2020/cmus-music-player-review.html" rel="alternate" type="text/html" title="CMUS music player review" /><published>2020-09-01T11:03:28+02:00</published><updated>2020-09-01T11:03:28+02:00</updated><id>http://localhost:4000/2020/cmus-music-player-review</id><content type="html" xml:base="http://localhost:4000/2020/cmus-music-player-review.html"><![CDATA[<h1 id="cmus-music-player-review">CMUS music player review</h1>
+			<span class="k">return</span> <span class="n">final_date</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="date" /><category term="iso8601" /><category term="python" /><summary type="html"><![CDATA[Converting date to ISO 8601 in Python]]></summary></entry><entry><title type="html">CMUS music player review</title><link href="https://www.devkoala.com/2020/cmus-music-player-review.html" rel="alternate" type="text/html" title="CMUS music player review" /><published>2020-09-01T11:03:28+02:00</published><updated>2020-09-01T11:03:28+02:00</updated><id>https://www.devkoala.com/2020/cmus-music-player-review</id><content type="html" xml:base="https://www.devkoala.com/2020/cmus-music-player-review.html"><![CDATA[<h1 id="cmus-music-player-review">CMUS music player review</h1>
 
 <div class="sidenote">
 version reviewed: 2.7.0<br />
 installed on: Linux Mint 19
 </div>
 
-<p><img src="http://localhost:4000/assets/img/articles/cmus-music-player-review/cmus1.png" alt="CMUS library view" /></p>
+<p><img src="https://www.devkoala.com/assets/img/articles/cmus-music-player-review/cmus1.png" alt="CMUS library view" /></p>
 
 <p>CMUS is probably the most popular terminal-based music player for Unix operating systems. The competition is almost non-existent, and even from that small pool, some applications do not look to meet the same needs CMUS addresses (some basically play a single specified track and that’s it).</p>
 
@@ -433,7 +640,7 @@ installed on: Linux Mint 19
 
 <p>The version 2.7.0, which I installed from official repository, is missing an ability to set the default view on program startup. As a playlist user, I have to manually focus the player and press ‘3’ on each system startup to switch from an empty library window to playlist view.</p>
 
-<p><img src="http://localhost:4000/assets/img/articles/cmus-music-player-review/cmus2.png" alt="CMUS playlist view" /></p>
+<p><img src="https://www.devkoala.com/assets/img/articles/cmus-music-player-review/cmus2.png" alt="CMUS playlist view" /></p>
 
 <p>An auto-detect feature would be nice as well - if playlist is populated, but library is empty, start with playlist view. If both are empty, but queue contains tracks, focus queue view on startup.</p>
 
@@ -520,7 +727,7 @@ installed on: Linux Mint 19
 
 <p>Currently played track remains being one no matter what. If I pause playback and then clear whatever list I’m using for playback, it is somewhat logical that the paused track remains present and ready to continue playback, despite removing it from a list in which it was played. After all, we just paused it, the pointer sits somewhere between its start and end.</p>
 
-<p><img src="http://localhost:4000/assets/img/articles/cmus-music-player-review/cmus3.png" alt="CMUS options view" /></p>
+<p><img src="https://www.devkoala.com/assets/img/articles/cmus-music-player-review/cmus3.png" alt="CMUS options view" /></p>
 
 <p>But when the track is stopped and then the playlist is cleared, I am giving two commands to get rid of it, and yet when I add some new music and order a ‘–play’ command, it doesn’t start playing the first track from the freshly added ones. Instead, it starts the last played one from the beginning!</p>
 
@@ -590,7 +797,7 @@ installed on: Linux Mint 19
 
 <p>If on your machine cmus-remote commands work as intended and lack of equalizer and tag viewer/editor are irrelevant to you, then you may still want to try it out. Because outside of those issues, everything works like a charm.</p>
 
-<p>Unfortunately, for me each one of those is a dealbreaker, and all together make CMUS unarmed for daily use.</p>]]></content><author><name>Chris</name></author><category term="audio" /><category term="cmus" /><category term="review" /><summary type="html"><![CDATA[CMUS music player review]]></summary></entry><entry><title type="html">Setting up single navigation pane in Ranger and why it’s a good idea</title><link href="http://localhost:4000/2020/setting-up-single-navigation-pane-in-ranger.html" rel="alternate" type="text/html" title="Setting up single navigation pane in Ranger and why it’s a good idea" /><published>2020-06-22T13:31:14+02:00</published><updated>2020-06-22T13:31:14+02:00</updated><id>http://localhost:4000/2020/setting-up-single-navigation-pane-in-ranger</id><content type="html" xml:base="http://localhost:4000/2020/setting-up-single-navigation-pane-in-ranger.html"><![CDATA[<h1 id="setting-up-single-navigation-pane-in-ranger-and-why-its-a-good-idea">Setting up single navigation pane in Ranger and why it’s a good idea</h1>
+<p>Unfortunately, for me each one of those is a dealbreaker, and all together make CMUS unarmed for daily use.</p>]]></content><author><name>Chris</name></author><category term="audio" /><category term="cmus" /><category term="review" /><summary type="html"><![CDATA[CMUS music player review]]></summary></entry><entry><title type="html">Setting up single navigation pane in Ranger and why it’s a good idea</title><link href="https://www.devkoala.com/2020/setting-up-single-navigation-pane-in-ranger.html" rel="alternate" type="text/html" title="Setting up single navigation pane in Ranger and why it’s a good idea" /><published>2020-06-22T13:31:14+02:00</published><updated>2020-06-22T13:31:14+02:00</updated><id>https://www.devkoala.com/2020/setting-up-single-navigation-pane-in-ranger</id><content type="html" xml:base="https://www.devkoala.com/2020/setting-up-single-navigation-pane-in-ranger.html"><![CDATA[<h1 id="setting-up-single-navigation-pane-in-ranger-and-why-its-a-good-idea">Setting up single navigation pane in Ranger and why it’s a good idea</h1>
 
 <p>By default, Ranger starts in a 3-pane view, which makes it unique but not very practical. Fortunately, this can be easily changed.</p>
 
@@ -750,7 +957,7 @@ map H history_go 1</p>
 
 <p>In a default config Ranger use, going back in history will mostly go to the directory from which we came, which will be one level higher or lower in the directory structure. Moving forward will do the opposite and will, of course, only work if we already went back in history (like redo in text editors).</p>
 
-<p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="navigation" /><category term="ranger" /><summary type="html"><![CDATA[Setting up single navigation pane in Ranger and why it’s a good idea]]></summary></entry><entry><title type="html">Ranger configuration extras</title><link href="http://localhost:4000/2020/ranger-configuration-extras.html" rel="alternate" type="text/html" title="Ranger configuration extras" /><published>2020-04-01T22:43:18+02:00</published><updated>2020-04-01T22:43:18+02:00</updated><id>http://localhost:4000/2020/ranger-configuration-extras</id><content type="html" xml:base="http://localhost:4000/2020/ranger-configuration-extras.html"><![CDATA[<h1 id="ranger-configuration-extras">Ranger configuration extras</h1>
+<p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="navigation" /><category term="ranger" /><summary type="html"><![CDATA[Setting up single navigation pane in Ranger and why it’s a good idea]]></summary></entry><entry><title type="html">Ranger configuration extras</title><link href="https://www.devkoala.com/2020/ranger-configuration-extras.html" rel="alternate" type="text/html" title="Ranger configuration extras" /><published>2020-04-01T22:43:18+02:00</published><updated>2020-04-01T22:43:18+02:00</updated><id>https://www.devkoala.com/2020/ranger-configuration-extras</id><content type="html" xml:base="https://www.devkoala.com/2020/ranger-configuration-extras.html"><![CDATA[<h1 id="ranger-configuration-extras">Ranger configuration extras</h1>
 
 <p>Ranger is probably the single most powerful file manager application on any operating system.</p>
 
@@ -892,7 +1099,7 @@ map Kc shell setxkbmap -variant colemak</p>
 
 <blockquote>
   <p>no-window-dragging</p>
-</blockquote>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="ranger" /><summary type="html"><![CDATA[Ranger configuration extras]]></summary></entry><entry><title type="html">Setting up a screen capturing script in Linux</title><link href="http://localhost:4000/2020/setting-up-a-screen-capturing-script-in-linux.html" rel="alternate" type="text/html" title="Setting up a screen capturing script in Linux" /><published>2020-03-28T11:13:54+01:00</published><updated>2020-03-28T11:13:54+01:00</updated><id>http://localhost:4000/2020/setting-up-a-screen-capturing-script-in-linux</id><content type="html" xml:base="http://localhost:4000/2020/setting-up-a-screen-capturing-script-in-linux.html"><![CDATA[<h1 id="setting-up-a-screen-capturing-script-in-linux">Setting up a screen capturing script in Linux</h1>
+</blockquote>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="ranger" /><summary type="html"><![CDATA[Ranger configuration extras]]></summary></entry><entry><title type="html">Setting up a screen capturing script in Linux</title><link href="https://www.devkoala.com/2020/setting-up-a-screen-capturing-script-in-linux.html" rel="alternate" type="text/html" title="Setting up a screen capturing script in Linux" /><published>2020-03-28T11:13:54+01:00</published><updated>2020-03-28T11:13:54+01:00</updated><id>https://www.devkoala.com/2020/setting-up-a-screen-capturing-script-in-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/setting-up-a-screen-capturing-script-in-linux.html"><![CDATA[<h1 id="setting-up-a-screen-capturing-script-in-linux">Setting up a screen capturing script in Linux</h1>
 
 <p>Microsoft Windows has evolved significantly from the days when pressing the “Print Screen” key simply copied the desktop image to the clipboard, requiring users to manually paste it into an image editor to save it. Today, Windows 10 offers the <em>Snipping Tool</em> and <em>Snip &amp; Sketch</em>, providing various methods to capture parts of the screen. Despite having two tools for the same task, which indicates some unfinished business, Microsoft has streamlined the screenshot process.</p>
 
@@ -999,7 +1206,7 @@ bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to
 
 <p>Remember that binding a key or key combination directly in the window manager usually means no application can use it. Otherwise, one key could potentially execute multiple unrelated actions, leaving the user in a state of confusion.</p>
 
-<p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="printscreen" /><summary type="html"><![CDATA[Setting up a screen capturing script in Linux]]></summary></entry><entry><title type="html">Writing a local audio scrobbling script in Bash</title><link href="http://localhost:4000/2020/writing-a-local-audio-scrobbling-script-in-bash.html" rel="alternate" type="text/html" title="Writing a local audio scrobbling script in Bash" /><published>2020-02-20T21:43:18+01:00</published><updated>2020-02-20T21:43:18+01:00</updated><id>http://localhost:4000/2020/writing-a-local-audio-scrobbling-script-in-bash</id><content type="html" xml:base="http://localhost:4000/2020/writing-a-local-audio-scrobbling-script-in-bash.html"><![CDATA[<h1 id="writing-a-local-audio-scrobbling-script-in-bash">Writing a local audio scrobbling script in Bash</h1>
+<p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="printscreen" /><summary type="html"><![CDATA[Setting up a screen capturing script in Linux]]></summary></entry><entry><title type="html">Writing a local audio scrobbling script in Bash</title><link href="https://www.devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html" rel="alternate" type="text/html" title="Writing a local audio scrobbling script in Bash" /><published>2020-02-20T21:43:18+01:00</published><updated>2020-02-20T21:43:18+01:00</updated><id>https://www.devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash</id><content type="html" xml:base="https://www.devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html"><![CDATA[<h1 id="writing-a-local-audio-scrobbling-script-in-bash">Writing a local audio scrobbling script in Bash</h1>
 
 <h2 id="lastfm-vs-local-scrobbling">Last.fm vs local scrobbling</h2>
 <p>Once merged with <strong>Audioscrobbler</strong>, <strong>Last.fm</strong> became the leading tool for tracking music history and probably remains so to this day, despite being considerably less popular now than it used to be.</p>
@@ -1238,7 +1445,7 @@ bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to
 
 <p>Yet another problem is logging playback from services like Spotify. Popular services of this kind support scrobbling to Last.fm. It will get logged the same as if we were listening through the music player. This script obviously doesn’t have that functionality.</p>
 
-<p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>]]></content><author><name>Chris</name></author><category term="bash" /><category term="linux" /><category term="scrobbling" /><summary type="html"><![CDATA[Writing a local audio scrobbling script in Bash]]></summary></entry><entry><title type="html">Using commands to resize programs in Linux</title><link href="http://localhost:4000/2020/using-commands-to-resize-programs-in-linux.html" rel="alternate" type="text/html" title="Using commands to resize programs in Linux" /><published>2020-01-14T13:45:20+01:00</published><updated>2020-01-14T13:45:20+01:00</updated><id>http://localhost:4000/2020/using-commands-to-resize-programs-in-linux</id><content type="html" xml:base="http://localhost:4000/2020/using-commands-to-resize-programs-in-linux.html"><![CDATA[<h1 id="using-commands-to-resize-programs-in-linux">Using commands to resize programs in Linux</h1>
+<p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>]]></content><author><name>Chris</name></author><category term="bash" /><category term="linux" /><category term="scrobbling" /><summary type="html"><![CDATA[Writing a local audio scrobbling script in Bash]]></summary></entry><entry><title type="html">Using commands to resize programs in Linux</title><link href="https://www.devkoala.com/2020/using-commands-to-resize-programs-in-linux.html" rel="alternate" type="text/html" title="Using commands to resize programs in Linux" /><published>2020-01-14T13:45:20+01:00</published><updated>2020-01-14T13:45:20+01:00</updated><id>https://www.devkoala.com/2020/using-commands-to-resize-programs-in-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/using-commands-to-resize-programs-in-linux.html"><![CDATA[<h1 id="using-commands-to-resize-programs-in-linux">Using commands to resize programs in Linux</h1>
 
 <p>Neither Linux nor Windows remembers the window size and position for applications.</p>
 
