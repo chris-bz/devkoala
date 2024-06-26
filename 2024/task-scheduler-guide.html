@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Task Scheduler Guide | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="https://www.devkoala.com/">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="https://www.devkoala.com/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
+
+<p>A decent tool since <em>Vista</em> but already existing as early as <em>Win 3.11</em>, Task Scheduler is an ireplaceable tool to manage system scripts.</p>
+
+<p>As the name implies, it is the Windows version of Unix’s <em>Cron</em>. The software manages events that are executed at specified times. It’s essentially a calendar of tasks.</p>
+
+<p>Setting up tasks is more cumbersome compared to Cron due to everything being done through a graphical interface. Instead of quickly writing a one-line rule with a path to a script, we have to navigate through multiple clicks.</p>
+
+<p>On the other hand, Task Scheduler is more user-friendly. Unlike Cron, which requires explanation, a task in Task Scheduler can be created with minimal knowledge and research.</p>
+
+<p>This makes it particularly useful in freelancing, where a client whose knowledge of PCs is limited can be easily guided through the setup process without becoming frustrated.</p>
+
+<p>Another advantage is reliability: in Cron, scripts can sometimes run unpredictably, and troubleshooting may require technical knowledge and can be cumbersome. Task Scheduler is generally more reliable in this regard.</p>
+
+<h2 id="starting-task-scheduler">Starting Task Scheduler</h2>
+
+<p>The easiest way to start Task Scheduler is by pressing the Start button on your keyboard and then typing ‘task scheduler’. You don’t have to type the whole phrase, as the autofill will suggest it. Just press <em>Enter</em> when it appears.</p>
+
+<p>For those who prefer keyboard shortcuts or want a more direct approach, you can press <em>Win+r</em> and type <em>‘taskschd.sc’</em> in the Run dialog that appears.</p>
+
+<p>The initial screen might look like this, or somewhat similar, depending on which menu panels you have enabled or disabled:</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd1.png" alt="Task Scheduler main tab" /></p>
+
+<p>Right off the bat, you can see some limitations in the interface. Sorting tasks by column used to work on Windows 10, but it may not function now (at least in my experience). There’s also no search functionality.</p>
+
+<p>This means locating a single task when you have hundreds can be extremely problematic. After focusing on the table, you can type the name of the task you’re looking for and it will keep focusing first direct match, but if there are many tasks with near-identical names, it’s not very helpful.</p>
+
+<h2 id="adding-a-new-task">Adding a new task</h2>
+
+<p>There are two procedures for creating tasks:</p>
+
+<ol>
+  <li>
+    <p><strong>Create Basic Task</strong> - A streamlined wizard with limited options that sets sensible defaults. This is designed for inexperienced users to avoid confusion.</p>
+  </li>
+  <li>
+    <p><strong>Create Task</strong> - The full version with all options visible, taking slightly longer to set up but offering more control.</p>
+  </li>
+</ol>
+
+<p>In this article, we’ll cover option 2, as it only takes about one to five minutes to fully grasp and some of the extra options are useful.</p>
+
+<p>In the right <em>Actions</em> panel, click <em>Create Task</em>. Alternatively, in the top program menu, click <em>Action</em> and select <em>Create Task</em> from the dropdown menu.</p>
+
+<h3 id="general">General</h3>
+
+<p>A window similar to the one pictured below will appear. It has 5 tabs, defaulting to the first one, <em>General</em>. Here are explanations for all the options. The one marked with an exclamation mark (!) is required to set up before continuing.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd2.png" alt="Task Scheduler: Create Task: General" /></p>
+
+<ul>
+  <li>
+    <p><strong>Name</strong>(!): Name of the task. Choose something concise yet descriptive enough that you’ll immediately know what the task does when you encounter it a year from now. Using unique initial letters makes it easier to find by typing.</p>
+  </li>
+  <li>
+    <p><strong>Description</strong>: Self-explanatory. Here you can be as verbose as you like. Taking a moment to write a detailed description is worthwhile, especially if you plan to have many tasks.</p>
+  </li>
+  <li>
+    <p><strong>When running the task, use the following user account</strong>: If the account which will be running the script is different from the currently logged-in account, you need to change it here.</p>
+  </li>
+  <li>
+    <p><strong>Run only when user is logged in / Run whether user is logged in or not</strong>: Scripts that require user interaction or access to variables created during the log-in process need the first option. The second option hides the task execution and is more suitable for non-interactive background tasks. If unsure, leave it at the default first option.</p>
+  </li>
+  <li>
+    <p><strong>Run with highest privileges</strong>: Enable this only if you know you need it. Otherwise, leave it off, as giving highest privileges to a script can cause significant problems if the script misbehaves.</p>
+  </li>
+  <li>
+    <p><strong>Hidden</strong>: This option hides the task from the list of tasks. Use with caution and only when necessary for privacy or security reasons.</p>
+  </li>
+  <li>
+    <p><strong>Configure for</strong>: Increases compatibility in some edge cases. It’s usually safe to leave this at the default setting.</p>
+  </li>
+</ul>
+
+<h3 id="triggers">Triggers</h3>
+
+<p>This is where Task Scheduler really shines and makes Crontab look like child’s toy.</p>
+
+<p>Triggers are conditions which, when met, start the task. In most cases, tasks will have one trigger, but there are instances where multiple triggers are needed. It’s much more convenient to define multiple triggers than multiple tasks, each with a different trigger.</p>
+
+<p>The most commonly used trigger, which is also the default, is <em>On the schedule</em>. We choose a specific date, or a daily/weekly/monthly cycle for the task to be executed.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd3.png" alt="Task Scheduler: Create Task: Triggers" /></p>
+
+<p>Often, we want the script to run whenever the computer is on, without concerning ourselves with dates and cycles. We can choose to start the task at logon or startup.</p>
+
+<p>A fantastic feature for power users and unique cases is <em>On an event</em>. For example, when a specific event is logged in the <em>Windows Event Viewer</em>, it could trigger our script to start.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd4.png" alt="Task Scheduler: Create Task: New trigger" /></p>
+
+<p>Workstation lock/unlock triggers are very useful in work environments when we want certain scripts to run only when the workstation is in use.</p>
+
+<p>As you can see, the possibilities with Task Scheduler Triggers are vast. Microsoft has made many questionable decisions in the directions its applications are going, but here they’ve done an excellent job.</p>
+
+<p>Let’s discuss some of the <strong>Advanced settings</strong>:</p>
+
+<ul>
+  <li>
+    <p><strong>Delay task for up to X</strong>: When the trigger registers, instead of starting the task immediately, Task Scheduler waits a specified amount of time before starting.</p>
+  </li>
+  <li>
+    <p><strong>Repeat task every X for the duration of Y</strong>: When we want to start a script at system logon and then run every hour, choose <em>Begin a task: On a schedule</em> and select <em>Repeat task every: 1 hour</em>. If you want it to repeat indefinitely, make sure to select <em>For a duration of: Indefinitely</em>.</p>
+  </li>
+  <li>
+    <p><strong>Stop Task if it runs longer than X</strong>: Very useful for poorly written scripts which tend to fail and then hang indefinitely, especially if they consume resources while doing so. When dealing with such problematic code, we can limit it with settings like 30 minutes. Note that you’re not limited to options in the drop-down list; you can enter custom values.</p>
+  </li>
+  <li>
+    <p><strong>Expire</strong>: Another useful feature. We can have a script collecting data until publication of that data, at which point we want the script to be disabled until we start another data gathering session later in the year. It’s convenient to set up the task expiration date instead of having to remember to disable it manually.</p>
+  </li>
+  <li>
+    <p><strong>Enabled</strong>: The most self-explanatory of all the options, but potentially troublesome. It can be clicked not only by clicking on the box or the name, but the clickable area extends to half of the entire container window width. This makes it possible to accidentally click and disable it, potentially causing confusion about why the task isn’t working.</p>
+  </li>
+</ul>
+
+<h3 id="actions">Actions</h3>
+
+<p>After going through various options and scheduling settings for our task, we now create the actual task that will be running.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd5.png" alt="Task Scheduler: Create Task: Actions" /></p>
+
+<p>Here, everything is straightforward. We click on <em>Browse</em> and provide the location of the program to run. If we want to start a program with additional arguments, we specify them in the second field.</p>
+
+<p>The third box, <em>Start in (optional)</em> provides a directory where the program will start. This will be the context directory, useful for example when the program uses relative paths and we want it to have access to files in that particular directory.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd6.png" alt="Task Scheduler: Create Task: New action" /></p>
+
+<p>Another use is for log file generation. Starting in a specific directory could mean the script generates logs in that directory, which might be desired behavior.</p>
+
+<h3 id="conditions">Conditions</h3>
+
+<p>Conditions are an extra set of <em>if</em> statements guarding the task. If any condition is not met, the task is prevented from running.</p>
+
+<p>All of the options are self-explanatory, so there’s no need to expand on any of them.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd7.png" alt="Task Scheduler: Create Task: Conditions" /></p>
+
+<p>One particularly useful feature is <em>“Start only if the following network connection is available”</em>. This is especially useful for users in countries where high-speed internet access is not yet common. A PC could be connected to low-speed internet, and for a few hours of the day, high-speed internet could become available.</p>
+
+<p>Task Scheduler could wait for the better option and only then execute the script to enable faster downloading of content. Another use case is waiting for a connection where there is no monthly download limit.</p>
+
+<h3 id="settings">Settings</h3>
+
+<ul>
+  <li>
+    <p><strong>Allow task to be run on demand</strong>: Enables manual execution of the task at any time via the Task Scheduler interface or command line. This is useful for creating extra backup runs of the script or when the script is still in a testing stage and we need to manually execute it to verify what is not working and why.</p>
+  </li>
+  <li>
+    <p><strong>Run task as soon as possible after a scheduled start is missed</strong>: A crucial setting for all scripts handling backup. For example, if we schedule a backup at 10 AM but the system is off at that time, ticking this setting ensures that when the PC starts later that day, Task Scheduler recognizes that the backup script did not run and will execute it.</p>
+  </li>
+  <li>
+    <p><strong>If the task fails, restart every [X] minutes, up to [Y] times</strong>: Enable this setting for network-related tasks, such as scripts that upload files to a server. If the task fails due to a temporary network issue, it will retry a few times before giving up, increasing the chances of success.</p>
+  </li>
+  <li>
+    <p><strong>Stop the task if it runs longer than [X] hours and [Y] minutes</strong>: Enable this setting for scripts that perform resource-intensive calculations or data processing. If the script has a bug causing it to run indefinitely, this setting will prevent it from consuming system resources indefinitely.</p>
+  </li>
+  <li>
+    <p><strong>If the running task does not end when requested, force it to stop</strong>: Enable this setting for tasks that interact with external systems, such as automated tests or data transfers. If these tasks hang due to unresponsive external systems, forcing them to stop prevents system resources from being tied up.</p>
+  </li>
+  <li>
+    <p><strong>If the task is already running, then the following rule applies</strong>: A very useful set of conditions. When a script is scheduled to run every hour and the old instance hangs and consumes resources, these can stack up. If it doesn’t quit as expected and continues its work, after an hour we could have two scripts doing the same thing which, if they manipulate the same data simultaneously, can have catastrophic results. This setting provides safety nets for these and many other conditions.</p>
+  </li>
+</ul>
+
+<h3 id="history">History</h3>
+
+<p>Finally, we have the task execution history. It is disabled by default, but enabling it won’t significantly impact system performance. It won’t create logs that consume much disk space, won’t cause excessive disk I/O, and won’t consume much processing power.</p>
+
+<p>The exception is when we have a very large number of tasks that run frequently, but these are very rare cases.</p>
+
+<p>In general, when we are working on a complex system task whose development will take a while and it’s going to be executed many times during each working session, it is useful to enable history for easy execution status tracking.</p>
+
+<h3 id="last-run-result">Last Run Result</h3>
+
+<p>One poorly designed aspect of Task Scheduler is the execution codes, visible in the main task table.</p>
+
+<p>Each time a task is executed, there is a code describing the status of that execution. Some of these statuses have both a hexadecimal code (0xnum) and a description, from which we can determine if it worked well and if not, why. However, other times we just receive the code and have to manually search the web to understand what happened with our task.</p>
+
+<p>Below is a list of all the common execution codes and what they mean:</p>
+<ul>
+  <li><strong>0x0: Success</strong> - The task completed successfully without errors.</li>
+  <li><strong>0x1: Incorrect function call</strong> - This often indicates a generic error with the function call within the script or program.</li>
+  <li><strong>0x2: File not found</strong> - The script or program could not find a file it needs to execute.</li>
+  <li><strong>0x41300: Task is ready to run at its next scheduled time</strong> - The task is correctly configured and will run at the next scheduled time.</li>
+  <li><strong>0x41301: Task is currently running</strong> - The task is actively running.</li>
+  <li><strong>0x41302: Task is disabled</strong> - The task needs to be manually enabled to run.</li>
+  <li><strong>0x41303: Task has not yet run</strong> - The task has never been executed since it was created or last updated.</li>
+  <li><strong>Task is running interactively as a different user</strong> - The task is running interactively under a different user account.</li>
+  <li><strong>0x41305: Task is not running</strong> - The task is not currently running.</li>
+  <li><strong>0x80070005: Access is denied</strong> - The task does not have the necessary permissions to execute.</li>
+  <li><strong>0x8007010B: Directory name is invalid</strong> - The task points to a directory that is invalid or does not exist.</li>
+  <li><strong>0xC000013A: The application was terminated by Ctrl+C</strong> - The task was terminated by the user manually.</li>
+</ul>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    <script async data-id="101455210" src="//static.getclicky.com/js"></script>
+  </body>
+
+</html>

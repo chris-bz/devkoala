@@ -1,4 +1,196 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-25T21:19:09+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Writing a local Windows audio scrobbler</title><link href="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html" rel="alternate" type="text/html" title="Writing a local Windows audio scrobbler" /><published>2024-02-15T14:13:00+01:00</published><updated>2024-02-15T14:13:00+01:00</updated><id>https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler</id><content type="html" xml:base="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html"><![CDATA[<h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-26T20:24:53+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2024/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2024-06-26T14:14:20+02:00</published><updated>2024-06-26T14:14:20+02:00</updated><id>https://www.devkoala.com/2024/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2024/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
+
+<p>A decent tool since <em>Vista</em> but already existing as early as <em>Win 3.11</em>, Task Scheduler is an ireplaceable tool to manage system scripts.</p>
+
+<p>As the name implies, it is the Windows version of Unix’s <em>Cron</em>. The software manages events that are executed at specified times. It’s essentially a calendar of tasks.</p>
+
+<p>Setting up tasks is more cumbersome compared to Cron due to everything being done through a graphical interface. Instead of quickly writing a one-line rule with a path to a script, we have to navigate through multiple clicks.</p>
+
+<p>On the other hand, Task Scheduler is more user-friendly. Unlike Cron, which requires explanation, a task in Task Scheduler can be created with minimal knowledge and research.</p>
+
+<p>This makes it particularly useful in freelancing, where a client whose knowledge of PCs is limited can be easily guided through the setup process without becoming frustrated.</p>
+
+<p>Another advantage is reliability: in Cron, scripts can sometimes run unpredictably, and troubleshooting may require technical knowledge and can be cumbersome. Task Scheduler is generally more reliable in this regard.</p>
+
+<h2 id="starting-task-scheduler">Starting Task Scheduler</h2>
+
+<p>The easiest way to start Task Scheduler is by pressing the Start button on your keyboard and then typing ‘task scheduler’. You don’t have to type the whole phrase, as the autofill will suggest it. Just press <em>Enter</em> when it appears.</p>
+
+<p>For those who prefer keyboard shortcuts or want a more direct approach, you can press <em>Win+r</em> and type <em>‘taskschd.sc’</em> in the Run dialog that appears.</p>
+
+<p>The initial screen might look like this, or somewhat similar, depending on which menu panels you have enabled or disabled:</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd1.png" alt="Task Scheduler main tab" /></p>
+
+<p>Right off the bat, you can see some limitations in the interface. Sorting tasks by column used to work on Windows 10, but it may not function now (at least in my experience). There’s also no search functionality.</p>
+
+<p>This means locating a single task when you have hundreds can be extremely problematic. After focusing on the table, you can type the name of the task you’re looking for and it will keep focusing first direct match, but if there are many tasks with near-identical names, it’s not very helpful.</p>
+
+<h2 id="adding-a-new-task">Adding a new task</h2>
+
+<p>There are two procedures for creating tasks:</p>
+
+<ol>
+  <li>
+    <p><strong>Create Basic Task</strong> - A streamlined wizard with limited options that sets sensible defaults. This is designed for inexperienced users to avoid confusion.</p>
+  </li>
+  <li>
+    <p><strong>Create Task</strong> - The full version with all options visible, taking slightly longer to set up but offering more control.</p>
+  </li>
+</ol>
+
+<p>In this article, we’ll cover option 2, as it only takes about one to five minutes to fully grasp and some of the extra options are useful.</p>
+
+<p>In the right <em>Actions</em> panel, click <em>Create Task</em>. Alternatively, in the top program menu, click <em>Action</em> and select <em>Create Task</em> from the dropdown menu.</p>
+
+<h3 id="general">General</h3>
+
+<p>A window similar to the one pictured below will appear. It has 5 tabs, defaulting to the first one, <em>General</em>. Here are explanations for all the options. The one marked with an exclamation mark (!) is required to set up before continuing.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd2.png" alt="Task Scheduler: Create Task: General" /></p>
+
+<ul>
+  <li>
+    <p><strong>Name</strong>(!): Name of the task. Choose something concise yet descriptive enough that you’ll immediately know what the task does when you encounter it a year from now. Using unique initial letters makes it easier to find by typing.</p>
+  </li>
+  <li>
+    <p><strong>Description</strong>: Self-explanatory. Here you can be as verbose as you like. Taking a moment to write a detailed description is worthwhile, especially if you plan to have many tasks.</p>
+  </li>
+  <li>
+    <p><strong>When running the task, use the following user account</strong>: If the account which will be running the script is different from the currently logged-in account, you need to change it here.</p>
+  </li>
+  <li>
+    <p><strong>Run only when user is logged in / Run whether user is logged in or not</strong>: Scripts that require user interaction or access to variables created during the log-in process need the first option. The second option hides the task execution and is more suitable for non-interactive background tasks. If unsure, leave it at the default first option.</p>
+  </li>
+  <li>
+    <p><strong>Run with highest privileges</strong>: Enable this only if you know you need it. Otherwise, leave it off, as giving highest privileges to a script can cause significant problems if the script misbehaves.</p>
+  </li>
+  <li>
+    <p><strong>Hidden</strong>: This option hides the task from the list of tasks. Use with caution and only when necessary for privacy or security reasons.</p>
+  </li>
+  <li>
+    <p><strong>Configure for</strong>: Increases compatibility in some edge cases. It’s usually safe to leave this at the default setting.</p>
+  </li>
+</ul>
+
+<h3 id="triggers">Triggers</h3>
+
+<p>This is where Task Scheduler really shines and makes Crontab look like child’s toy.</p>
+
+<p>Triggers are conditions which, when met, start the task. In most cases, tasks will have one trigger, but there are instances where multiple triggers are needed. It’s much more convenient to define multiple triggers than multiple tasks, each with a different trigger.</p>
+
+<p>The most commonly used trigger, which is also the default, is <em>On the schedule</em>. We choose a specific date, or a daily/weekly/monthly cycle for the task to be executed.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd3.png" alt="Task Scheduler: Create Task: Triggers" /></p>
+
+<p>Often, we want the script to run whenever the computer is on, without concerning ourselves with dates and cycles. We can choose to start the task at logon or startup.</p>
+
+<p>A fantastic feature for power users and unique cases is <em>On an event</em>. For example, when a specific event is logged in the <em>Windows Event Viewer</em>, it could trigger our script to start.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd4.png" alt="Task Scheduler: Create Task: New trigger" /></p>
+
+<p>Workstation lock/unlock triggers are very useful in work environments when we want certain scripts to run only when the workstation is in use.</p>
+
+<p>As you can see, the possibilities with Task Scheduler Triggers are vast. Microsoft has made many questionable decisions in the directions its applications are going, but here they’ve done an excellent job.</p>
+
+<p>Let’s discuss some of the <strong>Advanced settings</strong>:</p>
+
+<ul>
+  <li>
+    <p><strong>Delay task for up to X</strong>: When the trigger registers, instead of starting the task immediately, Task Scheduler waits a specified amount of time before starting.</p>
+  </li>
+  <li>
+    <p><strong>Repeat task every X for the duration of Y</strong>: When we want to start a script at system logon and then run every hour, choose <em>Begin a task: On a schedule</em> and select <em>Repeat task every: 1 hour</em>. If you want it to repeat indefinitely, make sure to select <em>For a duration of: Indefinitely</em>.</p>
+  </li>
+  <li>
+    <p><strong>Stop Task if it runs longer than X</strong>: Very useful for poorly written scripts which tend to fail and then hang indefinitely, especially if they consume resources while doing so. When dealing with such problematic code, we can limit it with settings like 30 minutes. Note that you’re not limited to options in the drop-down list; you can enter custom values.</p>
+  </li>
+  <li>
+    <p><strong>Expire</strong>: Another useful feature. We can have a script collecting data until publication of that data, at which point we want the script to be disabled until we start another data gathering session later in the year. It’s convenient to set up the task expiration date instead of having to remember to disable it manually.</p>
+  </li>
+  <li>
+    <p><strong>Enabled</strong>: The most self-explanatory of all the options, but potentially troublesome. It can be clicked not only by clicking on the box or the name, but the clickable area extends to half of the entire container window width. This makes it possible to accidentally click and disable it, potentially causing confusion about why the task isn’t working.</p>
+  </li>
+</ul>
+
+<h3 id="actions">Actions</h3>
+
+<p>After going through various options and scheduling settings for our task, we now create the actual task that will be running.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd5.png" alt="Task Scheduler: Create Task: Actions" /></p>
+
+<p>Here, everything is straightforward. We click on <em>Browse</em> and provide the location of the program to run. If we want to start a program with additional arguments, we specify them in the second field.</p>
+
+<p>The third box, <em>Start in (optional)</em> provides a directory where the program will start. This will be the context directory, useful for example when the program uses relative paths and we want it to have access to files in that particular directory.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd6.png" alt="Task Scheduler: Create Task: New action" /></p>
+
+<p>Another use is for log file generation. Starting in a specific directory could mean the script generates logs in that directory, which might be desired behavior.</p>
+
+<h3 id="conditions">Conditions</h3>
+
+<p>Conditions are an extra set of <em>if</em> statements guarding the task. If any condition is not met, the task is prevented from running.</p>
+
+<p>All of the options are self-explanatory, so there’s no need to expand on any of them.</p>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd7.png" alt="Task Scheduler: Create Task: Conditions" /></p>
+
+<p>One particularly useful feature is <em>“Start only if the following network connection is available”</em>. This is especially useful for users in countries where high-speed internet access is not yet common. A PC could be connected to low-speed internet, and for a few hours of the day, high-speed internet could become available.</p>
+
+<p>Task Scheduler could wait for the better option and only then execute the script to enable faster downloading of content. Another use case is waiting for a connection where there is no monthly download limit.</p>
+
+<h3 id="settings">Settings</h3>
+
+<ul>
+  <li>
+    <p><strong>Allow task to be run on demand</strong>: Enables manual execution of the task at any time via the Task Scheduler interface or command line. This is useful for creating extra backup runs of the script or when the script is still in a testing stage and we need to manually execute it to verify what is not working and why.</p>
+  </li>
+  <li>
+    <p><strong>Run task as soon as possible after a scheduled start is missed</strong>: A crucial setting for all scripts handling backup. For example, if we schedule a backup at 10 AM but the system is off at that time, ticking this setting ensures that when the PC starts later that day, Task Scheduler recognizes that the backup script did not run and will execute it.</p>
+  </li>
+  <li>
+    <p><strong>If the task fails, restart every [X] minutes, up to [Y] times</strong>: Enable this setting for network-related tasks, such as scripts that upload files to a server. If the task fails due to a temporary network issue, it will retry a few times before giving up, increasing the chances of success.</p>
+  </li>
+  <li>
+    <p><strong>Stop the task if it runs longer than [X] hours and [Y] minutes</strong>: Enable this setting for scripts that perform resource-intensive calculations or data processing. If the script has a bug causing it to run indefinitely, this setting will prevent it from consuming system resources indefinitely.</p>
+  </li>
+  <li>
+    <p><strong>If the running task does not end when requested, force it to stop</strong>: Enable this setting for tasks that interact with external systems, such as automated tests or data transfers. If these tasks hang due to unresponsive external systems, forcing them to stop prevents system resources from being tied up.</p>
+  </li>
+  <li>
+    <p><strong>If the task is already running, then the following rule applies</strong>: A very useful set of conditions. When a script is scheduled to run every hour and the old instance hangs and consumes resources, these can stack up. If it doesn’t quit as expected and continues its work, after an hour we could have two scripts doing the same thing which, if they manipulate the same data simultaneously, can have catastrophic results. This setting provides safety nets for these and many other conditions.</p>
+  </li>
+</ul>
+
+<h3 id="history">History</h3>
+
+<p>Finally, we have the task execution history. It is disabled by default, but enabling it won’t significantly impact system performance. It won’t create logs that consume much disk space, won’t cause excessive disk I/O, and won’t consume much processing power.</p>
+
+<p>The exception is when we have a very large number of tasks that run frequently, but these are very rare cases.</p>
+
+<p>In general, when we are working on a complex system task whose development will take a while and it’s going to be executed many times during each working session, it is useful to enable history for easy execution status tracking.</p>
+
+<h3 id="last-run-result">Last Run Result</h3>
+
+<p>One poorly designed aspect of Task Scheduler is the execution codes, visible in the main task table.</p>
+
+<p>Each time a task is executed, there is a code describing the status of that execution. Some of these statuses have both a hexadecimal code (0xnum) and a description, from which we can determine if it worked well and if not, why. However, other times we just receive the code and have to manually search the web to understand what happened with our task.</p>
+
+<p>Below is a list of all the common execution codes and what they mean:</p>
+<ul>
+  <li><strong>0x0: Success</strong> - The task completed successfully without errors.</li>
+  <li><strong>0x1: Incorrect function call</strong> - This often indicates a generic error with the function call within the script or program.</li>
+  <li><strong>0x2: File not found</strong> - The script or program could not find a file it needs to execute.</li>
+  <li><strong>0x41300: Task is ready to run at its next scheduled time</strong> - The task is correctly configured and will run at the next scheduled time.</li>
+  <li><strong>0x41301: Task is currently running</strong> - The task is actively running.</li>
+  <li><strong>0x41302: Task is disabled</strong> - The task needs to be manually enabled to run.</li>
+  <li><strong>0x41303: Task has not yet run</strong> - The task has never been executed since it was created or last updated.</li>
+  <li><strong>Task is running interactively as a different user</strong> - The task is running interactively under a different user account.</li>
+  <li><strong>0x41305: Task is not running</strong> - The task is not currently running.</li>
+  <li><strong>0x80070005: Access is denied</strong> - The task does not have the necessary permissions to execute.</li>
+  <li><strong>0x8007010B: Directory name is invalid</strong> - The task points to a directory that is invalid or does not exist.</li>
+  <li><strong>0xC000013A: The application was terminated by Ctrl+C</strong> - The task was terminated by the user manually.</li>
+</ul>]]></content><author><name>Chris</name></author><category term="scheduler" /><category term="windows" /><summary type="html"><![CDATA[Task Scheduler Guide]]></summary></entry><entry><title type="html">Writing a local Windows audio scrobbler</title><link href="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html" rel="alternate" type="text/html" title="Writing a local Windows audio scrobbler" /><published>2024-02-15T14:13:00+01:00</published><updated>2024-02-15T14:13:00+01:00</updated><id>https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler</id><content type="html" xml:base="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html"><![CDATA[<h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
 
 <p>The practice of listening to MP3 files and maintaining an MP3 collection is certainly a thing of the past now. In fact, if we asked a few tech-savvy teenagers what an MP3 file is, some wouldn’t even know.</p>
 
@@ -1445,224 +1637,4 @@ bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to
 
 <p>Yet another problem is logging playback from services like Spotify. Popular services of this kind support scrobbling to Last.fm. It will get logged the same as if we were listening through the music player. This script obviously doesn’t have that functionality.</p>
 
-<p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>]]></content><author><name>Chris</name></author><category term="bash" /><category term="linux" /><category term="scrobbling" /><summary type="html"><![CDATA[Writing a local audio scrobbling script in Bash]]></summary></entry><entry><title type="html">Using commands to resize programs in Linux</title><link href="https://www.devkoala.com/2020/using-commands-to-resize-programs-in-linux.html" rel="alternate" type="text/html" title="Using commands to resize programs in Linux" /><published>2020-01-14T13:45:20+01:00</published><updated>2020-01-14T13:45:20+01:00</updated><id>https://www.devkoala.com/2020/using-commands-to-resize-programs-in-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/using-commands-to-resize-programs-in-linux.html"><![CDATA[<h1 id="using-commands-to-resize-programs-in-linux">Using commands to resize programs in Linux</h1>
-
-<p>Neither Linux nor Windows remembers the window size and position for applications.</p>
-
-<p>A minority of programs retain their dimensions and position upon exit. For the rest, it feels as if a mischievous spirit is deciding randomly: “Where should we put it this time?”</p>
-
-<p>It is disappointing that such a basic and important feature is still largely ignored by developers of both operating systems. As a result, we must rely on separate tools to address this issue while less significant concerns are prioritized.</p>
-
-<p>In this article, we will explore options to modify window sizes and positions using commands and scripts.</p>
-
-<h2 id="geometry">Geometry</h2>
-
-<p>Occasionally, Linux applications support setting geometry, which more than solves this problem, but only for those specific apps.</p>
-
-<p>Geometry is a special string containing four numbers:</p>
-<ul>
-  <li>Window width</li>
-  <li>Window height</li>
-  <li>Starting position in pixels from left screen border</li>
-  <li>Starting position in pixels from top screen border</li>
-</ul>
-
-<p>We can append this special geometry string to some programs when we start them from command line. This functionality must be implemented by the developer within the app.</p>
-
-<p>There are also programs that can set any graphical window’s parameters through special commands. The following article explains both methods in detail.</p>
-
-<p>The first two parameters determine window’s size vertically and horizontally, while the other two specify where the top-left corner of the application is on our monitor. Here’s an example:</p>
-
-<blockquote>
-  <p>1200x600+20+0</p>
-</blockquote>
-
-<p>Assuming we have a 1080p monitor, its exact resolution is 1920x1080. Here, the program window is being set to 1200 pixels wide and 600 pixels high. It will occupy a considerable amount of space on our monitor.</p>
-
-<p>The third number indicates that we want our program to be 20 pixels from the left border of our monitor. The last number means it will start at pixel 0 from the top. In other words, there will be no space between our program’s top border and the monitor’s top border.</p>
-
-<p>Notice the two pluses at the end. We can either put ‘+’ or ‘-‘ in front of each of the last two numbers. Plus means ‘pixels from the left edge of the screen’, while minus means ‘pixels from the right edge of the screen’.</p>
-
-<p>Sometimes it is more convenient to align our windows from the right side, so it is great that we have this flexibility.</p>
-
-<p>Of course, pixels then align towards the left side, just like when we get an order to move our piece of furniture 20 cm from the right wall; we move it to the left instead of trying to demolish the wall and put it inside.</p>
-
-<p>Without the option to align from the right side with minuses, if we wanted to set it 20 pixels from the right, we’d have to calculate each time: current monitor resolution - (window width + 20px). It would be very cumbersome to do this.</p>
-
-<p>Not all window managers on Linux support geometry, so make sure that the one in your distribution does before starting to tinker with it. Fortunately, all the popular ones (and many less popular ones) do, so it is likely that yours does too.</p>
-
-<p>Another thing to consider is that some window managers have different window ‘states’. For example, in i3, windows can be either floating or tiling. Geometry only works for floating windows. However, if you’re using a tiling window manager, you are likely doing so intentionally and already know about this distinction.</p>
-
-<p>As mentioned at the beginning of this article, some programs support setting geometry at startup. In those cases, the magic formula almost always looks like this shell command:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">mpv <span class="nt">--geometry</span><span class="o">=</span>1280x1024+1920+0 </code></pre></figure>
-
-<p>It is super useful for multi-monitor setups. Sometimes, we want to start the player on monitor one. Tutorials, we might want to watch on monitor 2, a TV show on our TV, which is set up as monitor 3.</p>
-
-<p>We can have different commands to start the same player in these different contexts, which is more powerful than system-wide memory of last known window state (which nevertheless needs to be implemented).</p>
-
-<h2 id="getting-window-geometry">Getting window geometry</h2>
-
-<p>Finding out exact position and dimensions of our window does not require print-screening entire desktop and then probing it in an image editor.</p>
-
-<p>It’s very simple. We just resize the window to our liking, position it where we want on our screen and run a command to find out its dimensions.</p>
-
-<p>For that, a program called <strong>xwininfo</strong> is needed. It has many more uses than just geometry, but since right now it is all we need, we enter this command into our console:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xwininfo | <span class="nb">grep </span>geometry</code></pre></figure>
-
-<p>This is super useful for multi-monitor setups. Sometimes, we want to start the player on monitor one. For tutorials, we might want to watch on monitor two, and a TV show on our TV, which is set up as monitor three.</p>
-
-<p>We can have different commands to start the same player in these different contexts, which is much more powerful than system-wide memory of the last known window state (which still needs to be implemented).</p>
-
-<h2 id="introduction-to-wmctrl">Introduction to wmctrl</h2>
-
-<p>Many people who work on their computers have a small set of programs they run each time they start working. For entertainment, they often use a different set of programs.</p>
-
-<p>Some applications need to have different window properties during work than during leisure. For example, a terminal emulator window could be smaller during leisure time to give more screen space to the internet browser, but larger during work hours when Vim or Kakoune needs to be run inside it.</p>
-
-<p>With Linux, the sky is the limit, and we can create extremely convenient shortcuts to instantly get the desktop setup we want.</p>
-
-<p>The tool that makes this possible is wmctrl. It is a simple, lightning-fast application that looks for specified windows on our desktop and gives them various behavior commands, like maximizing, changing geometry, closing, and even changing the title.</p>
-
-<p>First, we need to install it using our Linux distro’s package manager of choice. In the case of Ubuntu/Mint, the command is:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sudo </span>apt <span class="nb">install </span>wmctrl</code></pre></figure>
-
-<p>Let’s start by changing the geometry of a single window. We’ll need to provide wmctrl with some identification so it knows which window we want to modify. The previously used xwininfo command can also be used here.</p>
-
-<p>Type this in your console window:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">xwininfo | <span class="nb">grep</span> <span class="s2">"Window id"</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s1">'(?&lt;=").+(?=")'</span></code></pre></figure>
-
-<p>…and then click on the window you want. You should get the window title in your console.</p>
-
-<p>The command may look complicated if you don’t understand regex and piping, but in reality, it’s simple. It filters the output of xwininfo to get the line where the title resides and then extracts it from inside the brackets so that the full title is the only thing displayed.</p>
-
-<p>It is easier and faster to go these extra two piping steps to get just what we want. Additionally, we can point a bash variable to it or save it to a file for future use.</p>
-
-<p>The full command may not work in some edge cases (like a browser with a focused tab containing brackets in the page title). If it doesn’t work for you, just write xwininfo in your console, and the title will be inside brackets next to the Window id number.</p>
-
-<p>Write down that title. Now, let’s look at wmctrl syntax for changing window geometry:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wmctrl <span class="nt">-r</span> TITLE <span class="nt">-e</span> GEOMETRY</code></pre></figure>
-
-<p>One last obstacle: wmctrl does not accept geometry in its standard format. You have to take those four numbers and rearrange them to fit wmctrl’s standard, which is:</p>
-
-<blockquote>
-  <p>GRAVITY,PX_FROM_LEFT,PX_FROM_TOP,WIDTH,HEIGHT</p>
-</blockquote>
-
-<p>As you can see, wmctrl takes another item right at the beginning.</p>
-
-<p>That first number is gravity, which specifies the alignment or source of reference for the moved window. You most likely don’t need to understand what it is and can always set it to 0. Just remember to include it. You can safely skip the next section describing how it works.</p>
-
-<h2 id="gravity-details">Gravity details</h2>
-
-<p>We don’t use pluses and minuses to specify if the window should move “to the right from the left side of the screen” or “to the left from the right side of the screen.”</p>
-
-<p>Instead, we use a compass-like reference point. The screen has four cardinal directions (north, south, east, west) and four intercardinal directions (northeast, northwest, etc.).</p>
-
-<p>A value of 0 refers to the system default, typically north-west, meaning alignment from the top-left corner of the screen. A gravity value of 3 (north-east) aligns the window from the top-right corner, similar to using negative numbers when setting geometry.</p>
-
-<p>Below are the codes for all 8 gravity directions. Note that many window managers do not support this feature and will default to the system setting regardless of the value provided.</p>
-
-<blockquote>
-  <p>NorthWest (1), North (2), NorthEast (3), West (4), Center (5), East (6), SouthWest (7), South (8), SouthEast (9) and Static (10)</p>
-</blockquote>
-
-<h2 id="wmctrl-traps">Wmctrl traps</h2>
-
-<p>Read this part if your wmctrl command does nothing, or if you intend to use it often and want to know some caveats in advance.</p>
-
-<p>Let’s look at an example of a wmctrl command:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">wmctrl <span class="nt">-r</span> <span class="s2">"Sublime Text"</span> <span class="nt">-e</span> 0,30,20,800,1080</code></pre></figure>
-
-<p>The program first generates a list of currently existing windows, finds the first title that contains a string specified within brackets, and then sets it to gravity 0, position from the left 30px, position from the top 20px, window width 800px, and window height 1080px.</p>
-
-<p>Because only the first found item gets adjusted, if we have a few windows which are really one program, only one of them will be done, and each next command given will still reposition just that one window.</p>
-
-<p>Another potential issue is that windows can have surprising titles sometimes. Browsers troll the most if we seek inside the window title.</p>
-
-<p>A website we are visiting might have a “Sublime Text registered version cost” title, which could result in your Firefox having a “Sublime Text registered version cost - Mozilla Firefox” title whenever that particular tab is focused.</p>
-
-<p>If those 3 conditions were met:</p>
-<ul>
-  <li>The title we order wmctrl to search for is ‘Sublime Text’</li>
-  <li>The browser is higher in wmctrl’s item search order than Sublime Text (and so would be checked first)</li>
-  <li>The title of the currently focused Firefox tab includes a string ‘Sublime Text’</li>
-</ul>
-
-<p>…then wmctrl would adjust Firefox’s parameters instead of Sublime Text’s.</p>
-
-<p>There are multiple ways to solve that problem:</p>
-<ol>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>Use wmctrl with ‘-x’ to search WM_CLASS instead of the title, and that you can find with the ‘xprop</td>
-          <td>grep WM_CLASS’ command (followed by clicking a desired application window, just like with xwininfo).</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>Use it with the ‘-F’ option to match the exact string to the letter, instead of looking for the string inside the app title (‘Sublime Text’ only matches if the application title is ‘Sublime Text’, it will fail if it is ‘How much does Sublime Text cost - Mozilla Firefox’).</li>
-  <li>Change conflicting application titles right before searching (for example: ‘wmctrl -r “ - Mozilla Firefox” -N Firefox’ and Sublime Text resizing wmctrl command right after).</li>
-</ol>
-
-<p>If you are playing title guessing games in your scripts, it is generally a good idea to set application titles to some unique strings that are not likely to get falsely matched (for example: ‘:.:BROWSER:.:’, ‘:.:EDITOR:.:’, ‘:.:MP3PLAYER:.:’…) in all applications that give an option to change their titles. Many do, many don’t ;)</p>
-
-<p>If you can’t, it is good practice to order your resizing commands starting from applications most likely to cause conflicts (i.e., those whose names dynamically change based on file opened, website visited, etc.), through less likely to do so, with the ones which never will (due to constant unique name) at the bottom. For the last ones, the order doesn’t matter.</p>
-
-<p>For each that can cause problems, follow the line in which you resize with the line that changes that same program’s name (the mentioned ‘-N’, you can see it below in an example file). This will ensure that the application won’t cause any conflicts.</p>
-
-<p>Don’t worry if you have to do a lot of title renaming - both repositioning and renaming are trivial operations from your processor’s point of view. You will never see any performance hit, no matter how old your computer is and how many windows you shuffle around.</p>
-
-<p>Again, many apps offer an option to set a permanent app title and your fixing attempts should start there. Some even allow having different titles when starting them with different profiles. A fantastic terminal emulator called Tilix is a good example.</p>
-
-<h2 id="creating-a-script-file-to-resize-multiple-windows">Creating a script file to resize multiple windows</h2>
-
-<p>Each wmctrl command only changes one window, so we need to invoke as many commands as windows we need changed.</p>
-
-<p>To contain all these instructions, we will use a bash script. Traditionally, in its first line we need to point to the interpreter. Most often, the line you need is:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span></code></pre></figure>
-
-<p>Then, in each line a separate wmctrl command. No need for a colon, semicolon, or any other sign by line end. Just one command in each line.</p>
-
-<p>The quickest way to write such a script is to set up exactly the desktop layout we want. Align everything so it looks perfect. Then, use the mentioned xwininfo commands to get each window’s geometry and title. Write everything down.</p>
-
-<p>Next, write wmctrl commands. Remember to convert geometry strings (WIDTHxHEIGHT+FROMLEFT+FROMTOP) to the format that wmctrl accepts (0,FROMLEFT,FROMTOP,WIDTH,HEIGHT) in each command.</p>
-
-<p>A complete example winresize.sh file looks like this:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
-wmctrl <span class="nt">-r</span> Firefox <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> Firefox <span class="nt">-N</span> Firefox
-wmctrl <span class="nt">-r</span> <span class="s1">'Sublime Text'</span> <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> qBittorrent <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> <span class="s1">'Google Chrome'</span> <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> <span class="s1">'Tor Browser'</span> <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> Kid3 <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> Pinta <span class="nt">-e</span> 0,394,17,1510,1044
-wmctrl <span class="nt">-r</span> LibreOffice <span class="nt">-e</span> 0,394,17,1510,1044
-wmctrl <span class="nt">-r</span> QuiteRSS <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> easystroke <span class="nt">-e</span> 0,942,18,961,1042
-wmctrl <span class="nt">-r</span> Telegram <span class="nt">-e</span> 0,16,95,359,605
-wmctrl <span class="nt">-r</span> deadbeef <span class="nt">-e</span> 0,16,720,359,340</code></pre></figure>
-
-<p>Don’t forget to order them from most conflicting to least conflicting and follow each problematic application with another wmctrl command that renames it. Above, you see me doing it with Firefox.</p>
-
-<h2 id="making-convenient-shortcuts-for-resizing">Making convenient shortcuts for resizing</h2>
-
-<p>The final step is to set up a way to execute our new script at will. Below are the main 3 categories of options we have.</p>
-
-<ol>
-  <li>Create a bash alias for execution of that file (in file <em>~/.bash_aliases</em> add line: <em>resizer=’/path/to/script.sh’</em>), source that file (or restart the system if you don’t know how) and then execute it from console by writing <em>‘resizer’</em></li>
-  <li>Set up a system-wide keyboard shortcut for that script (different for every window manager, in i3 it’s as simple as adding this line: <em>‘bindsym F9 exec /path/to/script.sh’</em>)</li>
-  <li>Create a mouse gesture to execute a script (easily achieved with easystroke, choosing ‘command’ option and then in command just pasting /full/path/to/our/script.sh</li>
-</ol>
-
-<p>And voila! We now can reshape all our desktop with something as simple as a single command, pressing of a key, or a mouse gesture. We can create as many of those files and shortcuts as we want.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="linux" /><summary type="html"><![CDATA[Using commands to resize programs in Linux]]></summary></entry></feed>
+<p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>]]></content><author><name>Chris</name></author><category term="bash" /><category term="linux" /><category term="scrobbling" /><summary type="html"><![CDATA[Writing a local audio scrobbling script in Bash]]></summary></entry></feed>

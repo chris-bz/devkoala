@@ -239,12 +239,25 @@ main.post {
 }
 
 main.post h2 {
-    padding-top: 40px;
+    margin-top: clamp(40px, 5vw, 70px);
+    margin-bottom: clamp(20px, 8vw, 30px);
+    font-size: min(calc(10px + 3vw), 23px);
 }
+
+main.post h3 {
+    margin-top: clamp(30px, 4vw, 60px);
+    margin-bottom: clamp(15px, 6vw, 26px);
+    font-size: 1.3em;
+}
+
+/* main.post li p {
+    font-size: 1rem;
+} */
 
 article img {
     display: block;
     margin: 0 auto;
+    max-width: 770px;
 }
 
 article div.sidenote {
