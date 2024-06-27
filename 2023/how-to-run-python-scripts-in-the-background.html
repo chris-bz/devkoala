@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>How to Run Python Scripts in the Background | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="https://www.devkoala.com/">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="https://www.devkoala.com/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="how-to-run-python-scripts-in-the-background">How to Run Python Scripts in the Background</h1>
+
+<p>There are two type of system scripts.</p>
+
+<ol>
+  <li>
+    <p><strong>Interactive Scripts</strong>: These are scripts that we run with a program or terminal window open. For these scripts, we often want detailed output so we can closely monitor what the script is achieving and ensure it encounters no obstacles.</p>
+  </li>
+  <li>
+    <p><strong>Background Scripts</strong>: These are silent partners, running in the background and performing minor tasks quietly, such as periodic data downloading, database updating, headline sniffing, file maintenance, etc.</p>
+  </li>
+</ol>
+
+<p>For the latter, having a window open the entire time for something that is just supposed to work quietly is a waste of visual space. We want it to be as detached and absent as possible.</p>
+
+<p>Below, I will show a simple way to set up just that. The example will be a Python script run through Task Scheduler.</p>
+
+<h2 id="basics">Basics</h2>
+
+<p>To run scripts “silently”, we need a few things things:</p>
+
+<h3 id="--python">- Python</h3>
+
+<p>Download the latest version from the <a href="https://www.python.org/downloads/" target="_blank">official website</a>.</p>
+
+<h3 id="--virtual-environment">- Virtual Environment</h3>
+
+<p>Although it’s not required, using a virtual environment is a very important habit. Virtual environments are self-contained environments that have a specific version of Python and a specific set of modules installed, tailored for one particular job.</p>
+
+<p>If we install all the modules to the default system version of Python, the module list might grow exponentially, slowing down Python software execution. Additionally, we might encounter compatibility issues. If something happens to the core system Python, it could cause a system-wide meltdown.</p>
+
+<p>To maintain order, simplicity, ease of access, and stability, it’s best to install a virtual environment for every different task or group of tasks our programs will be performing.</p>
+
+<p><strong>venv</strong>, a virtual library for Python, comes with Python itself, so there is no need to install it separately.</p>
+
+<ul>
+  <li>Open a terminal (cmd or PowerShell) and navigate to the directory where you want to store your virtual environments. Choose a location that is convenient and logical.</li>
+  <li>In the terminal, run: <em>python -m venv</em> followed by the name you want to give to the virtual environment. For example: <em>python -m venv mybackup</em>.</li>
+  <li>To use the virtual environment, you need to activate it. When you create an environment using venv, a folder with that name is created, containing a <em>Scripts</em> folder, which contains an activate file. To start the script, run the command: <em>source path/to/venv/myvenvname/Scripts/activate</em> where myvenvname is the name of your virtual environment. Alternatively, you can navigate to the venv’s <em>Scripts</em> folder and run <em>source activate</em>.</li>
+  <li>Once the virtual environment is activated, install all the modules required by the script you want to run in Task Scheduler. Open your script file(s) and review all the imports. Some of them are built-in (installed with Python), while others need to be downloaded externally. Download the external modules with the command <em>pip install</em> followed by the module name.</li>
+</ul>
+
+<p>Once you are finished, you can exit the virtual environment by typing <em>exit</em> in the console window. Don’t worry - once everything is set up, you won’t have to manually enter the virtual environment for Task Scheduler to execute it.</p>
+
+<h3 id="--pyw-python-file">- <em>.pyw</em> Python file</h3>
+
+<p>Python files can be saved with two file extensions: <em>.py</em> and <em>.pyw</em>. The latter, <em>‘w’</em> stands for <em>‘Windows’</em>.</p>
+
+<p>The code within the file gets executed the same way. The difference is that the extra <em>‘w’</em> tells Windows that the script is intended to run in the graphical interface, i.e., without a terminal window present during execution.</p>
+
+<h3 id="--task-scheduler">- Task Scheduler</h3>
+
+<p>Ideally, background scripts initiate on predefined triggers or run whenever the system is on, without the need to start them manually each time.</p>
+
+<p>Task Scheduler is a refined piece of software included with Microsoft Windows, specifically designed to run tasks according to various criteria.</p>
+
+<p>I will skip the detailed explanation and go straight to the point. However, if you need a detailed guide on its features and settings, <a href="/2024/task-scheduler-guide.html" target="_blank">here is a link</a> to a Task Scheduler guide.</p>
+
+<h2 id="create-a-script-task-in-task-manager">Create a script task in Task Manager</h2>
+
+<ul>
+  <li>Make sure that the Python script you are adding has a <em>.pyw</em> extension instead of <em>.py</em>.</li>
+  <li>Open Task Scheduler by pressing <em>Start</em> and typing the initial letters of <em>task scheduler</em> until auto-complete suggests it.</li>
+  <li>Select a <em>Create Task</em> action.</li>
+  <li>In the <em>General</em> tab, give your task a name. Choose something short but descriptive. The name is required, and while the description is optional, it’s worth adding if you have many tasks or similar tasks.</li>
+  <li>In the <em>Triggers</em> tab, add one or more triggers. For example, if you want the script to run at 10 AM every day, select <em>On a schedule</em> and specify the hour.</li>
+  <li>In <em>Actions</em> tab, specify the tasks to be executed. Click the <em>New</em> button.
+<img src="https://www.devkoala.com/assets/img/articles/how-to-run-python-scripts-in-the-background/pyw.png" alt="Task Scheduler: adding a pyw script" /></li>
+  <li>Click <em>Browse</em>, navigate to the location of your virtual environment where the script is supposed to run. In the directory containing the activate file, there are <em>.exe</em> files for different Python executables. Locate <em>pythonw.exe</em> and select it. Be careful not to select <em>python.exe</em> by accident. The <em>‘w’</em> letter at the end is important, as we need to run a <em>‘.pyw’</em> file with <em>‘pythonw.exe’</em> for the script to run entirely in the background.</li>
+  <li>In the Add arguments (optional) field, paste the full path to the script you want to run.</li>
+</ul>
+
+<p>And that’s it! There are many other settings worth checking out to tailor the script to your needs, but the defaults are sensible and will generally not prevent the script from working.</p>
+
+<p>It is generally worth manually starting the task after adding it to verify that it’s working before leaving Task Scheduler.</p>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    <script async data-id="101455210" src="//static.getclicky.com/js"></script>
+  </body>
+
+</html>

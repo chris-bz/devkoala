@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-26T20:24:53+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2024/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2024-06-26T14:14:20+02:00</published><updated>2024-06-26T14:14:20+02:00</updated><id>https://www.devkoala.com/2024/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2024/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-27T12:07:51+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2024/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2024-06-26T14:14:20+02:00</published><updated>2024-06-26T14:14:20+02:00</updated><id>https://www.devkoala.com/2024/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2024/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
 
 <p>A decent tool since <em>Vista</em> but already existing as early as <em>Win 3.11</em>, Task Scheduler is an ireplaceable tool to manage system scripts.</p>
 
@@ -397,7 +397,81 @@
 				<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
 
 		<span class="n">time_played_past</span> <span class="o">=</span> <span class="n">time_played_current</span>
-	<span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="audio" /><category term="python" /><summary type="html"><![CDATA[Writing a local Windows audio scrobbler]]></summary></entry><entry><title type="html">Guide to responsive design tools in CSS</title><link href="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html" rel="alternate" type="text/html" title="Guide to responsive design tools in CSS" /><published>2021-02-01T10:13:28+01:00</published><updated>2021-02-01T10:13:28+01:00</updated><id>https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css</id><content type="html" xml:base="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html"><![CDATA[<h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
+	<span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="audio" /><category term="python" /><summary type="html"><![CDATA[Writing a local Windows audio scrobbler]]></summary></entry><entry><title type="html">How to Run Python Scripts in the Background</title><link href="https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background.html" rel="alternate" type="text/html" title="How to Run Python Scripts in the Background" /><published>2023-04-11T14:21:01+02:00</published><updated>2023-04-11T14:21:01+02:00</updated><id>https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background</id><content type="html" xml:base="https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background.html"><![CDATA[<h1 id="how-to-run-python-scripts-in-the-background">How to Run Python Scripts in the Background</h1>
+
+<p>There are two type of system scripts.</p>
+
+<ol>
+  <li>
+    <p><strong>Interactive Scripts</strong>: These are scripts that we run with a program or terminal window open. For these scripts, we often want detailed output so we can closely monitor what the script is achieving and ensure it encounters no obstacles.</p>
+  </li>
+  <li>
+    <p><strong>Background Scripts</strong>: These are silent partners, running in the background and performing minor tasks quietly, such as periodic data downloading, database updating, headline sniffing, file maintenance, etc.</p>
+  </li>
+</ol>
+
+<p>For the latter, having a window open the entire time for something that is just supposed to work quietly is a waste of visual space. We want it to be as detached and absent as possible.</p>
+
+<p>Below, I will show a simple way to set up just that. The example will be a Python script run through Task Scheduler.</p>
+
+<h2 id="basics">Basics</h2>
+
+<p>To run scripts “silently”, we need a few things things:</p>
+
+<h3 id="--python">- Python</h3>
+
+<p>Download the latest version from the <a href="https://www.python.org/downloads/" target="_blank">official website</a>.</p>
+
+<h3 id="--virtual-environment">- Virtual Environment</h3>
+
+<p>Although it’s not required, using a virtual environment is a very important habit. Virtual environments are self-contained environments that have a specific version of Python and a specific set of modules installed, tailored for one particular job.</p>
+
+<p>If we install all the modules to the default system version of Python, the module list might grow exponentially, slowing down Python software execution. Additionally, we might encounter compatibility issues. If something happens to the core system Python, it could cause a system-wide meltdown.</p>
+
+<p>To maintain order, simplicity, ease of access, and stability, it’s best to install a virtual environment for every different task or group of tasks our programs will be performing.</p>
+
+<p><strong>venv</strong>, a virtual library for Python, comes with Python itself, so there is no need to install it separately.</p>
+
+<ul>
+  <li>Open a terminal (cmd or PowerShell) and navigate to the directory where you want to store your virtual environments. Choose a location that is convenient and logical.</li>
+  <li>In the terminal, run: <em>python -m venv</em> followed by the name you want to give to the virtual environment. For example: <em>python -m venv mybackup</em>.</li>
+  <li>To use the virtual environment, you need to activate it. When you create an environment using venv, a folder with that name is created, containing a <em>Scripts</em> folder, which contains an activate file. To start the script, run the command: <em>source path/to/venv/myvenvname/Scripts/activate</em> where myvenvname is the name of your virtual environment. Alternatively, you can navigate to the venv’s <em>Scripts</em> folder and run <em>source activate</em>.</li>
+  <li>Once the virtual environment is activated, install all the modules required by the script you want to run in Task Scheduler. Open your script file(s) and review all the imports. Some of them are built-in (installed with Python), while others need to be downloaded externally. Download the external modules with the command <em>pip install</em> followed by the module name.</li>
+</ul>
+
+<p>Once you are finished, you can exit the virtual environment by typing <em>exit</em> in the console window. Don’t worry - once everything is set up, you won’t have to manually enter the virtual environment for Task Scheduler to execute it.</p>
+
+<h3 id="--pyw-python-file">- <em>.pyw</em> Python file</h3>
+
+<p>Python files can be saved with two file extensions: <em>.py</em> and <em>.pyw</em>. The latter, <em>‘w’</em> stands for <em>‘Windows’</em>.</p>
+
+<p>The code within the file gets executed the same way. The difference is that the extra <em>‘w’</em> tells Windows that the script is intended to run in the graphical interface, i.e., without a terminal window present during execution.</p>
+
+<h3 id="--task-scheduler">- Task Scheduler</h3>
+
+<p>Ideally, background scripts initiate on predefined triggers or run whenever the system is on, without the need to start them manually each time.</p>
+
+<p>Task Scheduler is a refined piece of software included with Microsoft Windows, specifically designed to run tasks according to various criteria.</p>
+
+<p>I will skip the detailed explanation and go straight to the point. However, if you need a detailed guide on its features and settings, <a href="/2024/task-scheduler-guide.html" target="_blank">here is a link</a> to a Task Scheduler guide.</p>
+
+<h2 id="create-a-script-task-in-task-manager">Create a script task in Task Manager</h2>
+
+<ul>
+  <li>Make sure that the Python script you are adding has a <em>.pyw</em> extension instead of <em>.py</em>.</li>
+  <li>Open Task Scheduler by pressing <em>Start</em> and typing the initial letters of <em>task scheduler</em> until auto-complete suggests it.</li>
+  <li>Select a <em>Create Task</em> action.</li>
+  <li>In the <em>General</em> tab, give your task a name. Choose something short but descriptive. The name is required, and while the description is optional, it’s worth adding if you have many tasks or similar tasks.</li>
+  <li>In the <em>Triggers</em> tab, add one or more triggers. For example, if you want the script to run at 10 AM every day, select <em>On a schedule</em> and specify the hour.</li>
+  <li>In <em>Actions</em> tab, specify the tasks to be executed. Click the <em>New</em> button.
+<img src="https://www.devkoala.com/assets/img/articles/how-to-run-python-scripts-in-the-background/pyw.png" alt="Task Scheduler: adding a pyw script" /></li>
+  <li>Click <em>Browse</em>, navigate to the location of your virtual environment where the script is supposed to run. In the directory containing the activate file, there are <em>.exe</em> files for different Python executables. Locate <em>pythonw.exe</em> and select it. Be careful not to select <em>python.exe</em> by accident. The <em>‘w’</em> letter at the end is important, as we need to run a <em>‘.pyw’</em> file with <em>‘pythonw.exe’</em> for the script to run entirely in the background.</li>
+  <li>In the Add arguments (optional) field, paste the full path to the script you want to run.</li>
+</ul>
+
+<p>And that’s it! There are many other settings worth checking out to tailor the script to your needs, but the defaults are sensible and will generally not prevent the script from working.</p>
+
+<p>It is generally worth manually starting the task after adding it to verify that it’s working before leaving Task Scheduler.</p>]]></content><author><name>Chris</name></author><category term="python" /><category term="windows" /><summary type="html"><![CDATA[How to Run Python Scripts in the Background]]></summary></entry><entry><title type="html">Guide to responsive design tools in CSS</title><link href="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html" rel="alternate" type="text/html" title="Guide to responsive design tools in CSS" /><published>2021-02-01T10:13:28+01:00</published><updated>2021-02-01T10:13:28+01:00</updated><id>https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css</id><content type="html" xml:base="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html"><![CDATA[<h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
 
 <p>Before smartphones became popular, almost entire web browsing traffic was on PCs.</p>
 
@@ -1398,243 +1472,4 @@ bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to
 
 <p>Remember that binding a key or key combination directly in the window manager usually means no application can use it. Otherwise, one key could potentially execute multiple unrelated actions, leaving the user in a state of confusion.</p>
 
-<p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="printscreen" /><summary type="html"><![CDATA[Setting up a screen capturing script in Linux]]></summary></entry><entry><title type="html">Writing a local audio scrobbling script in Bash</title><link href="https://www.devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html" rel="alternate" type="text/html" title="Writing a local audio scrobbling script in Bash" /><published>2020-02-20T21:43:18+01:00</published><updated>2020-02-20T21:43:18+01:00</updated><id>https://www.devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash</id><content type="html" xml:base="https://www.devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html"><![CDATA[<h1 id="writing-a-local-audio-scrobbling-script-in-bash">Writing a local audio scrobbling script in Bash</h1>
-
-<h2 id="lastfm-vs-local-scrobbling">Last.fm vs local scrobbling</h2>
-<p>Once merged with <strong>Audioscrobbler</strong>, <strong>Last.fm</strong> became the leading tool for tracking music history and probably remains so to this day, despite being considerably less popular now than it used to be.</p>
-
-<p>One of the reasons it became so popular was because it added a social dimension to music tracking. We can start a conversation about an interesting track we’ve both discovered recently, or a concert which, as it turns out, we both attended.</p>
-
-<p>But what if someone doesn’t care about all that and just wants to track their history and store it? In that case, there is probably no reason to keep something as precious as a lifetime of our musical adventures only on a remote server.</p>
-
-<p>That applies even if the company is trustworthy. And people behind Last.fm, both before and after <a href="https://techcrunch.com/2007/05/30/cbs-acquires-lastfm-for-280m/?guccounter=1">the CBS takeover</a>, have not given us any reasons to doubt them.</p>
-
-<p>Anything can happen to a website though. A disgruntled employee on his way out might <a href="http://www.digitaljournal.com/article/249311">erase large portion of its data</a>.</p>
-
-<p>Just to be safe, we might want to download our entire listening history. In the case of Last.fm, this isn’t always easy. The service itself used to provide a way to download all user data, but for years that option has been gone.</p>
-
-<p>There are other websites that can extract it. But if our history contains hundreds of thousands of items, there is a big chance downloading those large files will fail at some point. Fetching data through those kinds of websites also takes a lot of time.</p>
-
-<p>When our history is out there with no backups, even if that company has many backups on different servers, we can’t really be 100% sure that our data is safe. It needs to be backed up somehow.</p>
-
-<p>If downloading Last.fm user history fails, the only option left is to write a script that will extract that data from their website, page by page. That can be tens of thousands of pages… and now we have to know web scraping.</p>
-
-<p>But it can’t just be a script that we run once and are done with it. It needs to check for new scrobbles periodically, so we lose as little data as possible.</p>
-
-<p>In other words, if we want to continue using a remote scrobbling service, but also want a regular and reliable backup plan for our data, we’re in a world of trouble.</p>
-
-<p>Why not write our own script and store our musical history on our very own disk, right under our noses? Backing it up further from a local file for 100% safety is so much simpler and faster, too.</p>
-
-<p>We won’t need any application that might spy on us, to which we might one day lose the password by accident, or which might stop working at some point due to some peculiar bug.</p>
-
-<p>And we need it to be able to scrobble, or our listening history comes to a halt until the problem is solved. Do we stop listening to anything until we manage to fix it, just to keep historical accuracy? That would be a questionable solution to a problem that we could do without.</p>
-
-<p>A local script means every time the system is on, scrobbling is on. 100% reliability. Let’s explore other arguments for it.</p>
-
-<h2 id="advantages-of-local-scrobbling">Advantages of local scrobbling</h2>
-
-<ul>
-  <li>The script is just a few lines long, possible to fully understand quickly even for someone who has just started learning Bash.</li>
-  <li>Once everything is set up, it always works. If problematic strings are properly escaped/removed, nothing will break our script.</li>
-  <li>Data can be stored in any format we want. In case we change our mind at some point, converting it to another format using regex is very easy.</li>
-  <li>With a minor modification of this script, we can set up a local SQL server and directly feed it scrobbled data. Keep in mind that if you don’t plan to do advanced stuff with that data, choosing a database over a plain CSV file for storage is overkill.</li>
-  <li>We decide which tag fields should be stored.</li>
-  <li>Deleting unwanted items is as simple and powerful as our editor allows, as opposed to a click-fest if we decide to do it through a website.</li>
-  <li>Even decade-long logs still won’t take more than a dozen megabytes, which by today’s storage standards is zero.</li>
-  <li>We can extract whatever statistical information from it; imagination is the limit (but we have to do the work).</li>
-</ul>
-
-<h2 id="requirements">Requirements</h2>
-
-<ol>
-  <li>
-    <p>This tutorial uses Bash inside Linux as the environment of choice. We will be issuing system commands, which is always more natural from Unix shell languages than from other programming languages. The latter usually require importing system libraries first and might produce code that is harder to read.</p>
-  </li>
-  <li>
-    <p>For local scrobbling to be an easy ride, you have to use a music player that supports editing its title. The popular standard is for the player to display currently played track’s tag information as the application title. We need to be able to change from which tag fields we get the information.</p>
-
-    <p>If you intend to use graphical application and don’t care about library, <a href="https://deadbeef.sourceforge.io/">DeadBeef</a> comes highly recommended. For console interface, <a href="https://cmus.github.io/">CMUS</a> is another choice. This tutorial will work with DeadBeef.</p>
-  </li>
-  <li>
-    <p>You will need to download <strong>wmctrl</strong>. Your system package manager most likely has it. It is a small, very fast and very useful tool. I recommend getting to know it as it makes many interesting system scripts possible.</p>
-  </li>
-</ol>
-
-<h2 id="configuring-deadbeef">Configuring DeadBeef</h2>
-<p>Go to <strong>Edit</strong> -&gt; <strong>Preferences</strong> -&gt; <strong>GUI/MISC</strong> -&gt; <strong>Player</strong></p>
-
-<p>In the ‘<em>Titlebar text while playing</em>’ field, replace the current string with:</p>
-
-<blockquote>
-  <p>deadbeef: %artist%;%album%;%title%;%year%;%length%</p>
-</blockquote>
-
-<p>…or any tags you want, in any order. The beginning part is important, as we will be identifying the program title by a string ‘deadbeef: ‘, so it has to be there.</p>
-
-<p>You might want to change it to something more unique to never match that title elsewhere (in case you one day visit a website whose title contains <em>‘deadbeef: ‘</em> or a similar situation). If you decide to do so, remember to change it to something identical both in DeadBeef options and in line 4 of the script.</p>
-
-<p>In the <em>‘Titlebar text while stopped’</em> field, replace the current string with:</p>
-
-<blockquote>
-  <p>deadbeef - not playing</p>
-</blockquote>
-
-<p>It is important that there is no <em>‘deadbeef: ‘</em> string here, as a different string is a signal that DeadBeef is not playing. If we’d add a colon here, the script would assume that DeadBeef is playing and that <em>’- not playing’</em> is another currently playing track that needs to be added to a scrobbling history file.</p>
-
-<h2 id="csv-as-our-storage-format-of-choice">CSV as our storage format of choice</h2>
-
-<p>Semicolons between tags decrease readability, but we are going to make our log a CSV file, with semicolons instead of commas.</p>
-
-<p>And so, to make our life easier, DeadBeef will be displaying tag information already formatted for CSV file writing. A CSV file is like a table, with each line being a row and cell items divided by a comma, semicolon, or any other symbol you choose. Tab is another good option.</p>
-
-<p>We no longer have COMMA separated values, so it’s not a CSV file anymore, strictly speaking. But the idea is the same, so we keep calling it that anyway.</p>
-
-<p>Even though it doesn’t look pretty (compare it to <em>YAML</em>, for example), we keep using it for practical reasons. If we ever intend to analyze that data in any way (most popular artist this year, most listened to track ever…), parsing a CSV file is kid’s play.</p>
-
-<p>YAML is the best option for readability, but files can be considerably larger because of it and it can be a nightmare to parse. CSV is simple and reliable.</p>
-
-<p>Because the format is very popular, many frameworks, libraries, and other tools have CSV importing/exporting built-in. We won’t have to do any additional work to prepare the data ahead of our tasks. With YAML, we might as well need to hire an assistant parser ;)</p>
-
-<p>Remember that the character you chose as a field separator can’t be present inside your music tags, or it will mess up your data. It’s good when all music tracks get pre-cleaned before being played for the first time. Check the article list on this blog; I will write such a script and post it here sooner or later.</p>
-
-<h2 id="breaking-apart-the-script">Breaking apart the script</h2>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
-<span class="nv">last_title_path</span><span class="o">=</span><span class="s1">'/path/to/scrobble-last.log'</span></code></pre></figure>
-
-<p>We start by pointing to the Bash interpreter, which usually is in the main bin folder. Then, we create a variable that points to a string representing the path to a file that stores the last scrobbled track.</p>
-
-<p>We could store the last scrobbled track in memory to avoid disk writes. An average of one disk write every 3 or 4 minutes is not exactly the case of machine cruelty, and it won’t have any impact on our hard disk lifespan. And if we write to disk, we don’t have to be afraid of losing data on reboot, etc.</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do</span></code></pre></figure>
-
-<p>This is a common programming use for an infinite loop. The idea is to start the script on system startup and repeat some sequence of events forever. For that, we need a loop that under no condition ever breaks.</p>
-
-<p>‘While’ checks for something being true (or truthy, depending on the language). True is always true; it’s not going to change at iteration 131. It guarantees the loop will run until terminated from outside (like the kill command or system reboot).</p>
-
-<p>The entire sequence of code will be executed line after line, after which the next loop iteration will start, i.e., it will begin to execute the entire sequence again.</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nv">curr_title</span><span class="o">=</span><span class="si">$(</span>wmctrl <span class="nt">-l</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s2">"(?&lt;=deadbeef: ).+"</span><span class="si">)</span>
-<span class="o">=</span><span class="si">$(</span><span class="nb">head</span> <span class="nt">-n1</span> <span class="nv">$last_title_path</span><span class="si">)</span></code></pre></figure>
-
-<p>The logic of the script is that every 5 seconds, we will check current track against previously played one and only if it’s different, we will put it in log.</p>
-
-<p>Wmctrl has a useful <em>‘-l’</em> argument, which lists all graphical windows currently open on all our monitors. It also states on which monitor each window currently resides and, what interests us here, program title.</p>
-
-<p>We wrap the system command in ‘<em>$()</em>’ and make variable point to its output. The command first lists all open windows, and then pipes it through grep. For the latter, we specify two options:</p>
-<ul>
-  <li>‘<em>-P</em>’, which changes default regex engine to Perl’s (best Regex version). it needs to be specified because the default grep regex engine does not support lookbehind</li>
-  <li>‘<em>-o</em>’, which only returns what regex matches, and not a whole line in which regex match was found</li>
-</ul>
-
-<p>A variable representing previously played track is set by printing it through <em>head</em> with the ‘<em>-n1</em>’ option. By default, head prints the first ten lines of a specified file. We just want one line, the first one, which the ‘<em>-n</em>’ option secures.</p>
-
-<p>We can’t just <strong>cat</strong> the whole file, because then we’d also get the newline. We don’t want it, so we have to remove it one way or the other.</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"</span><span class="nv">$prev_title</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span></code></pre></figure>
-
-<p>After defining all the necessary variables, we get to the heart of our script. First, we check if the music player is playing anything, or the second test would produce an error and break our script if it doesn’t.</p>
-
-<p>Then, we check if the currently played track is different from the last played one.</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$last_title_path</span><span class="s2">"</span></code></pre></figure>
-
-<p>The next step is to replace the last played one with the currently played one inside our scrobble-last.log file. We need to compare future playback against this track from now on.</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">date</span> +<span class="s1">'%Y.%m.%d;%H:%M'</span><span class="si">)</span><span class="s2">;</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s1">'/path/to/scrobbles.csv'</span></code></pre></figure>
-
-<p>Here, we’re constructing the final string and appending it to our main scrobbling file. The desired format features date and time in front, either together in <a href="https://devkoala.com/2020/converting-date-to-iso8601-in-python.html">ISO 8601</a> format, or split by another separator (in our case, a semicolon).</p>
-
-<p>It is convenient to keep it separate from date, as we might want to also extract hourly statistics. Having them separate saves us from additional step of extracting it from another field when we need it.</p>
-
-<p>Our file entries are added chronologically, so it’s good to have time of addition in front. And since date and time are always same width, readability does not suffer.</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="nb">sleep </span>5</code></pre></figure>
-
-<p>Before closing the <em>if</em> statement and the loop, we instruct the script to sleep for 5 seconds. You can choose any other time interval. Linux’s sleep program is very flexible (unlike Python’s, for example), allowing not only seconds as a unit. The smallest unit (in theory) and the program default is seconds, though.</p>
-
-<p>We can even use floats, so you can set the sleep time to 0.1 seconds to get ten checks every second, providing 50 times greater resolution than our default and producing near-instant additions to the log. It is a trivial task for the processor, so you don’t have to worry about performance.</p>
-
-<p>For me, 5 seconds is precise enough. It’s going to check everything anyway (unless all you listen to is grindcore), and a few seconds of delay are completely irrelevant for the statistical operations I perform on the scrobbled data.</p>
-
-<p>One case where setting a lower time interval is important is when we need statistics of unfinished tracks. Then, we’d have to calculate the time difference between the beginning of playback of one file and the beginning of playback of the following one to see if it’s shorter than the track length and by how much.</p>
-
-<p>If we need that <em>“by how much,”</em> a few seconds will seriously screw up the data, so sleep needs a very low value.</p>
-
-<h2 id="final-script">Final script</h2>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
-<span class="nv">last_title_path</span><span class="o">=</span><span class="s1">'/path/to/scrobble-last.log'</span>
-<span class="k">while </span><span class="nb">true</span><span class="p">;</span> <span class="k">do
-	</span><span class="nv">curr_title</span><span class="o">=</span><span class="si">$(</span>wmctrl <span class="nt">-l</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s2">"(?&lt;=deadbeef: ).+"</span><span class="si">)</span>
-	<span class="nv">prev_title</span><span class="o">=</span><span class="si">$(</span><span class="nb">head</span> <span class="nt">-n1</span> <span class="nv">$last_title_path</span><span class="si">)</span>
-	<span class="k">if</span> <span class="o">[[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="o">[</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">!=</span> <span class="s2">"</span><span class="nv">$prev_title</span><span class="s2">"</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
-		</span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$last_title_path</span><span class="s2">"</span>
-		<span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span><span class="nb">date</span> +<span class="s1">'%Y.%m.%d;%H:%M'</span><span class="si">)</span><span class="s2">;</span><span class="nv">$curr_title</span><span class="s2">"</span> <span class="o">&gt;&gt;</span> <span class="s1">'/path/to/scrobbles.csv'</span>
-	<span class="k">fi
-	</span><span class="nb">sleep </span>5
-<span class="k">done</span></code></pre></figure>
-
-<h2 id="making-the-script-run-on-system-startup">Making the script run on system startup</h2>
-
-<p>We want the script to always run whenever the system is up.</p>
-
-<p>The alternatives are to either remember to manually start it before playback (impractical) or have the script monitor the music player for the beginning of playback, turning itself on when playback starts and off when playback stops (pointless).</p>
-
-<p>While technically the second solution is cleaner, it has no practical meaning and introduces a mechanism that could break if we don’t prepare for some rare exotic scenario bound to happen sooner or later.</p>
-
-<p>In any modern operating system, many things are happening in the background every second. The addition of another tool performing such a trivial task is irrelevant.</p>
-
-<p>After we have our script in a file, we need to make it run on system startup. There are many options for that. Below are two popular ones.</p>
-
-<h3 id="put-it-in-crontab">Put it in crontab</h3>
-
-<p>The crontab file contains instructions for running applications. Every Linux user profile has its crontab file. We can specify the precise time when we want to run something, specify days of the week when we need it to run, run it every x minutes, and more.</p>
-
-<p>It is a very flexible tool and needs to be, since Linux is mainly used for servers, and servers often need complex task schedules.</p>
-
-<p>One special use in crontab is to replace all the normal specifications of when it needs to be run with ‘<em>@reboot</em>’, so the command is executed on system startup and only then. In the case of our <em>scrobbler.sh</em> file, the entry looks like this:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">@reboot	/path/to/scrobbler.sh</code></pre></figure>
-
-<p>That line needs to be added to the user crontab file, which can be edited by writing this command in console:</p>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash">crontab <span class="nt">-e</span></code></pre></figure>
-
-<p>‘<em>e</em>’ is short for ‘<em>edit</em>’. It doesn’t matter which line you put it in.</p>
-
-<h3 id="order-window-manager-to-run-it-on-startup">Order window manager to run it on startup</h3>
-
-<p>Window managers often have configuration files which are loaded on system startup. In those files, we can order starting up of applications, so they run on startup as well. This way, we ensure that every time we load window manager, the script gets loaded as well, which is what we want.</p>
-
-<p>I am using <strong>i3</strong>, in which I need to edit <em>~/.config/i3/config</em> file and add this line to it:</p>
-
-<blockquote>
-  <p>exec /path/to/scrobbler.sh</p>
-</blockquote>
-
-<h2 id="limitations">Limitations</h2>
-
-<p>One feature this script lacks is the ability to detect the same track being played multiple times in a row.</p>
-
-<p>As the script is designed, if we listen to the same track for half a day, it does not see the track change, and therefore it cannot detect repeated plays.</p>
-
-<p>This is one area where scrobbler applications perform better. Remember that we’re comparing them to 11 lines of code. 😉</p>
-
-<p>Since I wanted to write a basic scrobbler, I did not implement checking for track repeats. I’m sure there are many ways to solve this problem, but I can’t find one that’s good enough and short enough to implement into the script while still keeping it simple.</p>
-
-<p>One solution is to convert track length to seconds (so we get a single integer for comparison) and then monitor if the playback of that track spans more than its length. The first time it does, we append the log with another instance of that track.</p>
-
-<p>That solution is not perfect, though. If we pause the track midway for 2 hours and then resume it, the script will add a second line to the log even though we’ve been listening to it once.</p>
-
-<p>Another thing is that services like Last.fm have many algorithms for filling out the missing data. If tags contain misspelled information, they check against some database to find a guaranteed match and correct it. We don’t have to do this; it gets done automatically.</p>
-
-<p>With our solution, everything inside the tags is logged directly, so it is our responsibility to make sure the data is correct. It’s more work, but it gives better results than an automated guessing game.</p>
-
-<p>Let’s give an example of such mistake. Generally, some popular band’s popular track should always be scrobbled as coming from its main popular album, but it’s sometimes logged as coming from an EP also containing it, a single which alsy was released, or one of dozen compilation albums that were released years after the original album containing was.</p>
-
-<p>And so in this case we get wrong album and date can also be way off.</p>
-
-<p>Yet another problem is logging playback from services like Spotify. Popular services of this kind support scrobbling to Last.fm. It will get logged the same as if we were listening through the music player. This script obviously doesn’t have that functionality.</p>
-
-<p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>]]></content><author><name>Chris</name></author><category term="bash" /><category term="linux" /><category term="scrobbling" /><summary type="html"><![CDATA[Writing a local audio scrobbling script in Bash]]></summary></entry></feed>
+<p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="printscreen" /><summary type="html"><![CDATA[Setting up a screen capturing script in Linux]]></summary></entry></feed>
