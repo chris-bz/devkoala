@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-06-27T12:07:51+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2024/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2024-06-26T14:14:20+02:00</published><updated>2024-06-26T14:14:20+02:00</updated><id>https://www.devkoala.com/2024/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2024/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-07-01T22:21:39+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2024/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2024-06-26T14:14:20+02:00</published><updated>2024-06-26T14:14:20+02:00</updated><id>https://www.devkoala.com/2024/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2024/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
 
 <p>A decent tool since <em>Vista</em> but already existing as early as <em>Win 3.11</em>, Task Scheduler is an ireplaceable tool to manage system scripts.</p>
 
@@ -471,7 +471,95 @@
 
 <p>And that’s it! There are many other settings worth checking out to tailor the script to your needs, but the defaults are sensible and will generally not prevent the script from working.</p>
 
-<p>It is generally worth manually starting the task after adding it to verify that it’s working before leaving Task Scheduler.</p>]]></content><author><name>Chris</name></author><category term="python" /><category term="windows" /><summary type="html"><![CDATA[How to Run Python Scripts in the Background]]></summary></entry><entry><title type="html">Guide to responsive design tools in CSS</title><link href="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html" rel="alternate" type="text/html" title="Guide to responsive design tools in CSS" /><published>2021-02-01T10:13:28+01:00</published><updated>2021-02-01T10:13:28+01:00</updated><id>https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css</id><content type="html" xml:base="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html"><![CDATA[<h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
+<p>It is generally worth manually starting the task after adding it to verify that it’s working before leaving Task Scheduler.</p>]]></content><author><name>Chris</name></author><category term="python" /><category term="windows" /><summary type="html"><![CDATA[How to Run Python Scripts in the Background]]></summary></entry><entry><title type="html">How to Run Scripts with Mouse Gestures</title><link href="https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures.html" rel="alternate" type="text/html" title="How to Run Scripts with Mouse Gestures" /><published>2021-08-22T10:00:01+02:00</published><updated>2021-08-22T10:00:01+02:00</updated><id>https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures</id><content type="html" xml:base="https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures.html"><![CDATA[<h1 id="how-to-run-scripts-with-mouse-gestures">How to Run Scripts with Mouse Gestures</h1>
+
+<h2 id="mouse-gestures-an-underutilized-feature">Mouse Gestures: An Underutilized Feature</h2>
+
+<p>Mouse gestures have always been an underutilized feature. Similar to Virtual Reality helmets, they are undeniably useful and have the potential to become universal. However, unlike VR, which has seen substantial investment, mouse gestures remain relatively neglected. Even today, internet browser manufacturers hesitate to implement them in the base code, let alone provide a system-wide solution. Notably, Apple’s Hot Corners is an example of something similar being implemented, but it is not a comprehensive solution.</p>
+
+<p>Casual users benefit the most from mouse gestures since they eliminate the need to remember text commands or navigate through menus. Instead, users can simply press a button and perform a hand movement. This feature can also be incredibly beneficial for programmers and IT administrators. Gone are the days when most tasks were performed in a terminal window, making the mouse redundant. Nowadays, many tasks are executed in graphical interfaces.</p>
+
+<p>A particularly powerful and simple action is starting a script with a mouse gesture. In just half a second and with our eyes closed, we could perform tasks such as:</p>
+
+<ul>
+  <li><strong>Preparing the work environment</strong>: Starting multiple apps, resizing windows, and closing unnecessary processes.</li>
+  <li><strong>Clipboard management</strong>: Displaying a list of recent clipboard items for quick pasting.</li>
+  <li><strong>Screenshot tool</strong>: Capturing a screenshot and saving it to a predefined folder.</li>
+  <li><strong>New email shortcut</strong>: Starting an email client and opening a new message window with the recipient pre-filled.</li>
+  <li><strong>VPN connect/disconnect</strong>: Quickly connecting to or disconnecting from a VPN.</li>
+  <li><strong>Task automation</strong>: Running a predefined automation script, such as moving files to a backup location.</li>
+  <li><strong>Lock screen</strong>: Immediately locking the computer screen for security.</li>
+</ul>
+
+<p>And much more. Imagination is the limit, as scripts can do almost anything, and modern Windows operating systems are very receptive.</p>
+
+<p>All we need for these tasks is a desktop mouse gesture program.</p>
+
+<h2 id="about-strokesplus">About StrokesPlus</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/how-to-run-scripts-with-mouse-gestures/strokes-plus.png" alt="StrokesPlus main window" /></p>
+
+<p>Since mouse gestures are not very popular, there aren’t many apps offering this functionality. Those that do often have slow development cycles. The app I recommend is <strong>StrokesPlus</strong>. Although it hasn’t received an update in almost a year, it remains a complete and bug-free software.</p>
+
+<p>It’s best to download it directly from its website at <a href="https://www.strokesplus.net/Downloads" target="_blank">strokesplus.net</a>.</p>
+
+<p>The program is simple yet powerful. It offers keyboard modifiers for every action, not just a single optional modifier for all actions. For instance, a right button swipe to the right could perform one action, a left button swipe to the right could do another, and a shift-right button swipe to the right could do yet another.</p>
+
+<p>This dramatically increases the number of actions you can assign, unlike most other mouse gesture programs that force users to come up with complex and difficult-to-execute gestures. The more complex the gesture, the higher the chance of executing an incorrect action.</p>
+
+<p>StrokesPlus uses Lua as a scripting language, allowing for a wide range of actions. The most basic use is generating keystrokes, such as <em>ctrl+w</em>, frequently used to close the current tab in programs. But it offers much more! Lua can interact with Windows APIs, enabling file operations, window management, process management, and system volume control.</p>
+
+<p>Thanks to AI tools like ChatGPT, you don’t even need to know Lua or delve into Windows API commands to program these tasks. Simply ask, and you shall receive.</p>
+
+<h2 id="setting-up-a-mouse-gesture-to-start-a-python-script">Setting Up a Mouse Gesture to Start a Python Script</h2>
+
+<ul>
+  <li>
+    <p><strong>Install StrokesPlus</strong>: After installation, restart your PC if necessary. Run the application. Its default state is minimized, with only a tray icon visible. Open the application window by clicking the tray icon.</p>
+  </li>
+  <li>
+    <p><strong>Create a new action</strong>: In the StrokesPlus.net interface, go to the Actions tab. Click the New Action button.</p>
+  </li>
+  <li>
+    <p><strong>Name the action</strong>: Give your action a descriptive name, such as My First System-Breaking Python Script.</p>
+  </li>
+  <li>
+    <p><strong>Assign a gesture</strong>: Assign a mouse gesture to this action by drawing in the gesture box.</p>
+  </li>
+  <li>
+    <p><strong>Add Lua script</strong>: In the Lua Script tab for the action, add the following Lua code to run your Python script through the virtual environment’s Python interpreter:</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">acShellExecute<span class="o">(</span><span class="s2">"C:</span><span class="se">\\</span><span class="s2">path</span><span class="se">\\</span><span class="s2">to</span><span class="se">\\</span><span class="s2">myenv</span><span class="se">\\</span><span class="s2">Scripts</span><span class="se">\\</span><span class="s2">python.exe"</span>, <span class="s2">"C:</span><span class="se">\\</span><span class="s2">path</span><span class="se">\\</span><span class="s2">to</span><span class="se">\\</span><span class="s2">your</span><span class="se">\\</span><span class="s2">script.py"</span>, <span class="s2">""</span>, <span class="s2">""</span>, <span class="s2">"SW_SHOWNORMAL"</span><span class="o">)</span></code></pre></figure>
+
+<p>Make sure to replace <em>“C:\path\to\myenv\Scripts\python.exe”</em> with the actual path to the Python executable in your virtual environment, and <em>“C:\path\to\your\script.py”</em> with the actual path to your Python script.</p>
+
+<h2 id="troubleshooting-tips">Troubleshooting tips</h2>
+
+<ul>
+  <li><strong>Permissions</strong>: Ensure your Python script has the necessary permissions to execute.</li>
+  <li><strong>Paths</strong>: Double-check all paths in your Lua script for accuracy.</li>
+  <li><strong>Virtual Environment Activation</strong>: Ensure you are using the correct path to the virtual environment’s Python executable.</li>
+</ul>
+
+<p>Keep in mind that if you already use mouse gestures in browsers, they may conflict with system-wide StrokesPlus gestures. It’s best to disable the browser add-ons. Additionally, while playing games, you might accidentally trigger mouse gestures. If those gestures correspond to in-game keyboard shortcuts, you could disrupt your gaming session. It’s best to either close StrokesPlus before playing, or add the game to <em>Ignore List</em> in StrokesPlus</p>
+
+<h2 id="final-thoughts">Final thoughts</h2>
+
+<p>It is not recommended to bind critical scripts to mouse gestures. Always consider the consequences of accidentally starting a script, whether by you or someone else using your computer. Assume it will happen one day, and if the negative consequences are too high, avoid creating that gesture.</p>
+
+<p>Ideal candidate scripts are those that:</p>
+
+<ul>
+  <li>Do not require any fixing or require minimal fixing if executed accidentally.</li>
+  <li>Are repetitive and need to be done frequently.</li>
+  <li>Were previously executed manually in a cumbersome and inconvenient way.</li>
+</ul>
+
+<p>Find a script that fits one or more of these criteria, and you’ll save a lot of time and wonder how you lived without custom gesture executing it!</p>
+
+<p>I still believe that one day gestures will become a crucial part of navigation in future interfaces, whatever those interfaces may be, but for now, even though mouse gestures are not popular, it doesn’t stop us from using them and enjoying all the power they have to offer.</p>]]></content><author><name>Chris</name></author><category term="interface" /><category term="windows" /><summary type="html"><![CDATA[How to Run Scripts with Mouse Gestures]]></summary></entry><entry><title type="html">Guide to responsive design tools in CSS</title><link href="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html" rel="alternate" type="text/html" title="Guide to responsive design tools in CSS" /><published>2021-02-01T10:13:28+01:00</published><updated>2021-02-01T10:13:28+01:00</updated><id>https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css</id><content type="html" xml:base="https://www.devkoala.com/2021/guide-to-responsive-design-tools-in-css.html"><![CDATA[<h1 id="guide-to-responsive-design-tools-in-css">Guide to responsive design tools in CSS</h1>
 
 <p>Before smartphones became popular, almost entire web browsing traffic was on PCs.</p>
 
@@ -1365,111 +1453,4 @@ map Kc shell setxkbmap -variant colemak</p>
 
 <blockquote>
   <p>no-window-dragging</p>
-</blockquote>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="ranger" /><summary type="html"><![CDATA[Ranger configuration extras]]></summary></entry><entry><title type="html">Setting up a screen capturing script in Linux</title><link href="https://www.devkoala.com/2020/setting-up-a-screen-capturing-script-in-linux.html" rel="alternate" type="text/html" title="Setting up a screen capturing script in Linux" /><published>2020-03-28T11:13:54+01:00</published><updated>2020-03-28T11:13:54+01:00</updated><id>https://www.devkoala.com/2020/setting-up-a-screen-capturing-script-in-linux</id><content type="html" xml:base="https://www.devkoala.com/2020/setting-up-a-screen-capturing-script-in-linux.html"><![CDATA[<h1 id="setting-up-a-screen-capturing-script-in-linux">Setting up a screen capturing script in Linux</h1>
-
-<p>Microsoft Windows has evolved significantly from the days when pressing the “Print Screen” key simply copied the desktop image to the clipboard, requiring users to manually paste it into an image editor to save it. Today, Windows 10 offers the <em>Snipping Tool</em> and <em>Snip &amp; Sketch</em>, providing various methods to capture parts of the screen. Despite having two tools for the same task, which indicates some unfinished business, Microsoft has streamlined the screenshot process.</p>
-
-<p>Most Linux distributions now also come with robust screenshot tools. However, if you use a niche window manager that lacks this functionality or if your built-in tool stops working, you can still capture screenshots using some basic knowledge and a single tool, which may already be installed by default on your system.</p>
-
-<p>This tutorial will explain how to set up a screenshot script in the <em>i3</em> window manager.</p>
-
-<h2 id="what-does-this-script-do">What does this script do?</h2>
-
-<ol>
-  <li>
-    <p>Pressing the <strong>Print Screen</strong> Key: Captures the entire screen and saves it to an image file in a specified location.</p>
-  </li>
-  <li>
-    <p>Pressing the <strong>Scroll Lock</strong> Key: Captures the screen, saves it, and then opens the saved image in an editor of your choice.</p>
-  </li>
-</ol>
-
-<p><small>
-It is a common task to screen capture something, some video stream we’re watching perhaps. But before we post it online, we want to mark some interesting part of our screen with a circle, or point to it with an ugly-looking arrow.
-Instantly opening image editor is a lot more convenient than saving the image to disk, then manually navigating to the folder in which the image resides and opening it. If that’s not enough, we would usually need to use the ‘open with’ option if plain image viewer and not editor is set as the default program for executing images.
-</small></p>
-
-<p>After pressing the Print Screen key, the script first checks the folder in which we save capture files if any already exist. If they do, it takes the number of the newest one (the one with biggest number), increments that number by one and saves our new screen capture with that number.</p>
-
-<p>In other words, if you already have print-screen1.jpg and print-screen3.jpg (let’s assume 2 has been deleted in the meantime), the script will create print-screen4.jpg instead of substituting print-screen1.jpg, or creating print-screen2.jpg.</p>
-
-<p>If there are no print-screen[num] files in folder, it creates print-screen1.jpg.</p>
-
-<p>This is hands-down the best default behavior, as it retains chronology and prevents sometimes unwanted file loss.</p>
-
-<h2 id="requirements">Requirements</h2>
-
-<p>We will use Bash as our shell language and import from <a href="https://imagemagick.org/index.php">ImageMagick</a>, a powerful image processing tool. ImageMagick is available in most system repositories and can be installed easily.</p>
-
-<p><small>Either of the two programs is worth getting to know it if you deal with images a lot and feel like you could automate some of your tasks. IM has slightly more robust tools, GM can perform faster in some scenarios. We will work with IM’s import.</small></p>
-
-<p>One example of its use is having <em>*watch</em> monitor a particular folder where we save memes (the most important images on anyone’s HDD). We can order ImageMagick tools to check if the maximum resolution is not bigger than something and, if it is, reduce it to a sensible maximum.</p>
-
-<p>Next, the script could check if those meme files have a compression level higher than, let’s say, <em>90</em>, and if they do, compress them to <em>90</em> to save disk space. Then, we could automatically move those files to our final meme directory.</p>
-
-<p>This is a very basic example, but it already shows how useful this set of tools can be.</p>
-
-<p>You will most likely find ImageMagick in your system repository. It is spelled <em>imagemagick</em>.</p>
-
-<h2 id="code">Code</h2>
-
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/bin/bash</span>
-<span class="nv">ps_numb</span><span class="o">=</span><span class="si">$(</span><span class="nb">ls</span> <span class="nt">-v</span> /path/to/print-screens/ | <span class="nb">grep </span>print-screen | <span class="nb">tail</span> <span class="nt">-n1</span> | <span class="nb">grep</span> <span class="nt">-Po</span> <span class="s1">'\d\d?(?=\.png)'</span><span class="si">)</span>
-<span class="nv">ps_numb</span><span class="o">=</span><span class="k">$((</span><span class="nv">$ps_numb</span> <span class="o">+</span> <span class="m">1</span><span class="k">))</span>
-import <span class="nt">-window</span> root <span class="nt">-crop</span> 1920x1080+0+0 /path/to/print-screens/print-screen<span class="k">${</span><span class="nv">ps_numb</span><span class="k">}</span>.png</code></pre></figure>
-
-<h2 id="code-explanation">Code explanation</h2>
-
-<p>Thanks to piping, we accomplish many tasks in our first actual line of code:</p>
-<ul>
-  <li><strong>ls -v</strong> - ‘<em>ls</em>’ lists files in specified directory, ‘<em>-v</em>’ makes sure numbers are sorted properly (with default sorting, for example, 100 is before 2… because 1 is smaller than 2. we do not want that!)</li>
-  <li><strong>grep</strong> - searches directory list for files/directories containing a string <em>print-screen</em></li>
-  <li><strong>tail -n1</strong> - ‘<em>tail</em>’ displays last lines of our result list, ‘<em>-n1’</em> narrows it down to just last line, which we’ve made sure is the one with the biggest number</li>
-  <li><strong>grep -Po…</strong> - grep extracts single or double digit number from that filename (you can append a second ‘<em>\d?</em>’ if for some reason you can end up with 100+ files).</li>
-  <li><strong>(?=.png)</strong> - it is a lookahead, meaning we only look for digits which are immediately followed by ‘.png’.</li>
-</ul>
-
-<p>That lookahead is a safety measure against directories that contain the string ‘<em>print-screen</em>’. The script may one day encounter such a directory, but it is not likely to encounter a directory named […]print-screen[num][maybenum].png[…].</p>
-
-<p>Even if such a rare thing happens, the script will create a file with one number higher than the number in this directory, assuming there are no print-screen files with higher numbers. This is a rare worst-case scenario and still not hazardous.</p>
-
-<p>The second line does arithmetic (which we enable with double parentheses). It adds one to append that number to the filename later. If you want a different numbering order, you can change it easily here.</p>
-
-<p><small>
-Bash can take dynamic typing to extremes, as is the case here. If the previous line returns nothing (if there are no print-screen files in our folder, or the last sorted one has no digits followed by <em>‘.png’</em>), the next line takes that nothing and converts it to something arithmetically viable, because it now sits inside double parentheses, which are used for arithmetic operations. Because there is no data (or false, or an empty string), that data is converted to 0 to make it viable in the world of mathematics. And 0+1 gives 1, saving us from writing our script in a more complicated way to ensure that if there are no print-screen files, a proper number for a new filename is still generated.
-</small></p>
-
-<p>Notice the file extension in the second and fourth lines. Change it to any image format you want and test it to ensure that the import tool supports such a format.</p>
-
-<p>The third line is where the magic happens. The <em>import</em> tool is told to capture the main display window with the <em>-window root</em> option.</p>
-
-<p>Just like <em>xwininfo</em>, <em>xprop</em>, and many other useful X tools, import waits for a user click to specify the window for capture. But we don’t want to capture just one program window, but the entire screen, and we want it to happen automatically instead of requiring us to click each time. That’s why we have to be specific.</p>
-
-<p>If you only have one monitor, you can safely remove the <em>-crop 1920x1080+0+0</em> part. I have two monitors, the first one set to 1080p resolution. <em>import</em> with <em>-window root</em> captures content from all monitors into one glued-together image. I want to get the left-most monitor’s content only, so after capturing, I need to crop it to the position and dimensions of my first monitor.</p>
-
-<p>That is why the script specifies geometry (you can read more about geometry in this article). Most people only have one monitor, and while the script will work for them as well, they won’t need that bit of code.</p>
-
-<p>But because it’s there, it will also work for people with more than one monitor. If yours has a different resolution than 1920x1080, change those numbers. If you don’t want the left-most monitor’s contents, replace ‘+0+0’ with the proper starting pixel location.</p>
-
-<h2 id="binding-the-script-to-a-key">Binding the script to a key</h2>
-
-<p>As mentioned at the start, if your window manager is not i3, search for how to add system-wide keyboard shortcuts in your Linux distribution/window manager.</p>
-
-<p>Usually, you can set a key to execute a command. Instead of a system command, point to a file (with the full path, so the system knows where to look for it).</p>
-
-<p>In i3, that operation is very simple. Edit this file: <em>~/.config/i3/config</em>, and add these two lines:</p>
-
-<blockquote>
-  <p>bindsym Print exec /path/to/file.sh<br />
-bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to/save/image.jpg; pinta /location/to/save/image.jpg”</p>
-</blockquote>
-
-<p>As far as I know, i3 can only execute single statement, so to execute two, we need to sneak them in as one command inside quotes.</p>
-
-<p>Editing does not require automatic numbering of the following files. After all, we capture, edit, and save each time. Therefore, we only use the import command here and not the entire script. Be sure it is called with the exact same options and parameters as inside your script if you want to capture the same screen area.</p>
-
-<p>The <em>Print</em> and <em>Scroll Lock</em> keys can be changed to any other ones you want. A list of popular names and how to easily get any key name you want that i3 understands can be found <a href="http://xahlee.info/linux/linux_show_keycode_keysym.html">here</a>.</p>
-
-<p>Remember that binding a key or key combination directly in the window manager usually means no application can use it. Otherwise, one key could potentially execute multiple unrelated actions, leaving the user in a state of confusion.</p>
-
-<p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>]]></content><author><name>Chris</name></author><category term="cli" /><category term="desktop" /><category term="printscreen" /><summary type="html"><![CDATA[Setting up a screen capturing script in Linux]]></summary></entry></feed>
+</blockquote>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="ranger" /><summary type="html"><![CDATA[Ranger configuration extras]]></summary></entry></feed>

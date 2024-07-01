@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>How to Run Scripts with Mouse Gestures | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="https://www.devkoala.com/">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="https://www.devkoala.com/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="how-to-run-scripts-with-mouse-gestures">How to Run Scripts with Mouse Gestures</h1>
+
+<h2 id="mouse-gestures-an-underutilized-feature">Mouse Gestures: An Underutilized Feature</h2>
+
+<p>Mouse gestures have always been an underutilized feature. Similar to Virtual Reality helmets, they are undeniably useful and have the potential to become universal. However, unlike VR, which has seen substantial investment, mouse gestures remain relatively neglected. Even today, internet browser manufacturers hesitate to implement them in the base code, let alone provide a system-wide solution. Notably, Apple’s Hot Corners is an example of something similar being implemented, but it is not a comprehensive solution.</p>
+
+<p>Casual users benefit the most from mouse gestures since they eliminate the need to remember text commands or navigate through menus. Instead, users can simply press a button and perform a hand movement. This feature can also be incredibly beneficial for programmers and IT administrators. Gone are the days when most tasks were performed in a terminal window, making the mouse redundant. Nowadays, many tasks are executed in graphical interfaces.</p>
+
+<p>A particularly powerful and simple action is starting a script with a mouse gesture. In just half a second and with our eyes closed, we could perform tasks such as:</p>
+
+<ul>
+  <li><strong>Preparing the work environment</strong>: Starting multiple apps, resizing windows, and closing unnecessary processes.</li>
+  <li><strong>Clipboard management</strong>: Displaying a list of recent clipboard items for quick pasting.</li>
+  <li><strong>Screenshot tool</strong>: Capturing a screenshot and saving it to a predefined folder.</li>
+  <li><strong>New email shortcut</strong>: Starting an email client and opening a new message window with the recipient pre-filled.</li>
+  <li><strong>VPN connect/disconnect</strong>: Quickly connecting to or disconnecting from a VPN.</li>
+  <li><strong>Task automation</strong>: Running a predefined automation script, such as moving files to a backup location.</li>
+  <li><strong>Lock screen</strong>: Immediately locking the computer screen for security.</li>
+</ul>
+
+<p>And much more. Imagination is the limit, as scripts can do almost anything, and modern Windows operating systems are very receptive.</p>
+
+<p>All we need for these tasks is a desktop mouse gesture program.</p>
+
+<h2 id="about-strokesplus">About StrokesPlus</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/how-to-run-scripts-with-mouse-gestures/strokes-plus.png" alt="StrokesPlus main window" /></p>
+
+<p>Since mouse gestures are not very popular, there aren’t many apps offering this functionality. Those that do often have slow development cycles. The app I recommend is <strong>StrokesPlus</strong>. Although it hasn’t received an update in almost a year, it remains a complete and bug-free software.</p>
+
+<p>It’s best to download it directly from its website at <a href="https://www.strokesplus.net/Downloads" target="_blank">strokesplus.net</a>.</p>
+
+<p>The program is simple yet powerful. It offers keyboard modifiers for every action, not just a single optional modifier for all actions. For instance, a right button swipe to the right could perform one action, a left button swipe to the right could do another, and a shift-right button swipe to the right could do yet another.</p>
+
+<p>This dramatically increases the number of actions you can assign, unlike most other mouse gesture programs that force users to come up with complex and difficult-to-execute gestures. The more complex the gesture, the higher the chance of executing an incorrect action.</p>
+
+<p>StrokesPlus uses Lua as a scripting language, allowing for a wide range of actions. The most basic use is generating keystrokes, such as <em>ctrl+w</em>, frequently used to close the current tab in programs. But it offers much more! Lua can interact with Windows APIs, enabling file operations, window management, process management, and system volume control.</p>
+
+<p>Thanks to AI tools like ChatGPT, you don’t even need to know Lua or delve into Windows API commands to program these tasks. Simply ask, and you shall receive.</p>
+
+<h2 id="setting-up-a-mouse-gesture-to-start-a-python-script">Setting Up a Mouse Gesture to Start a Python Script</h2>
+
+<ul>
+  <li>
+    <p><strong>Install StrokesPlus</strong>: After installation, restart your PC if necessary. Run the application. Its default state is minimized, with only a tray icon visible. Open the application window by clicking the tray icon.</p>
+  </li>
+  <li>
+    <p><strong>Create a new action</strong>: In the StrokesPlus.net interface, go to the Actions tab. Click the New Action button.</p>
+  </li>
+  <li>
+    <p><strong>Name the action</strong>: Give your action a descriptive name, such as My First System-Breaking Python Script.</p>
+  </li>
+  <li>
+    <p><strong>Assign a gesture</strong>: Assign a mouse gesture to this action by drawing in the gesture box.</p>
+  </li>
+  <li>
+    <p><strong>Add Lua script</strong>: In the Lua Script tab for the action, add the following Lua code to run your Python script through the virtual environment’s Python interpreter:</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">acShellExecute<span class="o">(</span><span class="s2">"C:</span><span class="se">\\</span><span class="s2">path</span><span class="se">\\</span><span class="s2">to</span><span class="se">\\</span><span class="s2">myenv</span><span class="se">\\</span><span class="s2">Scripts</span><span class="se">\\</span><span class="s2">python.exe"</span>, <span class="s2">"C:</span><span class="se">\\</span><span class="s2">path</span><span class="se">\\</span><span class="s2">to</span><span class="se">\\</span><span class="s2">your</span><span class="se">\\</span><span class="s2">script.py"</span>, <span class="s2">""</span>, <span class="s2">""</span>, <span class="s2">"SW_SHOWNORMAL"</span><span class="o">)</span></code></pre></figure>
+
+<p>Make sure to replace <em>“C:\path\to\myenv\Scripts\python.exe”</em> with the actual path to the Python executable in your virtual environment, and <em>“C:\path\to\your\script.py”</em> with the actual path to your Python script.</p>
+
+<h2 id="troubleshooting-tips">Troubleshooting tips</h2>
+
+<ul>
+  <li><strong>Permissions</strong>: Ensure your Python script has the necessary permissions to execute.</li>
+  <li><strong>Paths</strong>: Double-check all paths in your Lua script for accuracy.</li>
+  <li><strong>Virtual Environment Activation</strong>: Ensure you are using the correct path to the virtual environment’s Python executable.</li>
+</ul>
+
+<p>Keep in mind that if you already use mouse gestures in browsers, they may conflict with system-wide StrokesPlus gestures. It’s best to disable the browser add-ons. Additionally, while playing games, you might accidentally trigger mouse gestures. If those gestures correspond to in-game keyboard shortcuts, you could disrupt your gaming session. It’s best to either close StrokesPlus before playing, or add the game to <em>Ignore List</em> in StrokesPlus</p>
+
+<h2 id="final-thoughts">Final thoughts</h2>
+
+<p>It is not recommended to bind critical scripts to mouse gestures. Always consider the consequences of accidentally starting a script, whether by you or someone else using your computer. Assume it will happen one day, and if the negative consequences are too high, avoid creating that gesture.</p>
+
+<p>Ideal candidate scripts are those that:</p>
+
+<ul>
+  <li>Do not require any fixing or require minimal fixing if executed accidentally.</li>
+  <li>Are repetitive and need to be done frequently.</li>
+  <li>Were previously executed manually in a cumbersome and inconvenient way.</li>
+</ul>
+
+<p>Find a script that fits one or more of these criteria, and you’ll save a lot of time and wonder how you lived without custom gesture executing it!</p>
+
+<p>I still believe that one day gestures will become a crucial part of navigation in future interfaces, whatever those interfaces may be, but for now, even though mouse gestures are not popular, it doesn’t stop us from using them and enjoying all the power they have to offer.</p>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    <script async data-id="101455210" src="//static.getclicky.com/js"></script>
+  </body>
+
+</html>
