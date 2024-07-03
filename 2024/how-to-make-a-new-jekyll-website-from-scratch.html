@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>How to Make a New Jekyll Website from Scratch | Dev Koala</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta name="keywords" content="software development, python, bash, linux, windows scripts, system scripts, programming tutorials">
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="robots" content="index, follow">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta property="og:title" content="Devkoala.com | ...where animal kingdom meets software development">
+    <meta property="og:description" content="Python software tutorials, tips and tricks for keyboard-driven Linux navigation, cross-program integrations etc.">
+    <meta property="og:image" content="/assets/img/logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+</head>
+
+  <body>
+
+    <header>
+    <div class="logo">
+        <a href="https://www.devkoala.com/">
+            <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
+        </a>
+    </div>
+    
+    <nav>
+        <a href="https://www.devkoala.com/about.html">about</a>
+    </nav>
+</header>
+
+    <main class="post">
+      <article>
+        <h1 id="how-to-make-a-new-jekyll-website-from-scratch">How to Make a New Jekyll Website from Scratch</h1>
+
+<div class="intro">
+Curious about how to build a website from scratch with a static site generator? In this comprehensive guide, we'll dive into the world of Jekyll, a popular static website generator, and walk you through every step of creating your own Jekyll project. We'll explore Jekyll's evolution, compare it to alternatives, and cover everything from installation to configuration. You'll learn how to set up essential files, understand the intricacies of Front Matter, configure your Gemfile, and organize your project directory. Plus, we'll guide you through the process of creating new posts, uploading your site to GitHub, and using Kramdown notation to enhance your content. Get ready to master Jekyll and bring your static site to life!
+</div>
+
+<p>In 2001, Ben and Mena Trott from San Francisco changed the world (or at least the World Wide Web) by introducing a tool called <strong>Movable Type</strong>.</p>
+
+<p>The idea was to use database content to automatically generate a website. When the data changed, the website could be automatically re-generated with the new content.</p>
+
+<p>This gave birth to <em>static website generators</em>.</p>
+
+<p>Fast forward to 2008, another tool called <strong>Jekyll</strong> was created. Instead of attempting to be a full-blown Content Management System like Movable Type, it aimed to be a simple, easy-to-use, and fast static website generator. No database was needed, generation performance was lightning fast in comparison, and it was 100% open source.</p>
+
+<p>The tool quickly gained popularity among developers and tech-savvy bloggers. Its simplicity and GitHub Pages integration made it perfect for personal blogs and project documentation. Writing in Markdown and using Liquid for templating appealed to those valuing both simplicity and control.</p>
+
+<p>As Jekyll grew, it fostered a vibrant ecosystem of themes and plugins. The community expanded, contributing to its functionality. This growth aligned with a broader trend towards static site generators, with Jekyll often seen as a pioneer.</p>
+
+<h2 id="why-jekyll">Why Jekyll?</h2>
+
+<p>Since its inception, many others have joined the party, and in 2024 we are looking at literally hundreds of SWGs. In specific areas, many beat Jekyll:</p>
+
+<ul>
+  <li><strong>Hugo:</strong> Much faster, able to generate websites in a fraction of the time it takes Jekyll, making it very useful for an extremely large volume of content that changes often.</li>
+  <li><strong>Hexo:</strong> Offers one-command deployment to various platforms like GitHub Pages, Heroku, and more, streamlining the process compared to Jekyll’s more manual deployment approach.</li>
+  <li><strong>Gatsby:</strong> Leverages React and GraphQL, making it ideal for developers who are familiar with these technologies. It excels at creating complex, dynamic-feeling static sites with seamless integration of the React ecosystem.</li>
+</ul>
+
+<p>But unless one heavily relies on a particular area, selecting any mature product is likely good enough. For quite a while, Jekyll has been a complete product. With so many years under its belt, it is more mature and fleshed out than almost any other SWG on the market.</p>
+
+<p>Its code on GitHub is updated almost daily. Twelve years in the making, and it is still vibrantly developed and continuously improving.</p>
+
+<h2 id="installing-jekyll">Installing Jekyll</h2>
+
+<p>The official Jekyll website has an excellent installation guide for multiple operating systems. <a href="https://jekyllrb.com/docs/installation/" target="_blank">Here is a link</a> to their installation docs. Return once Ruby and Jekyll are installed.</p>
+
+<h2 id="creating-a-blank-jekyll-project">Creating a blank Jekyll project</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/how-to-make-a-new-jekyll-website-from-scratch/blank-jekyll-project.png" alt="Blank Jekyll project" /></p>
+
+<p>What the official Jekyll website doesn’t cover at the time of writing this article is how to create an empty Jekyll project.</p>
+
+<p>When Jekyll generates a new website, it automatically adds a theme called <em>Minima</em>. This creates some unnecessary content that is good for newbies, but it forces the user to remove all that content while adding own custom content.</p>
+
+<p>To create an “empty” Jekyll project, we need to add a <em>’–blank’</em> flag.</p>
+
+<p>Open a terminal, navigate to the directory where you want your new Jekyll project to be stored, and write:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">jekyll new <span class="nt">--blank</span> my-site-name</code></pre></figure>
+
+<p>…where <em>my-site-name</em> is the name you want to give to your project.</p>
+
+<p>The minimal (Minima-less) installation creates the critical directory structure, and the entire project takes less than 1KB of hard disk space.</p>
+
+<h2 id="editing-config-file">Editing config file</h2>
+
+<p>Let’s start with the most important file in the whole project - _config.yml. It is always present in your main directory. Let’s open it up and edit some things.</p>
+
+<p>Initially, only the first three positions listed below will be present, but we will be adding plenty more.</p>
+
+<ul>
+  <li><strong>url:</strong> Insert the full domain name with the extension, for example, <em>mynewstore.com</em>.</li>
+  <li><strong>baseurl:</strong> Only change this when you are not the domain owner and your website will be deeper in the directory structure. For example, if your university at <em>https://www.university.edu</em> hosts student websites at <em>https://www.university.edu/~username/blog</em>, the url setting should be <em>https://www.university.edu</em> and the baseurl setting should be <em>/~username/blog</em>.</li>
+  <li><strong>title:</strong> Name of your website.</li>
+  <li><strong>markdown: kramdown:</strong> Since Jekyll 3.0, Kramdown is the default markup language. Specifying it is not needed, but it can serve as a reference if you want to check the Markdown syntax but forgot which Markdown version is in use.</li>
+  <li><strong>highlighter: rouge:</strong> If you intend to have programming code examples in your articles, Jekyll has a highlighter plugin that colors your code, making it considerably easier to read.</li>
+  <li><strong>permalink: /:categories/:year/:month/:day/:title:output_ext:</strong> Default address structure of all articles on your website. A newly created article named <em>‘My new article’</em> written on 2024.07.02 under a <em>‘Travel’</em> category will end up with a URL address similar to: <em>https://www.mydomain.com/travel/2024/07/02/my-new-article</em>. You can modify placeholders to your liking or remove them entirely. Always remember to separate them with ‘/’.</li>
+  <li><strong>plugins:</strong> There are many Jekyll plugins. Two interesting ones are jekyll-feed and jekyll-paginate-v2. jekyll-feed automatically generates an XML file containing the entire structure of your website, making your website ready for RSS readers. jekyll-paginate organizes your articles so that they are displayed on multiple pages, for example, 10 articles per page, instead of all being displayed on one page. Installation and configuration of both are simple—just ask Chat GPT!</li>
+</ul>
+
+<h2 id="creating-necessary-html-files">Creating necessary HTML files</h2>
+
+<p>Three types of HTML files are on almost any website out there: <em>index</em>, <em>404</em>, and <em>about</em>. You need the first two; the third one you don’t, but you should still have.</p>
+
+<p>By default, Jekyll only creates an <em>index.md</em> file in the main project folder. I recommend deleting it and creating <em>index.html</em> instead, along with <em>404.html</em> and <em>about.html</em>.</p>
+
+<h2 id="front-matter">Front Matter</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/how-to-make-a-new-jekyll-website-from-scratch/front-matter.png" alt="Front Matter example" /></p>
+
+<p>Jekyll uses something called Front Matter, which is expected at the beginning of every HTML and Markdown file in your project.</p>
+
+<p>Front Matter provides basic information about the content inside the file, so it can later be generated into a website according to the proper design layout, placed in the correct category, have the correct URL address, etc.</p>
+
+<p>Front Matter must be positioned at the top of the file. Its initial and final lines only contain <em>’—‘</em>, and in between are lines containing different variables and their values, one variable per line.</p>
+
+<p>Below are the ten most useful Front Matter variables. Make sure to include title and layout in every Front Matter section! These are critical as every website needs a title and a layout for generating the content.</p>
+
+<p>For blog posts, date, author, and at least one of the tags variables should also be present.</p>
+
+<ul>
+  <li><strong>title: “My First Blog Post”:</strong> Page title.</li>
+  <li><strong>date: 2024-07-02 14:30:00 -0200:</strong> Last piece of data is your timezone.</li>
+  <li><strong>categories: [web development, jekyll]:</strong> As many categories as you like. Remember to keep them inside square brackets.</li>
+  <li><strong>tags: [tutorial, beginner]:</strong> Same format as categories.</li>
+  <li><strong>layout: page/post/something else:</strong> Every markdown page is dressed in HTML according to the layout specified. More details later.</li>
+  <li><strong>author:</strong> Mostly used in blog posts.</li>
+  <li><strong>description:</strong> What is this page’s content about?</li>
+  <li><strong>permalink:</strong> If you specify it, the default permalink gets replaced.</li>
+  <li><strong>published: False:</strong> If false is specified, the document will not be part of the generated website. Useful when you need to temporarily remove the document from your website, such as an article containing statements needing updating.</li>
+  <li><strong>custom variables:</strong> You can create your own variables to be used in multiple ways. For example, you could specify reading_time: 5 and then in the layout file include &lt;p&gt;Reading time:  minutes&lt;/p&gt; to automatically insert the specified time.</li>
+</ul>
+
+<h2 id="gemfile">Gemfile</h2>
+
+<p>A Gemfile is a file used by Ruby (and thus Jekyll) to manage dependencies. It lists the gems (Ruby libraries) your project needs.</p>
+
+<p>When creating a Jekyll website with the <em>’–blank’</em> flag, the file is not created. Create a file named Gemfile (no extension) in your Jekyll project’s root directory and open it for editing. Add the following lines:</p>
+
+<ul>
+  <li><strong>source “https://rubygems.org”:</strong> This line specifies where Ruby should look for gems. RubyGems.org is the default and most common source.</li>
+  <li><strong>gem “jekyll”:</strong> This line tells Bundler to include the Jekyll gem in your project.</li>
+  <li><strong>gem “jekyll”, “~&gt; 4.0”:</strong> An alternative version of the line above. It means: compatible with 4.0 but newer versions. This specification is called a pessimistic version constraint and serves to protect our project against compatibility issues that updating to newer versions of Jekyll might generate.</li>
+</ul>
+
+<p>All other plugins need to be included in the file as well, one per line, using the same format, i.e., <em>‘gem “plugin-name”‘</em>.</p>
+
+<h2 id="other-files-in-main-directory">Other files in main directory</h2>
+
+<p>There can be multiple other types of files in the main project directory. Some examples:</p>
+
+<ul>
+  <li><strong>favicon-16x16.png</strong>, <strong>favicon-32x32.png:</strong> Two most basic favicon types of files, best to reside in the main directory.</li>
+  <li><strong>CNAME:</strong> If the website is on a custom domain, a CNAME file containing the domain address needs to be put in the main folder; otherwise, the custom domain won’t work.</li>
+  <li><strong>.gitignore:</strong> In case the main project folder is being put on GitHub (as opposed to just the generated final page content), the .gitignore file specifies cache and other folders that should not be pushed and synced.</li>
+  <li><strong>README.md:</strong> A markdown file providing information about the project, often displayed on GitHub.</li>
+  <li><strong>LICENSE:</strong> A file detailing the license under which the project is distributed.</li>
+  <li><strong>.editorconfig:</strong> Helps maintain consistent coding styles across different editors and IDEs.</li>
+  <li><strong>package.json:</strong> Used if the project incorporates npm packages or scripts, often for asset processing.</li>
+  <li><strong>.travis.yml</strong> or <strong>.github/workflows/ci.yml:</strong> Configuration files for continuous integration services like Travis CI or GitHub Actions.</li>
+</ul>
+
+<h2 id="folders">Folders</h2>
+
+<p>One of the biggest advantages of Jekyll is its simplicity. It’s very easy to learn, as evidenced by the fact that almost everything can be contained in one mid-length article that you are reading right now.</p>
+
+<p>To work efficiently in Jekyll, it’s best to learn and remember the different types of folders early. Luckily, it’s just one minute of effort.</p>
+
+<ul>
+  <li><strong>_posts/:</strong> Contains your blog posts.</li>
+  <li><strong>_pages/:</strong> Holds static pages, ie. complete html documents that don’t need to be generated each time. Some projects use a dedicated <em>_pages</em> folder, while others place pages directly in the root. In general, if there are only few HTML documents (like earlier mentioned: <em>index.html</em>, <em>about.html</em>, <em>404.html</em>) and main project folder is not crowded, there’s no need to create an extra folder.</li>
+  <li><strong>_layouts/:</strong> Contains templates that wrap around your content. These define the overall structure of different types of pages.</li>
+  <li><strong>_includes/:</strong> Stores reusable content snippets that can be included in layouts, pages, or posts.</li>
+  <li><strong>_data/:</strong> YAML, JSON, or CSV files containing data that can be accessed via the site.data variable in templates.</li>
+  <li><strong>_sass/:</strong> Contains partial Sass files that can be imported into your main CSS file.</li>
+  <li><strong>assets/</strong> or <strong>_assets/:</strong> Stores static files like images, CSS files, and JavaScript files.</li>
+  <li><strong>_site/:</strong> The generated site directory (usually ignored in version control). This is where Jekyll outputs the final, static website. It is also where you want to initiate a git repository if you are using Github Pages to host your website.</li>
+  <li><strong>_drafts/:</strong> A place for unpublished posts. These won’t appear on the live site unless Jekyll is run with the <em>’–drafts’</em> switch.</li>
+  <li><strong>_plugins/</strong> or <strong>_extensions/:</strong> Contains custom Ruby plugins to extend Jekyll’s functionality.</li>
+  <li><strong>collections/ or custom collection folders:</strong> Holds files for custom collections, which are similar to posts but can be organized differently.</li>
+</ul>
+
+<p>Following are extended descriptions of some of the folders above, describing what kind of work has to be done in which folders in the process of creating, maintaining, and updating a Jekyll website.</p>
+
+<h2 id="_posts">_posts</h2>
+
+<p>The _posts folder is a cornerstone of Jekyll’s blogging functionality. It serves as the primary location for storing blog post content in a Jekyll site. This folder is created by default when you initialize a new Jekyll project.</p>
+
+<p>Within the _posts folder, individual blog posts are stored as separate files. These files follow a specific naming convention: <em>YYYY-MM-DD-title.md</em> (or .markdown). For example, <em>‘2023-07-02-welcome-to-jekyll.md’</em>. This naming structure is crucial as Jekyll uses it to extract the publication date and create the post’s URL.</p>
+
+<p>Each post file in the _posts folder typically begins with YAML front matter, enclosed between triple-dashed lines. This front matter contains metadata about the post, such as the title, date, categories, tags, and any custom variables you define. The content following the front matter is the main body of your blog post, usually written in Markdown.</p>
+
+<p>Jekyll processes these files, converting the Markdown to HTML and applying the appropriate layout as specified in the front matter or your configuration. The resulting HTML files are then placed in the appropriate location within your generated site, typically under a <em>/blog/</em> or <em>/posts/</em> directory, depending on your permalink settings.</p>
+
+<p>The _posts folder is dynamic, meaning you can continually add new post files, and Jekyll will automatically include them in your site when you build it using jekyll build or jekyll serve commands. This makes it easy to maintain and grow your blog over time, simply by adding new files to this folder.</p>
+
+<h2 id="_layouts">_layouts</h2>
+
+<p>The _layouts folder is a crucial component of Jekyll’s theming system. It contains template files that define the structure and appearance of different types of pages on your site. These templates act as the skeleton for your content, providing consistent styling and structure across your site.</p>
+
+<p>Layout files are typically HTML documents with Liquid tags and variables. They include placeholders for content, which Jekyll fills in when generating your site. The most common layout is default.html, which often serves as the base template for other layouts.</p>
+
+<p>Other common layouts might include post.html for blog posts, page.html for static pages, and home.html for the homepage. You can create as many custom layouts as you need for different types of content or sections of your site.</p>
+
+<p>In your content files (posts, pages, etc.), you specify which layout to use in the front matter. For example, <em>‘layout: post’</em> tells Jekyll to wrap that content in the <em>post.html</em> layout. If no layout is specified, Jekyll defaults to <em>default.html</em>.</p>
+
+<p>Layouts can be nested. For instance, a <em>post.html</em> layout might include the content within a <em>default.html</em> layout, adding post-specific elements like author information or publication date. This nesting allows for modularity and reuse of common elements across different page types.</p>
+
+<p>The _layouts folder gives you fine-grained control over your site’s structure and appearance. By editing these files, you can make site-wide changes efficiently, ensure consistency across pages, and create a unique look for your Jekyll site without repeating HTML structure in every content file.</p>
+
+<h2 id="_includes">_includes</h2>
+
+<p>The _includes folder in Jekyll is designed to store reusable content snippets. These snippets can be HTML, Markdown, or Liquid code that you want to use across multiple pages or layouts in your site. This folder helps in keeping your code DRY (Don’t Repeat Yourself) and makes maintenance easier.</p>
+
+<p>Common uses for includes are elements like headers, footers, navigation menus, sidebar content, or any other repetitive parts of your site. By storing these elements in separate files within the _includes folder, you can easily update them in one place and have the changes reflect across your entire site.</p>
+
+<p>To use an include in your layouts, pages, or posts, you simply use the Liquid tag <em>’{% include file.html %}’</em>. Jekyll will then insert the contents of the specified file from the _includes folder at that point in your document. You can also pass parameters to includes, allowing for more dynamic and flexible use of these snippets.</p>
+
+<p>The _includes folder is particularly useful for creating modular designs. It allows you to break down your site into smaller, manageable pieces, making it easier to update and maintain. This modularity also facilitates collaboration on larger projects, as different team members can work on different components without conflicting with each other’s work.</p>
+
+<h2 id="_assets">_assets</h2>
+
+<p>The _assets folder (or sometimes simply assets) is a common directory in Jekyll projects used to store static files that are part of your website. While not a default Jekyll folder, it’s widely adopted by developers as a best practice for organizing non-content files.</p>
+
+<p>This folder typically contains subdirectories for different types of assets. Common subdirectories include images for storing graphics and photos, css for stylesheets, js for JavaScript files, and fonts for custom web fonts. This organization helps keep your project structure clean and logical.</p>
+
+<p>Unlike content in folders like _posts or _pages, files in the _assets folder are not processed by Jekyll’s templating system. They are typically copied as-is to the _site folder when your site is built. However, many Jekyll setups use additional plugins or build processes to optimize these assets, such as minifying CSS and JavaScript or compressing images.</p>
+
+<p>To reference files from the _assets folder in your layouts, includes, or content, you’ll typically use Jekyll’s <em>‘site.baseurl’</em> variable combined with the file path. This ensures that your assets are correctly linked regardless of where your site is deployed.</p>
+
+<p>It’s worth noting that while _assets (with an underscore) is commonly used, some developers prefer assets without the underscore. The underscore version isn’t processed by Jekyll, which can be useful for certain setups, while the non-underscore version allows for easier direct linking in some deployment scenarios. The choice often depends on your specific needs and workflow.</p>
+
+<h2 id="blog-update-routine">Blog update routine</h2>
+
+<p>Working with Jekyll daily typically involves writing new articles and updating the website with those articles. Assuming <em>_config.yml</em>, <em>Gemfile</em>, and other necessary files are already created and configured, the update cycle generally follows these steps:</p>
+
+<ol>
+  <li><strong>Create a new post:</strong>
+    <ul>
+      <li>Navigate to your project’s <em>_posts</em> folder.</li>
+      <li>Create a new file using the format <em>YYYY-MM-DD-article-title.md</em>. For example, <em>2024-07-02-My-First-Article.md</em>.</li>
+    </ul>
+  </li>
+  <li><strong>Write the article:</strong>
+    <ul>
+      <li>Start the file with Front Matter. Begin and end the Front Matter with three dashes (<em>’—‘</em>), and specify metadata like title, date, categories, and tags.</li>
+      <li>Write the main content of your article in Markdown.</li>
+    </ul>
+  </li>
+  <li><strong>Preview locally:</strong>
+    <ul>
+      <li>Open a terminal, navigate to your Jekyll project directory, and run <em>‘jekyll serve’</em>.</li>
+      <li>Jekyll will build your site and serve it locally at <em>‘http://127.0.0.1:4000’</em>.</li>
+      <li>Open this address in your web browser to preview your changes in real-time as you write.</li>
+    </ul>
+  </li>
+  <li><strong>Finalize the Article:</strong>
+    <ul>
+      <li>Insert images, format text (using bold, italic, etc.), and structure your paragraphs.</li>
+      <li>Once satisfied, stop the local server by pressing <em>‘Ctrl+C’</em> twice in the terminal.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Congratulations, your website is ready for upload!</p>
+
+<h2 id="uploading-to-github">Uploading to Github</h2>
+
+<p>Github is very generous to static website owners, allowing them to upload websites for free with no catch to its Github Pages, so long as each website does not exceed 1GB in total size and there are no files larger than 100MB.</p>
+
+<p>It is generally recommended to sign up to Github Pages instead of uploading a static website to a custom ftp server. Such server will be paid, almost guaranteed to perform worse than Github Pages and will have worse uptime.</p>
+
+<p>Here is how to do this:</p>
+
+<ul>
+  <li>
+    <p>Download Git for Windows from <a href="https://git-scm.com/download/win" target="_blank">official website</a></p>
+  </li>
+  <li>
+    <p>Open a new terminal window and input these commands:</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git config <span class="nt">--global</span> user.name <span class="s2">"Your Name"</span>
+git config <span class="nt">--global</span> user.email <span class="s2">"your.email@example.com"</span></code></pre></figure>
+
+<ul>
+  <li>
+    <p>Navigate in terminal to your Jekyll project.</p>
+  </li>
+  <li>
+    <p>Initialize git repository with git init. Initializing is creating a git repository, you only have to do it once.</p>
+  </li>
+  <li>
+    <p>Write these commands. In second command, replace content in quotes with easy to understand and short description of what this particular update brings to your website.</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git add <span class="nb">.</span>
+git commit <span class="nt">-m</span> <span class="s2">"Initial commit"</span></code></pre></figure>
+
+<ul>
+  <li>Set up SSH for passwordless authentication:
+    <ul>
+      <li>Generate an SSH key: ssh-keygen -t rsa -b 4096 -C “your.email@example.com”</li>
+      <li>Start the ssh-agent: eval $(ssh-agent -s)</li>
+      <li>Add your SSH key to the agent: ssh-add ~/.ssh/id_rsa</li>
+    </ul>
+  </li>
+  <li>Add your SSH key to GitHub:
+    <ul>
+      <li>Copy your public key to clipboard: clip &lt; ~/.ssh/id_rsa.pub</li>
+      <li>Go to GitHub.com and log in</li>
+      <li>Click your profile photo &gt; Settings &gt; SSH and GPG keys</li>
+      <li>Click “New SSH key”</li>
+      <li>Give it a title and paste your key into the “Key” field</li>
+      <li>Click “Add SSH key”</li>
+    </ul>
+  </li>
+  <li>Connect your local repository to GitHub:
+    <ul>
+      <li>Create a new repository on GitHub (without initializing with README)</li>
+      <li>In Git Bash, add the remote repository: git remote add origin git@github.com:username/repository.git</li>
+      <li>Push your code to GitHub: git push -u origin master</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Now you should be able to push and pull from your GitHub repository without entering a password each time.</p>
+
+<p>Steps 6-8 are needed to perform just once. From now on, after you finish writing an article and quit Jekyll, routing uploading to Github Pages requires only 3 commands:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git add <span class="nb">.</span>
+git commit <span class="nt">-m</span> <span class="s2">"Your commit message"</span>
+git push</code></pre></figure>
+
+<h2 id="useful-kramdown-notation">Useful Kramdown notation</h2>
+
+<p>Kramdown, a Markdown parser used in Jekyll, provides a simple way to format your articles. Here are some commonly used Kramdown notations:</p>
+
+<ul>
+  <li><strong>#</strong>, <strong>##</strong>, <strong>###</strong>: Create headers of decreasing size. More # symbols mean smaller headers (# is H1, ## is H2 etc.)</li>
+  <li><strong>*</strong> , <strong>_</strong> , <strong>**</strong>: Create emphasis. Single * or _ for italics, double ** or __ for bold.</li>
+  <li><strong>-</strong> , <strong>+</strong> , <strong>*</strong>: Start unordered list items. Numbers followed by periods (1., 2., etc.) start ordered lists.</li>
+  <li><strong>[]</strong>: Enclose link text. <strong>()</strong> immediately after contains the URL.</li>
+  <li><strong>{:target=”_blank”}</strong> at the end of a link opens it in new tab</li>
+  <li><strong>!</strong>: Placed before [] to indicate an image. [] contains alt text, () contains image URL.</li>
+  <li><strong>—</strong>, <strong>***</strong>, ___: Any of these on a line by themselves creates a horizontal rule. Exceptions are Front Matter borders whichh will not produce html objects.</li>
+  <li><strong>:</strong> : Separates a term from its definition in definition lists.</li>
+</ul>
+
+<h2 id="final-word">Final word</h2>
+
+<p>Jekyll is a powerful yet straightforward tool that allows developers to create static websites with ease. Its structured folder system, which includes _posts, _layouts, _includes, and _assets, facilitates organized content management and site customization. By leveraging Markdown for content creation, Jekyll simplifies the writing process, enabling users to focus on their message rather than the intricacies of HTML.</p>
+
+<p>The ability to seamlessly update and preview changes locally, combined with the straightforward process of deploying updates to GitHub Pages, ensures that maintaining and growing your website is a smooth and efficient experience. By adhering to best practices and utilizing tools like Git and Kramdown, developers can ensure their sites are not only visually appealing but also robust and maintainable.</p>
+
+<p>Whether you are a seasoned developer or a newcomer to web development, Jekyll offers a streamlined path to building and managing a successful static website. Its user-friendly approach and powerful features make it an excellent choice for anyone looking to create a well-organized, professional web presence.</p>
+
+      </article>
+    </main>
+
+    <footer>
+    <div class="author">
+        <h3>Author</h3>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-user.png" alt="">
+            <p>Chris Blachewicz</p>
+        </div>
+        <div class="author-wrapper">
+            <img src="/assets/img/icon-email.png" alt="">
+            <p><a href="mailto:tonberry@gmx.com">tonberry@gmx.com</a></p>
+        </div>
+    </div>
+    <div class="about">
+        <h3>About</h3>
+        <p>Python system scripts, tips and tricks for keyboard-driven Linux navigation, cross-program integrations... <a href="">more</a></p>
+    </div>
+    <div class="copyright">
+        <h3>Copyright notice</h3>
+        <p>All rights waived. This work is dedicated to the public domain. You are free to use, modify, and distribute the content as you wish. If you copy code in its entirety, please provide proper citation.</p>
+    </div>
+    <div class="in-use">
+        <h3>In use</h3>
+        <div>
+            <a href="https://html.spec.whatwg.org/multipage/" target="_blank"><img src="/assets/img/logo-html5.png" alt=""></a>
+            <a href="https://www.python.org/" target="_blank"><img src="/assets/img/logo-python.png" alt=""></a>
+        </div>
+        <a href="https://jekyllrb.com/" target="_blank"><img src="/assets/img/logo-jekyll.png" alt=""></a>
+        <a href="https://www.gnu.org/software/bash/" target="_blank"><img src="/assets/img/logo-bash.png" alt="" class="bash"></a>
+    </div>
+</footer>
+    <script async data-id="101455210" src="//static.getclicky.com/js"></script>
+  </body>
+
+</html>

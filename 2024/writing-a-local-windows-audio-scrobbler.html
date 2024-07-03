@@ -35,6 +35,10 @@
       <article>
         <h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
 
+<div class="intro">
+In an era dominated by streaming services like Spotify, maintaining a local MP3 collection might seem outdated. However, for those who prefer the control and offline access it offers, local scrobbling is invaluable. This guide teaches you how to create a local audio scrobbler for Windows using Python and foobar2000. By capturing and logging playback data, you maintain complete control without relying on services like Last.fm. We’ll cover setting up your environment, configuring foobar2000, and writing the scrobbling script, providing a detailed yet straightforward path to enhance your music listening experience.
+</div>
+
 <p>The practice of listening to MP3 files and maintaining an MP3 collection is certainly a thing of the past now. In fact, if we asked a few tech-savvy teenagers what an MP3 file is, some wouldn’t even know.</p>
 
 <p>Services such as Spotify and Tidal have replaced manually searching for, downloading, and cataloguing music, much like Netflix and Disney+ have obliterated the pay-per-view and rental VOD market.</p>
@@ -186,7 +190,11 @@
 
 <p>Finally, we order the script to sleep for 3 seconds. The amount of time which is best depends on the habits of a particular user. One person changes tracks 20 times per minute, another presses play after adding a big playlist and never tinkers with playback until the program is shut down. The value must be chosen depending on your habits.</p>
 
-<p>Below is the code for the entire script. If you don’t know how to make the script run permanently in the background in Windows, please refer to a guide which I will be adding shortly.</p>
+<h2 id="final-word">Final word</h2>
+
+<p>By following this guide, you’ve gained the tools to create a custom local audio scrobbler for Windows, empowering you to maintain full control over your music collection and playback data. This setup ensures your scrobbles are logged accurately and reliably, without dependency on external services. As you continue to enjoy your personalized music experience, feel free to tweak and expand the script to better suit your needs. Thank you for reading, and happy scrobbling!</p>
+
+<p>Below is the code for the entire script. If you don’t know how to make the script run permanently in the background in Windows, <a href="/2022/task-scheduler-guide.html">here</a> is a guide that guides you through the process.</p>
 
 <h2 id="code-for-the-entire-script">Code for the entire script</h2>
 

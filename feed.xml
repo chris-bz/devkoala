@@ -1,4 +1,632 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-07-01T22:21:39+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2024/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2024-06-26T14:14:20+02:00</published><updated>2024-06-26T14:14:20+02:00</updated><id>https://www.devkoala.com/2024/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2024/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="https://www.devkoala.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://www.devkoala.com/" rel="alternate" type="text/html" /><updated>2024-07-03T22:33:59+02:00</updated><id>https://www.devkoala.com/feed.xml</id><title type="html">Dev Koala</title><entry><title type="html">How to Make a New Jekyll Website from Scratch</title><link href="https://www.devkoala.com/2024/how-to-make-a-new-jekyll-website-from-scratch.html" rel="alternate" type="text/html" title="How to Make a New Jekyll Website from Scratch" /><published>2024-07-02T19:55:34+02:00</published><updated>2024-07-02T19:55:34+02:00</updated><id>https://www.devkoala.com/2024/how-to-make-a-new-jekyll-website-from-scratch</id><content type="html" xml:base="https://www.devkoala.com/2024/how-to-make-a-new-jekyll-website-from-scratch.html"><![CDATA[<h1 id="how-to-make-a-new-jekyll-website-from-scratch">How to Make a New Jekyll Website from Scratch</h1>
+
+<div class="intro">
+Curious about how to build a website from scratch with a static site generator? In this comprehensive guide, we'll dive into the world of Jekyll, a popular static website generator, and walk you through every step of creating your own Jekyll project. We'll explore Jekyll's evolution, compare it to alternatives, and cover everything from installation to configuration. You'll learn how to set up essential files, understand the intricacies of Front Matter, configure your Gemfile, and organize your project directory. Plus, we'll guide you through the process of creating new posts, uploading your site to GitHub, and using Kramdown notation to enhance your content. Get ready to master Jekyll and bring your static site to life!
+</div>
+
+<p>In 2001, Ben and Mena Trott from San Francisco changed the world (or at least the World Wide Web) by introducing a tool called <strong>Movable Type</strong>.</p>
+
+<p>The idea was to use database content to automatically generate a website. When the data changed, the website could be automatically re-generated with the new content.</p>
+
+<p>This gave birth to <em>static website generators</em>.</p>
+
+<p>Fast forward to 2008, another tool called <strong>Jekyll</strong> was created. Instead of attempting to be a full-blown Content Management System like Movable Type, it aimed to be a simple, easy-to-use, and fast static website generator. No database was needed, generation performance was lightning fast in comparison, and it was 100% open source.</p>
+
+<p>The tool quickly gained popularity among developers and tech-savvy bloggers. Its simplicity and GitHub Pages integration made it perfect for personal blogs and project documentation. Writing in Markdown and using Liquid for templating appealed to those valuing both simplicity and control.</p>
+
+<p>As Jekyll grew, it fostered a vibrant ecosystem of themes and plugins. The community expanded, contributing to its functionality. This growth aligned with a broader trend towards static site generators, with Jekyll often seen as a pioneer.</p>
+
+<h2 id="why-jekyll">Why Jekyll?</h2>
+
+<p>Since its inception, many others have joined the party, and in 2024 we are looking at literally hundreds of SWGs. In specific areas, many beat Jekyll:</p>
+
+<ul>
+  <li><strong>Hugo:</strong> Much faster, able to generate websites in a fraction of the time it takes Jekyll, making it very useful for an extremely large volume of content that changes often.</li>
+  <li><strong>Hexo:</strong> Offers one-command deployment to various platforms like GitHub Pages, Heroku, and more, streamlining the process compared to Jekyll’s more manual deployment approach.</li>
+  <li><strong>Gatsby:</strong> Leverages React and GraphQL, making it ideal for developers who are familiar with these technologies. It excels at creating complex, dynamic-feeling static sites with seamless integration of the React ecosystem.</li>
+</ul>
+
+<p>But unless one heavily relies on a particular area, selecting any mature product is likely good enough. For quite a while, Jekyll has been a complete product. With so many years under its belt, it is more mature and fleshed out than almost any other SWG on the market.</p>
+
+<p>Its code on GitHub is updated almost daily. Twelve years in the making, and it is still vibrantly developed and continuously improving.</p>
+
+<h2 id="installing-jekyll">Installing Jekyll</h2>
+
+<p>The official Jekyll website has an excellent installation guide for multiple operating systems. <a href="https://jekyllrb.com/docs/installation/" target="_blank">Here is a link</a> to their installation docs. Return once Ruby and Jekyll are installed.</p>
+
+<h2 id="creating-a-blank-jekyll-project">Creating a blank Jekyll project</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/how-to-make-a-new-jekyll-website-from-scratch/blank-jekyll-project.png" alt="Blank Jekyll project" /></p>
+
+<p>What the official Jekyll website doesn’t cover at the time of writing this article is how to create an empty Jekyll project.</p>
+
+<p>When Jekyll generates a new website, it automatically adds a theme called <em>Minima</em>. This creates some unnecessary content that is good for newbies, but it forces the user to remove all that content while adding own custom content.</p>
+
+<p>To create an “empty” Jekyll project, we need to add a <em>’–blank’</em> flag.</p>
+
+<p>Open a terminal, navigate to the directory where you want your new Jekyll project to be stored, and write:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">jekyll new <span class="nt">--blank</span> my-site-name</code></pre></figure>
+
+<p>…where <em>my-site-name</em> is the name you want to give to your project.</p>
+
+<p>The minimal (Minima-less) installation creates the critical directory structure, and the entire project takes less than 1KB of hard disk space.</p>
+
+<h2 id="editing-config-file">Editing config file</h2>
+
+<p>Let’s start with the most important file in the whole project - _config.yml. It is always present in your main directory. Let’s open it up and edit some things.</p>
+
+<p>Initially, only the first three positions listed below will be present, but we will be adding plenty more.</p>
+
+<ul>
+  <li><strong>url:</strong> Insert the full domain name with the extension, for example, <em>mynewstore.com</em>.</li>
+  <li><strong>baseurl:</strong> Only change this when you are not the domain owner and your website will be deeper in the directory structure. For example, if your university at <em>https://www.university.edu</em> hosts student websites at <em>https://www.university.edu/~username/blog</em>, the url setting should be <em>https://www.university.edu</em> and the baseurl setting should be <em>/~username/blog</em>.</li>
+  <li><strong>title:</strong> Name of your website.</li>
+  <li><strong>markdown: kramdown:</strong> Since Jekyll 3.0, Kramdown is the default markup language. Specifying it is not needed, but it can serve as a reference if you want to check the Markdown syntax but forgot which Markdown version is in use.</li>
+  <li><strong>highlighter: rouge:</strong> If you intend to have programming code examples in your articles, Jekyll has a highlighter plugin that colors your code, making it considerably easier to read.</li>
+  <li><strong>permalink: /:categories/:year/:month/:day/:title:output_ext:</strong> Default address structure of all articles on your website. A newly created article named <em>‘My new article’</em> written on 2024.07.02 under a <em>‘Travel’</em> category will end up with a URL address similar to: <em>https://www.mydomain.com/travel/2024/07/02/my-new-article</em>. You can modify placeholders to your liking or remove them entirely. Always remember to separate them with ‘/’.</li>
+  <li><strong>plugins:</strong> There are many Jekyll plugins. Two interesting ones are jekyll-feed and jekyll-paginate-v2. jekyll-feed automatically generates an XML file containing the entire structure of your website, making your website ready for RSS readers. jekyll-paginate organizes your articles so that they are displayed on multiple pages, for example, 10 articles per page, instead of all being displayed on one page. Installation and configuration of both are simple—just ask Chat GPT!</li>
+</ul>
+
+<h2 id="creating-necessary-html-files">Creating necessary HTML files</h2>
+
+<p>Three types of HTML files are on almost any website out there: <em>index</em>, <em>404</em>, and <em>about</em>. You need the first two; the third one you don’t, but you should still have.</p>
+
+<p>By default, Jekyll only creates an <em>index.md</em> file in the main project folder. I recommend deleting it and creating <em>index.html</em> instead, along with <em>404.html</em> and <em>about.html</em>.</p>
+
+<h2 id="front-matter">Front Matter</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/how-to-make-a-new-jekyll-website-from-scratch/front-matter.png" alt="Front Matter example" /></p>
+
+<p>Jekyll uses something called Front Matter, which is expected at the beginning of every HTML and Markdown file in your project.</p>
+
+<p>Front Matter provides basic information about the content inside the file, so it can later be generated into a website according to the proper design layout, placed in the correct category, have the correct URL address, etc.</p>
+
+<p>Front Matter must be positioned at the top of the file. Its initial and final lines only contain <em>’—‘</em>, and in between are lines containing different variables and their values, one variable per line.</p>
+
+<p>Below are the ten most useful Front Matter variables. Make sure to include title and layout in every Front Matter section! These are critical as every website needs a title and a layout for generating the content.</p>
+
+<p>For blog posts, date, author, and at least one of the tags variables should also be present.</p>
+
+<ul>
+  <li><strong>title: “My First Blog Post”:</strong> Page title.</li>
+  <li><strong>date: 2024-07-02 14:30:00 -0200:</strong> Last piece of data is your timezone.</li>
+  <li><strong>categories: [web development, jekyll]:</strong> As many categories as you like. Remember to keep them inside square brackets.</li>
+  <li><strong>tags: [tutorial, beginner]:</strong> Same format as categories.</li>
+  <li><strong>layout: page/post/something else:</strong> Every markdown page is dressed in HTML according to the layout specified. More details later.</li>
+  <li><strong>author:</strong> Mostly used in blog posts.</li>
+  <li><strong>description:</strong> What is this page’s content about?</li>
+  <li><strong>permalink:</strong> If you specify it, the default permalink gets replaced.</li>
+  <li><strong>published: False:</strong> If false is specified, the document will not be part of the generated website. Useful when you need to temporarily remove the document from your website, such as an article containing statements needing updating.</li>
+  <li><strong>custom variables:</strong> You can create your own variables to be used in multiple ways. For example, you could specify reading_time: 5 and then in the layout file include &lt;p&gt;Reading time:  minutes&lt;/p&gt; to automatically insert the specified time.</li>
+</ul>
+
+<h2 id="gemfile">Gemfile</h2>
+
+<p>A Gemfile is a file used by Ruby (and thus Jekyll) to manage dependencies. It lists the gems (Ruby libraries) your project needs.</p>
+
+<p>When creating a Jekyll website with the <em>’–blank’</em> flag, the file is not created. Create a file named Gemfile (no extension) in your Jekyll project’s root directory and open it for editing. Add the following lines:</p>
+
+<ul>
+  <li><strong>source “https://rubygems.org”:</strong> This line specifies where Ruby should look for gems. RubyGems.org is the default and most common source.</li>
+  <li><strong>gem “jekyll”:</strong> This line tells Bundler to include the Jekyll gem in your project.</li>
+  <li><strong>gem “jekyll”, “~&gt; 4.0”:</strong> An alternative version of the line above. It means: compatible with 4.0 but newer versions. This specification is called a pessimistic version constraint and serves to protect our project against compatibility issues that updating to newer versions of Jekyll might generate.</li>
+</ul>
+
+<p>All other plugins need to be included in the file as well, one per line, using the same format, i.e., <em>‘gem “plugin-name”‘</em>.</p>
+
+<h2 id="other-files-in-main-directory">Other files in main directory</h2>
+
+<p>There can be multiple other types of files in the main project directory. Some examples:</p>
+
+<ul>
+  <li><strong>favicon-16x16.png</strong>, <strong>favicon-32x32.png:</strong> Two most basic favicon types of files, best to reside in the main directory.</li>
+  <li><strong>CNAME:</strong> If the website is on a custom domain, a CNAME file containing the domain address needs to be put in the main folder; otherwise, the custom domain won’t work.</li>
+  <li><strong>.gitignore:</strong> In case the main project folder is being put on GitHub (as opposed to just the generated final page content), the .gitignore file specifies cache and other folders that should not be pushed and synced.</li>
+  <li><strong>README.md:</strong> A markdown file providing information about the project, often displayed on GitHub.</li>
+  <li><strong>LICENSE:</strong> A file detailing the license under which the project is distributed.</li>
+  <li><strong>.editorconfig:</strong> Helps maintain consistent coding styles across different editors and IDEs.</li>
+  <li><strong>package.json:</strong> Used if the project incorporates npm packages or scripts, often for asset processing.</li>
+  <li><strong>.travis.yml</strong> or <strong>.github/workflows/ci.yml:</strong> Configuration files for continuous integration services like Travis CI or GitHub Actions.</li>
+</ul>
+
+<h2 id="folders">Folders</h2>
+
+<p>One of the biggest advantages of Jekyll is its simplicity. It’s very easy to learn, as evidenced by the fact that almost everything can be contained in one mid-length article that you are reading right now.</p>
+
+<p>To work efficiently in Jekyll, it’s best to learn and remember the different types of folders early. Luckily, it’s just one minute of effort.</p>
+
+<ul>
+  <li><strong>_posts/:</strong> Contains your blog posts.</li>
+  <li><strong>_pages/:</strong> Holds static pages, ie. complete html documents that don’t need to be generated each time. Some projects use a dedicated <em>_pages</em> folder, while others place pages directly in the root. In general, if there are only few HTML documents (like earlier mentioned: <em>index.html</em>, <em>about.html</em>, <em>404.html</em>) and main project folder is not crowded, there’s no need to create an extra folder.</li>
+  <li><strong>_layouts/:</strong> Contains templates that wrap around your content. These define the overall structure of different types of pages.</li>
+  <li><strong>_includes/:</strong> Stores reusable content snippets that can be included in layouts, pages, or posts.</li>
+  <li><strong>_data/:</strong> YAML, JSON, or CSV files containing data that can be accessed via the site.data variable in templates.</li>
+  <li><strong>_sass/:</strong> Contains partial Sass files that can be imported into your main CSS file.</li>
+  <li><strong>assets/</strong> or <strong>_assets/:</strong> Stores static files like images, CSS files, and JavaScript files.</li>
+  <li><strong>_site/:</strong> The generated site directory (usually ignored in version control). This is where Jekyll outputs the final, static website. It is also where you want to initiate a git repository if you are using Github Pages to host your website.</li>
+  <li><strong>_drafts/:</strong> A place for unpublished posts. These won’t appear on the live site unless Jekyll is run with the <em>’–drafts’</em> switch.</li>
+  <li><strong>_plugins/</strong> or <strong>_extensions/:</strong> Contains custom Ruby plugins to extend Jekyll’s functionality.</li>
+  <li><strong>collections/ or custom collection folders:</strong> Holds files for custom collections, which are similar to posts but can be organized differently.</li>
+</ul>
+
+<p>Following are extended descriptions of some of the folders above, describing what kind of work has to be done in which folders in the process of creating, maintaining, and updating a Jekyll website.</p>
+
+<h2 id="_posts">_posts</h2>
+
+<p>The _posts folder is a cornerstone of Jekyll’s blogging functionality. It serves as the primary location for storing blog post content in a Jekyll site. This folder is created by default when you initialize a new Jekyll project.</p>
+
+<p>Within the _posts folder, individual blog posts are stored as separate files. These files follow a specific naming convention: <em>YYYY-MM-DD-title.md</em> (or .markdown). For example, <em>‘2023-07-02-welcome-to-jekyll.md’</em>. This naming structure is crucial as Jekyll uses it to extract the publication date and create the post’s URL.</p>
+
+<p>Each post file in the _posts folder typically begins with YAML front matter, enclosed between triple-dashed lines. This front matter contains metadata about the post, such as the title, date, categories, tags, and any custom variables you define. The content following the front matter is the main body of your blog post, usually written in Markdown.</p>
+
+<p>Jekyll processes these files, converting the Markdown to HTML and applying the appropriate layout as specified in the front matter or your configuration. The resulting HTML files are then placed in the appropriate location within your generated site, typically under a <em>/blog/</em> or <em>/posts/</em> directory, depending on your permalink settings.</p>
+
+<p>The _posts folder is dynamic, meaning you can continually add new post files, and Jekyll will automatically include them in your site when you build it using jekyll build or jekyll serve commands. This makes it easy to maintain and grow your blog over time, simply by adding new files to this folder.</p>
+
+<h2 id="_layouts">_layouts</h2>
+
+<p>The _layouts folder is a crucial component of Jekyll’s theming system. It contains template files that define the structure and appearance of different types of pages on your site. These templates act as the skeleton for your content, providing consistent styling and structure across your site.</p>
+
+<p>Layout files are typically HTML documents with Liquid tags and variables. They include placeholders for content, which Jekyll fills in when generating your site. The most common layout is default.html, which often serves as the base template for other layouts.</p>
+
+<p>Other common layouts might include post.html for blog posts, page.html for static pages, and home.html for the homepage. You can create as many custom layouts as you need for different types of content or sections of your site.</p>
+
+<p>In your content files (posts, pages, etc.), you specify which layout to use in the front matter. For example, <em>‘layout: post’</em> tells Jekyll to wrap that content in the <em>post.html</em> layout. If no layout is specified, Jekyll defaults to <em>default.html</em>.</p>
+
+<p>Layouts can be nested. For instance, a <em>post.html</em> layout might include the content within a <em>default.html</em> layout, adding post-specific elements like author information or publication date. This nesting allows for modularity and reuse of common elements across different page types.</p>
+
+<p>The _layouts folder gives you fine-grained control over your site’s structure and appearance. By editing these files, you can make site-wide changes efficiently, ensure consistency across pages, and create a unique look for your Jekyll site without repeating HTML structure in every content file.</p>
+
+<h2 id="_includes">_includes</h2>
+
+<p>The _includes folder in Jekyll is designed to store reusable content snippets. These snippets can be HTML, Markdown, or Liquid code that you want to use across multiple pages or layouts in your site. This folder helps in keeping your code DRY (Don’t Repeat Yourself) and makes maintenance easier.</p>
+
+<p>Common uses for includes are elements like headers, footers, navigation menus, sidebar content, or any other repetitive parts of your site. By storing these elements in separate files within the _includes folder, you can easily update them in one place and have the changes reflect across your entire site.</p>
+
+<p>To use an include in your layouts, pages, or posts, you simply use the Liquid tag <em>’{% include file.html %}’</em>. Jekyll will then insert the contents of the specified file from the _includes folder at that point in your document. You can also pass parameters to includes, allowing for more dynamic and flexible use of these snippets.</p>
+
+<p>The _includes folder is particularly useful for creating modular designs. It allows you to break down your site into smaller, manageable pieces, making it easier to update and maintain. This modularity also facilitates collaboration on larger projects, as different team members can work on different components without conflicting with each other’s work.</p>
+
+<h2 id="_assets">_assets</h2>
+
+<p>The _assets folder (or sometimes simply assets) is a common directory in Jekyll projects used to store static files that are part of your website. While not a default Jekyll folder, it’s widely adopted by developers as a best practice for organizing non-content files.</p>
+
+<p>This folder typically contains subdirectories for different types of assets. Common subdirectories include images for storing graphics and photos, css for stylesheets, js for JavaScript files, and fonts for custom web fonts. This organization helps keep your project structure clean and logical.</p>
+
+<p>Unlike content in folders like _posts or _pages, files in the _assets folder are not processed by Jekyll’s templating system. They are typically copied as-is to the _site folder when your site is built. However, many Jekyll setups use additional plugins or build processes to optimize these assets, such as minifying CSS and JavaScript or compressing images.</p>
+
+<p>To reference files from the _assets folder in your layouts, includes, or content, you’ll typically use Jekyll’s <em>‘site.baseurl’</em> variable combined with the file path. This ensures that your assets are correctly linked regardless of where your site is deployed.</p>
+
+<p>It’s worth noting that while _assets (with an underscore) is commonly used, some developers prefer assets without the underscore. The underscore version isn’t processed by Jekyll, which can be useful for certain setups, while the non-underscore version allows for easier direct linking in some deployment scenarios. The choice often depends on your specific needs and workflow.</p>
+
+<h2 id="blog-update-routine">Blog update routine</h2>
+
+<p>Working with Jekyll daily typically involves writing new articles and updating the website with those articles. Assuming <em>_config.yml</em>, <em>Gemfile</em>, and other necessary files are already created and configured, the update cycle generally follows these steps:</p>
+
+<ol>
+  <li><strong>Create a new post:</strong>
+    <ul>
+      <li>Navigate to your project’s <em>_posts</em> folder.</li>
+      <li>Create a new file using the format <em>YYYY-MM-DD-article-title.md</em>. For example, <em>2024-07-02-My-First-Article.md</em>.</li>
+    </ul>
+  </li>
+  <li><strong>Write the article:</strong>
+    <ul>
+      <li>Start the file with Front Matter. Begin and end the Front Matter with three dashes (<em>’—‘</em>), and specify metadata like title, date, categories, and tags.</li>
+      <li>Write the main content of your article in Markdown.</li>
+    </ul>
+  </li>
+  <li><strong>Preview locally:</strong>
+    <ul>
+      <li>Open a terminal, navigate to your Jekyll project directory, and run <em>‘jekyll serve’</em>.</li>
+      <li>Jekyll will build your site and serve it locally at <em>‘http://127.0.0.1:4000’</em>.</li>
+      <li>Open this address in your web browser to preview your changes in real-time as you write.</li>
+    </ul>
+  </li>
+  <li><strong>Finalize the Article:</strong>
+    <ul>
+      <li>Insert images, format text (using bold, italic, etc.), and structure your paragraphs.</li>
+      <li>Once satisfied, stop the local server by pressing <em>‘Ctrl+C’</em> twice in the terminal.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Congratulations, your website is ready for upload!</p>
+
+<h2 id="uploading-to-github">Uploading to Github</h2>
+
+<p>Github is very generous to static website owners, allowing them to upload websites for free with no catch to its Github Pages, so long as each website does not exceed 1GB in total size and there are no files larger than 100MB.</p>
+
+<p>It is generally recommended to sign up to Github Pages instead of uploading a static website to a custom ftp server. Such server will be paid, almost guaranteed to perform worse than Github Pages and will have worse uptime.</p>
+
+<p>Here is how to do this:</p>
+
+<ul>
+  <li>
+    <p>Download Git for Windows from <a href="https://git-scm.com/download/win" target="_blank">official website</a></p>
+  </li>
+  <li>
+    <p>Open a new terminal window and input these commands:</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git config <span class="nt">--global</span> user.name <span class="s2">"Your Name"</span>
+git config <span class="nt">--global</span> user.email <span class="s2">"your.email@example.com"</span></code></pre></figure>
+
+<ul>
+  <li>
+    <p>Navigate in terminal to your Jekyll project.</p>
+  </li>
+  <li>
+    <p>Initialize git repository with git init. Initializing is creating a git repository, you only have to do it once.</p>
+  </li>
+  <li>
+    <p>Write these commands. In second command, replace content in quotes with easy to understand and short description of what this particular update brings to your website.</p>
+  </li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git add <span class="nb">.</span>
+git commit <span class="nt">-m</span> <span class="s2">"Initial commit"</span></code></pre></figure>
+
+<ul>
+  <li>Set up SSH for passwordless authentication:
+    <ul>
+      <li>Generate an SSH key: ssh-keygen -t rsa -b 4096 -C “your.email@example.com”</li>
+      <li>Start the ssh-agent: eval $(ssh-agent -s)</li>
+      <li>Add your SSH key to the agent: ssh-add ~/.ssh/id_rsa</li>
+    </ul>
+  </li>
+  <li>Add your SSH key to GitHub:
+    <ul>
+      <li>Copy your public key to clipboard: clip &lt; ~/.ssh/id_rsa.pub</li>
+      <li>Go to GitHub.com and log in</li>
+      <li>Click your profile photo &gt; Settings &gt; SSH and GPG keys</li>
+      <li>Click “New SSH key”</li>
+      <li>Give it a title and paste your key into the “Key” field</li>
+      <li>Click “Add SSH key”</li>
+    </ul>
+  </li>
+  <li>Connect your local repository to GitHub:
+    <ul>
+      <li>Create a new repository on GitHub (without initializing with README)</li>
+      <li>In Git Bash, add the remote repository: git remote add origin git@github.com:username/repository.git</li>
+      <li>Push your code to GitHub: git push -u origin master</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Now you should be able to push and pull from your GitHub repository without entering a password each time.</p>
+
+<p>Steps 6-8 are needed to perform just once. From now on, after you finish writing an article and quit Jekyll, routing uploading to Github Pages requires only 3 commands:</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash">git add <span class="nb">.</span>
+git commit <span class="nt">-m</span> <span class="s2">"Your commit message"</span>
+git push</code></pre></figure>
+
+<h2 id="useful-kramdown-notation">Useful Kramdown notation</h2>
+
+<p>Kramdown, a Markdown parser used in Jekyll, provides a simple way to format your articles. Here are some commonly used Kramdown notations:</p>
+
+<ul>
+  <li><strong>#</strong>, <strong>##</strong>, <strong>###</strong>: Create headers of decreasing size. More # symbols mean smaller headers (# is H1, ## is H2 etc.)</li>
+  <li><strong>*</strong> , <strong>_</strong> , <strong>**</strong>: Create emphasis. Single * or _ for italics, double ** or __ for bold.</li>
+  <li><strong>-</strong> , <strong>+</strong> , <strong>*</strong>: Start unordered list items. Numbers followed by periods (1., 2., etc.) start ordered lists.</li>
+  <li><strong>[]</strong>: Enclose link text. <strong>()</strong> immediately after contains the URL.</li>
+  <li><strong>{:target=”_blank”}</strong> at the end of a link opens it in new tab</li>
+  <li><strong>!</strong>: Placed before [] to indicate an image. [] contains alt text, () contains image URL.</li>
+  <li><strong>—</strong>, <strong>***</strong>, ___: Any of these on a line by themselves creates a horizontal rule. Exceptions are Front Matter borders whichh will not produce html objects.</li>
+  <li><strong>:</strong> : Separates a term from its definition in definition lists.</li>
+</ul>
+
+<h2 id="final-word">Final word</h2>
+
+<p>Jekyll is a powerful yet straightforward tool that allows developers to create static websites with ease. Its structured folder system, which includes _posts, _layouts, _includes, and _assets, facilitates organized content management and site customization. By leveraging Markdown for content creation, Jekyll simplifies the writing process, enabling users to focus on their message rather than the intricacies of HTML.</p>
+
+<p>The ability to seamlessly update and preview changes locally, combined with the straightforward process of deploying updates to GitHub Pages, ensures that maintaining and growing your website is a smooth and efficient experience. By adhering to best practices and utilizing tools like Git and Kramdown, developers can ensure their sites are not only visually appealing but also robust and maintainable.</p>
+
+<p>Whether you are a seasoned developer or a newcomer to web development, Jekyll offers a streamlined path to building and managing a successful static website. Its user-friendly approach and powerful features make it an excellent choice for anyone looking to create a well-organized, professional web presence.</p>]]></content><author><name>Chris</name></author><category term="jekyll" /><summary type="html"><![CDATA[How to Make a New Jekyll Website from Scratch]]></summary></entry><entry><title type="html">Writing a local Windows audio scrobbler</title><link href="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html" rel="alternate" type="text/html" title="Writing a local Windows audio scrobbler" /><published>2024-02-15T14:13:00+01:00</published><updated>2024-02-15T14:13:00+01:00</updated><id>https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler</id><content type="html" xml:base="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html"><![CDATA[<h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
+
+<div class="intro">
+In an era dominated by streaming services like Spotify, maintaining a local MP3 collection might seem outdated. However, for those who prefer the control and offline access it offers, local scrobbling is invaluable. This guide teaches you how to create a local audio scrobbler for Windows using Python and foobar2000. By capturing and logging playback data, you maintain complete control without relying on services like Last.fm. We’ll cover setting up your environment, configuring foobar2000, and writing the scrobbling script, providing a detailed yet straightforward path to enhance your music listening experience.
+</div>
+
+<p>The practice of listening to MP3 files and maintaining an MP3 collection is certainly a thing of the past now. In fact, if we asked a few tech-savvy teenagers what an MP3 file is, some wouldn’t even know.</p>
+
+<p>Services such as Spotify and Tidal have replaced manually searching for, downloading, and cataloguing music, much like Netflix and Disney+ have obliterated the pay-per-view and rental VOD market.</p>
+
+<p>As with every technology out there, there are a few dinosaurs who refuse to give up old habits for various reasons, the author of this blog being one of them.</p>
+
+<p>Having a private collection of files offers the same benefits as general local storage offers over cloud solutions: instant direct access, ability to edit and cut out content with ease, no need for an internet connection, and more.</p>
+
+<p>Local scrobbling perfectly compliments local playback. Last.fm, Libre.fm, and the like are nice while they last, but they are not profitable and therefore can be discontinued any day.</p>
+
+<p>By writing a local scrobbling application, we have full control over which tag fields are logged and how the file looks. It can then be backed up with ease.</p>
+
+<p>In this article, we’re going to write a scrobbling application using Python for the Windows operating system. It will run continuously while we are logged in. It will listen to changes in Foobar playback and log those changes to a file according to our specified logic.</p>
+
+<p>A few years ago, I wrote another article that does the same thing for graphical Linux, using the DeaDBeeF player and written in Bash. If you need a Linux version, <a href="https://devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html">here</a> is a link to the article.</p>
+
+<h2 id="requirements">Requirements</h2>
+
+<ol>
+  <li><strong>Python</strong>. Python. This ever-popular programming language is a first choice when it comes to many tasks. Due to its simplicity and readability, it is certainly a joy to write in compared to most other languages.</li>
+</ol>
+
+<p>Download the latest Python version from the official Python website <a href="https://www.python.org/downloads/">here</a>.</p>
+
+<ol>
+  <li><strong>foobar 2000</strong>. One of the easiest ways to make a local audio scrobbling script is to monitor an audio player’s title string, extract data from it, manipulate it, and store it in a file. There aren’t that many MP3 players for Windows, let alone ones that allow us to manipulate their title. Of the very few, foobar2000 is the best, so it is our choice.</li>
+</ol>
+
+<p><a href="https://www.foobar2000.org/download">Here</a> is a link to the download section of the official foobar2000 website.</p>
+
+<h2 id="configuring-foobar-2000">Configuring Foobar 2000</h2>
+
+<p><img src="https://www.devkoala.com/assets/img/articles/writing-a-local-windows-audio-scrobbler/foobar2000-options.png" alt="Foobar setting location" /></p>
+
+<p>The version I am using as of the time of writing this article is 2.1.4.</p>
+
+<p>Go to <em>Preferences</em> by either pressing <em>Ctrl+p</em> or through <em>File -&gt; Preferences</em>. In the left menu tree select <em>Display</em>, then select <em>Default User Interface</em> under it.</p>
+
+<p>In the <em>Playback state display formatting</em> section, you need to edit the <em>Window title</em> field. Replace whatever you find there with:</p>
+<blockquote>
+  <p><em>%artist% -.- %album% -.- %title% -.- %date% -.- %length% -.- %playback_time%</em></p>
+</blockquote>
+
+<p>As you can see, foobar2000 has many different tags encapsulated between percentage signs. Putting ‘ -.- ‘ is our choice. A distinct combination of strings has to be used so that the script can later extract data between them. Using the selected solution generally guarantees this. There is a very low chance that this particular string is going to appear in artist, album, or title tags.</p>
+
+<p>On the other hand, it doesn’t look horrible (although it’s certainly not pretty), which is also important because if our Windows taskbar is configured to show icons and program titles instead of just icons, we are going to be looking at it every time the artist tag field of the currently played song in foobar2000 is short enough.</p>
+
+<h2 id="breaking-apart-the-script">Breaking apart the script</h2>
+
+<p>Let’s get down to it.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span></code></pre></figure>
+
+<p>The imports section is quite straightforward, befitting a miniscule script.</p>
+
+<p><a href="https://pypi.org/project/PyGetWindow/">PyGetWindow</a> is the only module which is not built-in. Thanks to it, we get access to titles of all programs that are currently running. Download it from the command line with this command:</p>
+
+<blockquote>
+  <p>pip install pygetwindow</p>
+</blockquote>
+
+<p>Next, we define 3 functions to aid us in the audio scrobbling process:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
+	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">title</span></code></pre></figure>
+
+<p>foobar2000 adds the string <em>’ [foobar2000]’</em> at the end of the program title, and it’s non-negotiable. Therefore, we have a convenient string to search for in order to isolate foobar2000 from other applications and get the playback data.</p>
+
+<p>This function uses PyGetWindow to iterate through all the currently opened window titles and give us foobar2000.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
+	<span class="k">return</span> <span class="n">seconds_full</span></code></pre></figure>
+
+<p>In the script, playback time is important because we’re going to be constantly comparing the previously stored time with the current one in order to detect if the track has changed. To effectively do this comparison, it’s easiest to convert minutes to seconds by multiplying the value representing minutes by 60 and adding it to the value representing seconds.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
+	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
+	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
+	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stripe</span></code></pre></figure>
+
+<p>Once we get our title, there are a few things that need to be done with it:</p>
+
+<p>First, our <em>’ -.- ‘</em> separator needs to be replaced with the CSV separator needed for the scrobbling file. <em>’;’</em> is a considerably safer choice than a comma, because commas are very frequent in tags while semicolons are not.</p>
+
+<p>Next, there needs to be a timestamp at the beginning of each scrobble to indicate when that scrobble took place. Python’s datetime module provides a simple solution for this.</p>
+
+<p>After we get the datetime object, we format it according to a practical specification. Year is followed by month, which is then followed by day, then after a semicolon we get the current hour and minute of the day. A semicolon at the end prepares the string for the actual tag stripe.</p>
+
+<p>Finally, we add the timestamp to the tag content, remove unnecessary stuff from the end of the string, and return the complete scrobble line.</p>
+
+<p>After defining functions, we form starting variables:</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span></code></pre></figure>
+
+<p><em>csv_file_location</em> needs to be set to a path on your drive where the scrobbling file is to be stored.</p>
+
+<p>Setting up <em>time_played_past</em> and <em>time_played_current</em> is just priming the pump before the action starts. In other words, we set up initial values for the script to have something to work with.</p>
+
+<p><em>time_played_past</em> is needed once when the script initiates. For playback logging to be registered, the variable stores 9999 “seconds” so when we begin playback, <em>time_played_current</em> has a lower number. This means a track has been changed - if the same track were still playing, that number would go up, not down.</p>
+
+<p>The number going down indicates changing of the track or restarting the currently played track. One way or another, it is a sign to add that new item to our scrobble history.</p>
+
+<p>We use <em>while True:</em> for the contained code to run infinitely. We want the script to be always on and always listening for new playback changes.</p>
+
+<p>Because the code is simple and extremely lightweight, it doesn’t slow down the system by any noticeable amount. In fact, it probably wouldn’t even if we were running it 500 times in parallel.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span></code></pre></figure>
+
+<p>The script begins to move by checking if among all currently opened windows there is one whose title contains the string representing foobar2000.</p>
+
+<p>Just to make sure that we don’t have accidentally opened a website or a document which contains that very string and could fool our script, we add a second condition for further execution - the string has to contain our chosen tag separator in foobar2000. A situation where both of these conditions are met and the string captured is still not a foobar2000 player is probably as improbable as winning the national lottery five times in a row ;)</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span></code></pre></figure>
+
+<p>As explained before, in order to compare current playback time with the last tick, we need to feed time to a function that does just that. For that, we first extract the part of the string which contains playback time and then extract it from that line.</p>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
+	<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
+	<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+		<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span></code></pre></figure>
+
+<p>Making changes to a scrobble file is guarded behind a condition that the currently played file plays for fewer seconds than our last stored state.</p>
+
+<p>When the condition is met, we use the function that converts the foobar2000 title to a final CSV-ready stripe (line). After that, we append that stripe to our file whose location is stored in <em>csv_file_location</em>.</p>
+
+<p>The program cycle then needs two more actions to complete.</p>
+
+<p>First, the variable <em>time_played_past</em> needs to get the value of <em>time_played_current</em>. In other words, our variable to which we will compare the next playback state needs to be updated.</p>
+
+<p>Finally, we order the script to sleep for 3 seconds. The amount of time which is best depends on the habits of a particular user. One person changes tracks 20 times per minute, another presses play after adding a big playlist and never tinkers with playback until the program is shut down. The value must be chosen depending on your habits.</p>
+
+<h2 id="final-word">Final word</h2>
+
+<p>By following this guide, you’ve gained the tools to create a custom local audio scrobbler for Windows, empowering you to maintain full control over your music collection and playback data. This setup ensures your scrobbles are logged accurately and reliably, without dependency on external services. As you continue to enjoy your personalized music experience, feel free to tweak and expand the script to better suit your needs. Thank you for reading, and happy scrobbling!</p>
+
+<p>Below is the code for the entire script. If you don’t know how to make the script run permanently in the background in Windows, <a href="/2022/task-scheduler-guide.html">here</a> is a guide that guides you through the process.</p>
+
+<h2 id="code-for-the-entire-script">Code for the entire script</h2>
+
+<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
+<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span>
+
+
+<span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
+	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
+	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
+			<span class="k">return</span> <span class="n">title</span>
+
+
+<span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
+	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
+	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
+	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
+	<span class="k">return</span> <span class="n">seconds_full</span>
+
+
+<span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
+	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
+	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
+	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
+	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">stripe</span>
+
+
+
+<span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
+<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+	<span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
+
+	<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span>
+		<span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+		<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span>
+
+		<span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
+			<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
+			<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+				<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
+
+		<span class="n">time_played_past</span> <span class="o">=</span> <span class="n">time_played_current</span>
+	<span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="audio" /><category term="python" /><summary type="html"><![CDATA[Writing a local Windows audio scrobbler]]></summary></entry><entry><title type="html">How to Run Python Scripts in the Background</title><link href="https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background.html" rel="alternate" type="text/html" title="How to Run Python Scripts in the Background" /><published>2023-04-11T14:21:01+02:00</published><updated>2023-04-11T14:21:01+02:00</updated><id>https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background</id><content type="html" xml:base="https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background.html"><![CDATA[<h1 id="how-to-run-python-scripts-in-the-background">How to Run Python Scripts in the Background</h1>
+
+<div class="intro">
+In today's digital landscape, Python scripts serve as indispensable tools for automating tasks, whether they operate visibly or discreetly in the background. While interactive scripts thrive on real-time feedback and user interaction, background scripts operate silently, handling tasks such as data updates, file management, and more without constant oversight. This guide delves into the realm of running Python scripts quietly in the background using Task Scheduler, offering a streamlined approach to efficiency and automation. By harnessing these tools and techniques, users can optimize workflows and focus on higher-level tasks, enhancing productivity in both personal and professional settings.
+</div>
+
+<p>There are two type of system scripts.</p>
+
+<ol>
+  <li>
+    <p><strong>Interactive Scripts</strong>: These are scripts that we run with a program or terminal window open. For these scripts, we often want detailed output so we can closely monitor what the script is achieving and ensure it encounters no obstacles.</p>
+  </li>
+  <li>
+    <p><strong>Background Scripts</strong>: These are silent partners, running in the background and performing minor tasks quietly, such as periodic data downloading, database updating, headline sniffing, file maintenance, etc.</p>
+  </li>
+</ol>
+
+<p>For the latter, having a window open the entire time for something that is just supposed to work quietly is a waste of visual space. We want it to be as detached and absent as possible.</p>
+
+<p>Below, I will show a simple way to set up just that. The example will be a Python script run through Task Scheduler.</p>
+
+<h2 id="basics">Basics</h2>
+
+<p>To run scripts “silently”, we need a few things things:</p>
+
+<h3 id="--python">- Python</h3>
+
+<p>Download the latest version from the <a href="https://www.python.org/downloads/" target="_blank">official website</a>.</p>
+
+<h3 id="--virtual-environment">- Virtual Environment</h3>
+
+<p>Although it’s not required, using a virtual environment is a very important habit. Virtual environments are self-contained environments that have a specific version of Python and a specific set of modules installed, tailored for one particular job.</p>
+
+<p>If we install all the modules to the default system version of Python, the module list might grow exponentially, slowing down Python software execution. Additionally, we might encounter compatibility issues. If something happens to the core system Python, it could cause a system-wide meltdown.</p>
+
+<p>To maintain order, simplicity, ease of access, and stability, it’s best to install a virtual environment for every different task or group of tasks our programs will be performing.</p>
+
+<p><strong>venv</strong>, a virtual library for Python, comes with Python itself, so there is no need to install it separately.</p>
+
+<ul>
+  <li>Open a terminal (cmd or PowerShell) and navigate to the directory where you want to store your virtual environments. Choose a location that is convenient and logical.</li>
+  <li>In the terminal, run: <em>python -m venv</em> followed by the name you want to give to the virtual environment. For example: <em>python -m venv mybackup</em>.</li>
+  <li>To use the virtual environment, you need to activate it. When you create an environment using venv, a folder with that name is created, containing a <em>Scripts</em> folder, which contains an activate file. To start the script, run the command: <em>source path/to/venv/myvenvname/Scripts/activate</em> where myvenvname is the name of your virtual environment. Alternatively, you can navigate to the venv’s <em>Scripts</em> folder and run <em>source activate</em>.</li>
+  <li>Once the virtual environment is activated, install all the modules required by the script you want to run in Task Scheduler. Open your script file(s) and review all the imports. Some of them are built-in (installed with Python), while others need to be downloaded externally. Download the external modules with the command <em>pip install</em> followed by the module name.</li>
+</ul>
+
+<p>Once you are finished, you can exit the virtual environment by typing <em>exit</em> in the console window. Don’t worry - once everything is set up, you won’t have to manually enter the virtual environment for Task Scheduler to execute it.</p>
+
+<h3 id="--pyw-python-file">- <em>.pyw</em> Python file</h3>
+
+<p>Python files can be saved with two file extensions: <em>.py</em> and <em>.pyw</em>. The latter, <em>‘w’</em> stands for <em>‘Windows’</em>.</p>
+
+<p>The code within the file gets executed the same way. The difference is that the extra <em>‘w’</em> tells Windows that the script is intended to run in the graphical interface, i.e., without a terminal window present during execution.</p>
+
+<h3 id="--task-scheduler">- Task Scheduler</h3>
+
+<p>Ideally, background scripts initiate on predefined triggers or run whenever the system is on, without the need to start them manually each time.</p>
+
+<p>Task Scheduler is a refined piece of software included with Microsoft Windows, specifically designed to run tasks according to various criteria.</p>
+
+<p>I will skip the detailed explanation and go straight to the point. However, if you need a detailed guide on its features and settings, <a href="/2022/task-scheduler-guide.html" target="_blank">here is a link</a> to a Task Scheduler guide.</p>
+
+<h2 id="create-a-script-task-in-task-scheduler">Create a script task in Task Scheduler</h2>
+
+<ul>
+  <li>Make sure that the Python script you are adding has a <em>.pyw</em> extension instead of <em>.py</em>.</li>
+  <li>Open Task Scheduler by pressing <em>Start</em> and typing the initial letters of <em>task scheduler</em> until auto-complete suggests it.</li>
+  <li>Select a <em>Create Task</em> action.</li>
+  <li>In the <em>General</em> tab, give your task a name. Choose something short but descriptive. The name is required, and while the description is optional, it’s worth adding if you have many tasks or similar tasks.</li>
+  <li>In the <em>Triggers</em> tab, add one or more triggers. For example, if you want the script to run at 10 AM every day, select <em>On a schedule</em> and specify the hour.</li>
+  <li>In <em>Actions</em> tab, specify the tasks to be executed. Click the <em>New</em> button.
+<img src="https://www.devkoala.com/assets/img/articles/how-to-run-python-scripts-in-the-background/pyw.png" alt="Task Scheduler: adding a pyw script" /></li>
+  <li>Click <em>Browse</em>, navigate to the location of your virtual environment where the script is supposed to run. In the directory containing the activate file, there are <em>.exe</em> files for different Python executables. Locate <em>pythonw.exe</em> and select it. Be careful not to select <em>python.exe</em> by accident. The <em>‘w’</em> letter at the end is important, as we need to run a <em>‘.pyw’</em> file with <em>‘pythonw.exe’</em> for the script to run entirely in the background.</li>
+  <li>In the Add arguments (optional) field, paste the full path to the script you want to run.</li>
+</ul>
+
+<p>There are many other settings worth checking out to tailor the script to your needs, but the defaults are sensible and will generally not prevent the script from working.</p>
+
+<p>It is generally worth manually starting the task after adding it to verify that it’s working before leaving Task Scheduler.</p>
+
+<h2 id="final-word">Final word</h2>
+
+<p>Mastering the art of running Python scripts silently in the background empowers users to automate routine tasks seamlessly. With Task Scheduler and a virtual environment, you can ensure scripts execute efficiently without cluttering your workspace. If you encounter any challenges or seek further customization, feel free to explore additional Task Scheduler features or reach out for assistance. Happy scripting!</p>]]></content><author><name>Chris</name></author><category term="python" /><category term="windows" /><summary type="html"><![CDATA[How to Run Python Scripts in the Background]]></summary></entry><entry><title type="html">Task Scheduler Guide</title><link href="https://www.devkoala.com/2022/task-scheduler-guide.html" rel="alternate" type="text/html" title="Task Scheduler Guide" /><published>2022-04-25T14:14:20+02:00</published><updated>2022-04-25T14:14:20+02:00</updated><id>https://www.devkoala.com/2022/task-scheduler-guide</id><content type="html" xml:base="https://www.devkoala.com/2022/task-scheduler-guide.html"><![CDATA[<h1 id="task-scheduler-guide">Task Scheduler Guide</h1>
+
+<div class="intro">
+Task Scheduler is an essential tool for managing automated tasks in Windows, with a rich history and functionality that parallels Unix’s Cron. In this comprehensive guide, we'll explore how to utilize Task Scheduler to streamline your workflow, from setting up tasks to fine-tuning their execution parameters. You'll discover how to navigate the interface, create and configure tasks, and leverage advanced features for optimal performance and reliability. Whether you're a freelancer guiding clients through task setup or a power user seeking to automate complex processes, this guide will equip you with the knowledge to make the most of Task Scheduler’s capabilities.
+</div>
 
 <p>A decent tool since <em>Vista</em> but already existing as early as <em>Win 3.11</em>, Task Scheduler is an ireplaceable tool to manage system scripts.</p>
 
@@ -190,288 +818,7 @@
   <li><strong>0x80070005: Access is denied</strong> - The task does not have the necessary permissions to execute.</li>
   <li><strong>0x8007010B: Directory name is invalid</strong> - The task points to a directory that is invalid or does not exist.</li>
   <li><strong>0xC000013A: The application was terminated by Ctrl+C</strong> - The task was terminated by the user manually.</li>
-</ul>]]></content><author><name>Chris</name></author><category term="scheduler" /><category term="windows" /><summary type="html"><![CDATA[Task Scheduler Guide]]></summary></entry><entry><title type="html">Writing a local Windows audio scrobbler</title><link href="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html" rel="alternate" type="text/html" title="Writing a local Windows audio scrobbler" /><published>2024-02-15T14:13:00+01:00</published><updated>2024-02-15T14:13:00+01:00</updated><id>https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler</id><content type="html" xml:base="https://www.devkoala.com/2024/writing-a-local-windows-audio-scrobbler.html"><![CDATA[<h1 id="writing-a-local-windows-audio-scrobbler">Writing a local Windows audio scrobbler</h1>
-
-<p>The practice of listening to MP3 files and maintaining an MP3 collection is certainly a thing of the past now. In fact, if we asked a few tech-savvy teenagers what an MP3 file is, some wouldn’t even know.</p>
-
-<p>Services such as Spotify and Tidal have replaced manually searching for, downloading, and cataloguing music, much like Netflix and Disney+ have obliterated the pay-per-view and rental VOD market.</p>
-
-<p>As with every technology out there, there are a few dinosaurs who refuse to give up old habits for various reasons, the author of this blog being one of them.</p>
-
-<p>Having a private collection of files offers the same benefits as general local storage offers over cloud solutions: instant direct access, ability to edit and cut out content with ease, no need for an internet connection, and more.</p>
-
-<p>Local scrobbling perfectly compliments local playback. Last.fm, Libre.fm, and the like are nice while they last, but they are not profitable and therefore can be discontinued any day.</p>
-
-<p>By writing a local scrobbling application, we have full control over which tag fields are logged and how the file looks. It can then be backed up with ease.</p>
-
-<p>In this article, we’re going to write a scrobbling application using Python for the Windows operating system. It will run continuously while we are logged in. It will listen to changes in Foobar playback and log those changes to a file according to our specified logic.</p>
-
-<p>A few years ago, I wrote another article that does the same thing for graphical Linux, using the DeaDBeeF player and written in Bash. If you need a Linux version, <a href="https://devkoala.com/2020/writing-a-local-audio-scrobbling-script-in-bash.html">here</a> is a link to the article.</p>
-
-<h2 id="requirements">Requirements</h2>
-
-<ol>
-  <li><strong>Python</strong>. Python. This ever-popular programming language is a first choice when it comes to many tasks. Due to its simplicity and readability, it is certainly a joy to write in compared to most other languages.</li>
-</ol>
-
-<p>Download the latest Python version from the official Python website <a href="https://www.python.org/downloads/">here</a>.</p>
-
-<ol>
-  <li><strong>foobar 2000</strong>. One of the easiest ways to make a local audio scrobbling script is to monitor an audio player’s title string, extract data from it, manipulate it, and store it in a file. There aren’t that many MP3 players for Windows, let alone ones that allow us to manipulate their title. Of the very few, foobar2000 is the best, so it is our choice.</li>
-</ol>
-
-<p><a href="https://www.foobar2000.org/download">Here</a> is a link to the download section of the official foobar2000 website.</p>
-
-<h2 id="configuring-foobar-2000">Configuring Foobar 2000</h2>
-
-<p><img src="https://www.devkoala.com/assets/img/articles/writing-a-local-windows-audio-scrobbler/foobar2000-options.png" alt="Foobar setting location" /></p>
-
-<p>The version I am using as of the time of writing this article is 2.1.4.</p>
-
-<p>Go to <em>Preferences</em> by either pressing <em>Ctrl+p</em> or through <em>File -&gt; Preferences</em>. In the left menu tree select <em>Display</em>, then select <em>Default User Interface</em> under it.</p>
-
-<p>In the <em>Playback state display formatting</em> section, you need to edit the <em>Window title</em> field. Replace whatever you find there with:</p>
-<blockquote>
-  <p><em>%artist% -.- %album% -.- %title% -.- %date% -.- %length% -.- %playback_time%</em></p>
-</blockquote>
-
-<p>As you can see, foobar2000 has many different tags encapsulated between percentage signs. Putting ‘ -.- ‘ is our choice. A distinct combination of strings has to be used so that the script can later extract data between them. Using the selected solution generally guarantees this. There is a very low chance that this particular string is going to appear in artist, album, or title tags.</p>
-
-<p>On the other hand, it doesn’t look horrible (although it’s certainly not pretty), which is also important because if our Windows taskbar is configured to show icons and program titles instead of just icons, we are going to be looking at it every time the artist tag field of the currently played song in foobar2000 is short enough.</p>
-
-<h2 id="breaking-apart-the-script">Breaking apart the script</h2>
-
-<p>Let’s get down to it.</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
-<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span></code></pre></figure>
-
-<p>The imports section is quite straightforward, befitting a miniscule script.</p>
-
-<p><a href="https://pypi.org/project/PyGetWindow/">PyGetWindow</a> is the only module which is not built-in. Thanks to it, we get access to titles of all programs that are currently running. Download it from the command line with this command:</p>
-
-<blockquote>
-  <p>pip install pygetwindow</p>
-</blockquote>
-
-<p>Next, we define 3 functions to aid us in the audio scrobbling process:</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
-	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
-	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
-		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
-			<span class="k">return</span> <span class="n">title</span></code></pre></figure>
-
-<p>foobar2000 adds the string <em>’ [foobar2000]’</em> at the end of the program title, and it’s non-negotiable. Therefore, we have a convenient string to search for in order to isolate foobar2000 from other applications and get the playback data.</p>
-
-<p>This function uses PyGetWindow to iterate through all the currently opened window titles and give us foobar2000.</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
-	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
-	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
-	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
-	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
-	<span class="k">return</span> <span class="n">seconds_full</span></code></pre></figure>
-
-<p>In the script, playback time is important because we’re going to be constantly comparing the previously stored time with the current one in order to detect if the track has changed. To effectively do this comparison, it’s easiest to convert minutes to seconds by multiplying the value representing minutes by 60 and adding it to the value representing seconds.</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
-	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
-	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
-	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
-	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
-	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">stripe</span></code></pre></figure>
-
-<p>Once we get our title, there are a few things that need to be done with it:</p>
-
-<p>First, our <em>’ -.- ‘</em> separator needs to be replaced with the CSV separator needed for the scrobbling file. <em>’;’</em> is a considerably safer choice than a comma, because commas are very frequent in tags while semicolons are not.</p>
-
-<p>Next, there needs to be a timestamp at the beginning of each scrobble to indicate when that scrobble took place. Python’s datetime module provides a simple solution for this.</p>
-
-<p>After we get the datetime object, we format it according to a practical specification. Year is followed by month, which is then followed by day, then after a semicolon we get the current hour and minute of the day. A semicolon at the end prepares the string for the actual tag stripe.</p>
-
-<p>Finally, we add the timestamp to the tag content, remove unnecessary stuff from the end of the string, and return the complete scrobble line.</p>
-
-<p>After defining functions, we form starting variables:</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
-<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span></code></pre></figure>
-
-<p><em>csv_file_location</em> needs to be set to a path on your drive where the scrobbling file is to be stored.</p>
-
-<p>Setting up <em>time_played_past</em> and <em>time_played_current</em> is just priming the pump before the action starts. In other words, we set up initial values for the script to have something to work with.</p>
-
-<p><em>time_played_past</em> is needed once when the script initiates. For playback logging to be registered, the variable stores 9999 “seconds” so when we begin playback, <em>time_played_current</em> has a lower number. This means a track has been changed - if the same track were still playing, that number would go up, not down.</p>
-
-<p>The number going down indicates changing of the track or restarting the currently played track. One way or another, it is a sign to add that new item to our scrobble history.</p>
-
-<p>We use <em>while True:</em> for the contained code to run infinitely. We want the script to be always on and always listening for new playback changes.</p>
-
-<p>Because the code is simple and extremely lightweight, it doesn’t slow down the system by any noticeable amount. In fact, it probably wouldn’t even if we were running it 500 times in parallel.</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span></code></pre></figure>
-
-<p>The script begins to move by checking if among all currently opened windows there is one whose title contains the string representing foobar2000.</p>
-
-<p>Just to make sure that we don’t have accidentally opened a website or a document which contains that very string and could fool our script, we add a second condition for further execution - the string has to contain our chosen tag separator in foobar2000. A situation where both of these conditions are met and the string captured is still not a foobar2000 player is probably as improbable as winning the national lottery five times in a row ;)</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span></code></pre></figure>
-
-<p>As explained before, in order to compare current playback time with the last tick, we need to feed time to a function that does just that. For that, we first extract the part of the string which contains playback time and then extract it from that line.</p>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
-	<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
-	<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-		<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span></code></pre></figure>
-
-<p>Making changes to a scrobble file is guarded behind a condition that the currently played file plays for fewer seconds than our last stored state.</p>
-
-<p>When the condition is met, we use the function that converts the foobar2000 title to a final CSV-ready stripe (line). After that, we append that stripe to our file whose location is stored in <em>csv_file_location</em>.</p>
-
-<p>The program cycle then needs two more actions to complete.</p>
-
-<p>First, the variable <em>time_played_past</em> needs to get the value of <em>time_played_current</em>. In other words, our variable to which we will compare the next playback state needs to be updated.</p>
-
-<p>Finally, we order the script to sleep for 3 seconds. The amount of time which is best depends on the habits of a particular user. One person changes tracks 20 times per minute, another presses play after adding a big playlist and never tinkers with playback until the program is shut down. The value must be chosen depending on your habits.</p>
-
-<p>Below is the code for the entire script. If you don’t know how to make the script run permanently in the background in Windows, please refer to a guide which I will be adding shortly.</p>
-
-<h2 id="code-for-the-entire-script">Code for the entire script</h2>
-
-<figure class="highlight"><pre><code class="language-python" data-lang="python"><span class="kn">import</span> <span class="n">pygetwindow</span> <span class="k">as</span> <span class="n">gw</span><span class="p">,</span> <span class="n">re</span>
-<span class="kn">from</span> <span class="n">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="n">time</span> <span class="kn">import</span> <span class="n">sleep</span>
-
-
-<span class="k">def</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="n">partial_title</span><span class="p">):</span>
-	<span class="n">windows</span> <span class="o">=</span> <span class="n">gw</span><span class="p">.</span><span class="nf">getAllTitles</span><span class="p">()</span>
-	<span class="k">for</span> <span class="n">title</span> <span class="ow">in</span> <span class="n">windows</span><span class="p">:</span>
-		<span class="k">if</span> <span class="n">partial_title</span> <span class="ow">in</span> <span class="n">title</span><span class="p">.</span><span class="nf">lower</span><span class="p">():</span>
-			<span class="k">return</span> <span class="n">title</span>
-
-
-<span class="k">def</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">minsec</span><span class="p">):</span>
-	<span class="n">seconds</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:]</span>
-	<span class="n">minutes</span> <span class="o">=</span> <span class="n">minsec</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span>
-	<span class="n">seconds</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span>
-	<span class="n">minutes</span> <span class="o">=</span> <span class="nf">int</span><span class="p">(</span><span class="n">minutes</span><span class="p">)</span>
-	<span class="n">seconds_full</span> <span class="o">=</span> <span class="mi">60</span> <span class="o">*</span> <span class="n">minutes</span> <span class="o">+</span> <span class="n">seconds</span>
-	<span class="k">return</span> <span class="n">seconds_full</span>
-
-
-<span class="k">def</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">):</span>
-	<span class="n">csv_ready</span> <span class="o">=</span> <span class="n">foobar_title</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="sh">'</span><span class="s"> -.- </span><span class="sh">'</span><span class="p">,</span> <span class="sh">'</span><span class="s">;</span><span class="sh">'</span><span class="p">)</span>
-	<span class="n">current_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">.</span><span class="nf">now</span><span class="p">()</span>
-	<span class="n">formatted_time</span> <span class="o">=</span> <span class="n">current_time</span><span class="p">.</span><span class="nf">strftime</span><span class="p">(</span><span class="sh">'</span><span class="s">%Y.%m.%d;%H:%M;</span><span class="sh">'</span><span class="p">)</span>
-	<span class="n">stripe_pre</span> <span class="o">=</span> <span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">formatted_time</span><span class="si">}{</span><span class="n">csv_ready</span><span class="si">}</span><span class="sh">'</span><span class="p">[:</span><span class="o">-</span><span class="mi">14</span><span class="p">]</span>
-	<span class="n">unwanted_string_tail</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">"</span><span class="s">;\d?\d:\d\d$</span><span class="sh">"</span><span class="p">,</span> <span class="n">stripe_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-	<span class="n">stripe</span> <span class="o">=</span> <span class="n">stripe_pre</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="n">unwanted_string_tail</span><span class="p">,</span> <span class="sh">''</span><span class="p">)</span>
-	<span class="k">return</span> <span class="n">stripe</span>
-
-
-
-<span class="n">csv_file_location</span> 	<span class="o">=</span> <span class="sh">'</span><span class="s">d:/doc/scrobbles/2024.csv</span><span class="sh">'</span>
-<span class="n">time_played_current</span> <span class="o">=</span> <span class="mi">0</span>
-<span class="n">time_played_past</span> 	<span class="o">=</span> <span class="mi">9999</span>
-
-<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-	<span class="n">foobar_title</span> <span class="o">=</span> <span class="nf">get_window_title_contains</span><span class="p">(</span><span class="sh">'</span><span class="s"> [foobar2000]</span><span class="sh">'</span><span class="p">)</span>
-
-	<span class="k">if</span> <span class="n">foobar_title</span> <span class="ow">and</span> <span class="sh">'</span><span class="s">-.-</span><span class="sh">'</span> <span class="ow">in</span> <span class="n">foobar_title</span><span class="p">:</span>
-		<span class="n">playback_time_pre</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sh">'</span><span class="s">[^-]+$</span><span class="sh">'</span><span class="p">,</span> <span class="n">foobar_title</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-		<span class="n">playback_time</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="nf">search</span><span class="p">(</span><span class="sa">r</span><span class="sh">'</span><span class="s">\d\d?:\d\d</span><span class="sh">'</span><span class="p">,</span> <span class="n">playback_time_pre</span><span class="p">).</span><span class="nf">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-		<span class="n">time_played_current</span> <span class="o">=</span> <span class="nf">convert_minsec_to_sec</span><span class="p">(</span><span class="n">playback_time</span><span class="p">)</span>
-
-		<span class="k">if</span> <span class="n">time_played_current</span> <span class="o">&lt;</span> <span class="n">time_played_past</span><span class="p">:</span>
-			<span class="n">csv_stripe</span> <span class="o">=</span> <span class="nf">foobar_title_to_csv_stripe</span><span class="p">(</span><span class="n">foobar_title</span><span class="p">)</span>
-			<span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">csv_file_location</span><span class="p">,</span> <span class="sh">'</span><span class="s">a</span><span class="sh">'</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-				<span class="n">f</span><span class="p">.</span><span class="nf">write</span><span class="p">(</span><span class="sa">f</span><span class="sh">'</span><span class="si">{</span><span class="n">csv_stripe</span><span class="si">}</span><span class="se">\n</span><span class="sh">'</span><span class="p">)</span>
-
-		<span class="n">time_played_past</span> <span class="o">=</span> <span class="n">time_played_current</span>
-	<span class="nf">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></code></pre></figure>]]></content><author><name>Chris</name></author><category term="audio" /><category term="python" /><summary type="html"><![CDATA[Writing a local Windows audio scrobbler]]></summary></entry><entry><title type="html">How to Run Python Scripts in the Background</title><link href="https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background.html" rel="alternate" type="text/html" title="How to Run Python Scripts in the Background" /><published>2023-04-11T14:21:01+02:00</published><updated>2023-04-11T14:21:01+02:00</updated><id>https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background</id><content type="html" xml:base="https://www.devkoala.com/2023/how-to-run-python-scripts-in-the-background.html"><![CDATA[<h1 id="how-to-run-python-scripts-in-the-background">How to Run Python Scripts in the Background</h1>
-
-<p>There are two type of system scripts.</p>
-
-<ol>
-  <li>
-    <p><strong>Interactive Scripts</strong>: These are scripts that we run with a program or terminal window open. For these scripts, we often want detailed output so we can closely monitor what the script is achieving and ensure it encounters no obstacles.</p>
-  </li>
-  <li>
-    <p><strong>Background Scripts</strong>: These are silent partners, running in the background and performing minor tasks quietly, such as periodic data downloading, database updating, headline sniffing, file maintenance, etc.</p>
-  </li>
-</ol>
-
-<p>For the latter, having a window open the entire time for something that is just supposed to work quietly is a waste of visual space. We want it to be as detached and absent as possible.</p>
-
-<p>Below, I will show a simple way to set up just that. The example will be a Python script run through Task Scheduler.</p>
-
-<h2 id="basics">Basics</h2>
-
-<p>To run scripts “silently”, we need a few things things:</p>
-
-<h3 id="--python">- Python</h3>
-
-<p>Download the latest version from the <a href="https://www.python.org/downloads/" target="_blank">official website</a>.</p>
-
-<h3 id="--virtual-environment">- Virtual Environment</h3>
-
-<p>Although it’s not required, using a virtual environment is a very important habit. Virtual environments are self-contained environments that have a specific version of Python and a specific set of modules installed, tailored for one particular job.</p>
-
-<p>If we install all the modules to the default system version of Python, the module list might grow exponentially, slowing down Python software execution. Additionally, we might encounter compatibility issues. If something happens to the core system Python, it could cause a system-wide meltdown.</p>
-
-<p>To maintain order, simplicity, ease of access, and stability, it’s best to install a virtual environment for every different task or group of tasks our programs will be performing.</p>
-
-<p><strong>venv</strong>, a virtual library for Python, comes with Python itself, so there is no need to install it separately.</p>
-
-<ul>
-  <li>Open a terminal (cmd or PowerShell) and navigate to the directory where you want to store your virtual environments. Choose a location that is convenient and logical.</li>
-  <li>In the terminal, run: <em>python -m venv</em> followed by the name you want to give to the virtual environment. For example: <em>python -m venv mybackup</em>.</li>
-  <li>To use the virtual environment, you need to activate it. When you create an environment using venv, a folder with that name is created, containing a <em>Scripts</em> folder, which contains an activate file. To start the script, run the command: <em>source path/to/venv/myvenvname/Scripts/activate</em> where myvenvname is the name of your virtual environment. Alternatively, you can navigate to the venv’s <em>Scripts</em> folder and run <em>source activate</em>.</li>
-  <li>Once the virtual environment is activated, install all the modules required by the script you want to run in Task Scheduler. Open your script file(s) and review all the imports. Some of them are built-in (installed with Python), while others need to be downloaded externally. Download the external modules with the command <em>pip install</em> followed by the module name.</li>
-</ul>
-
-<p>Once you are finished, you can exit the virtual environment by typing <em>exit</em> in the console window. Don’t worry - once everything is set up, you won’t have to manually enter the virtual environment for Task Scheduler to execute it.</p>
-
-<h3 id="--pyw-python-file">- <em>.pyw</em> Python file</h3>
-
-<p>Python files can be saved with two file extensions: <em>.py</em> and <em>.pyw</em>. The latter, <em>‘w’</em> stands for <em>‘Windows’</em>.</p>
-
-<p>The code within the file gets executed the same way. The difference is that the extra <em>‘w’</em> tells Windows that the script is intended to run in the graphical interface, i.e., without a terminal window present during execution.</p>
-
-<h3 id="--task-scheduler">- Task Scheduler</h3>
-
-<p>Ideally, background scripts initiate on predefined triggers or run whenever the system is on, without the need to start them manually each time.</p>
-
-<p>Task Scheduler is a refined piece of software included with Microsoft Windows, specifically designed to run tasks according to various criteria.</p>
-
-<p>I will skip the detailed explanation and go straight to the point. However, if you need a detailed guide on its features and settings, <a href="/2024/task-scheduler-guide.html" target="_blank">here is a link</a> to a Task Scheduler guide.</p>
-
-<h2 id="create-a-script-task-in-task-manager">Create a script task in Task Manager</h2>
-
-<ul>
-  <li>Make sure that the Python script you are adding has a <em>.pyw</em> extension instead of <em>.py</em>.</li>
-  <li>Open Task Scheduler by pressing <em>Start</em> and typing the initial letters of <em>task scheduler</em> until auto-complete suggests it.</li>
-  <li>Select a <em>Create Task</em> action.</li>
-  <li>In the <em>General</em> tab, give your task a name. Choose something short but descriptive. The name is required, and while the description is optional, it’s worth adding if you have many tasks or similar tasks.</li>
-  <li>In the <em>Triggers</em> tab, add one or more triggers. For example, if you want the script to run at 10 AM every day, select <em>On a schedule</em> and specify the hour.</li>
-  <li>In <em>Actions</em> tab, specify the tasks to be executed. Click the <em>New</em> button.
-<img src="https://www.devkoala.com/assets/img/articles/how-to-run-python-scripts-in-the-background/pyw.png" alt="Task Scheduler: adding a pyw script" /></li>
-  <li>Click <em>Browse</em>, navigate to the location of your virtual environment where the script is supposed to run. In the directory containing the activate file, there are <em>.exe</em> files for different Python executables. Locate <em>pythonw.exe</em> and select it. Be careful not to select <em>python.exe</em> by accident. The <em>‘w’</em> letter at the end is important, as we need to run a <em>‘.pyw’</em> file with <em>‘pythonw.exe’</em> for the script to run entirely in the background.</li>
-  <li>In the Add arguments (optional) field, paste the full path to the script you want to run.</li>
-</ul>
-
-<p>And that’s it! There are many other settings worth checking out to tailor the script to your needs, but the defaults are sensible and will generally not prevent the script from working.</p>
-
-<p>It is generally worth manually starting the task after adding it to verify that it’s working before leaving Task Scheduler.</p>]]></content><author><name>Chris</name></author><category term="python" /><category term="windows" /><summary type="html"><![CDATA[How to Run Python Scripts in the Background]]></summary></entry><entry><title type="html">How to Run Scripts with Mouse Gestures</title><link href="https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures.html" rel="alternate" type="text/html" title="How to Run Scripts with Mouse Gestures" /><published>2021-08-22T10:00:01+02:00</published><updated>2021-08-22T10:00:01+02:00</updated><id>https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures</id><content type="html" xml:base="https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures.html"><![CDATA[<h1 id="how-to-run-scripts-with-mouse-gestures">How to Run Scripts with Mouse Gestures</h1>
+</ul>]]></content><author><name>Chris</name></author><category term="scheduler" /><category term="windows" /><summary type="html"><![CDATA[Task Scheduler Guide]]></summary></entry><entry><title type="html">How to Run Scripts with Mouse Gestures</title><link href="https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures.html" rel="alternate" type="text/html" title="How to Run Scripts with Mouse Gestures" /><published>2021-08-22T10:00:01+02:00</published><updated>2021-08-22T10:00:01+02:00</updated><id>https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures</id><content type="html" xml:base="https://www.devkoala.com/2021/how-to-run-scripts-with-mouse-gestures.html"><![CDATA[<h1 id="how-to-run-scripts-with-mouse-gestures">How to Run Scripts with Mouse Gestures</h1>
 
 <h2 id="mouse-gestures-an-underutilized-feature">Mouse Gestures: An Underutilized Feature</h2>
 
@@ -1311,146 +1658,4 @@ map H history_go 1</p>
 
 <p>In a default config Ranger use, going back in history will mostly go to the directory from which we came, which will be one level higher or lower in the directory structure. Moving forward will do the opposite and will, of course, only work if we already went back in history (like redo in text editors).</p>
 
-<p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="navigation" /><category term="ranger" /><summary type="html"><![CDATA[Setting up single navigation pane in Ranger and why it’s a good idea]]></summary></entry><entry><title type="html">Ranger configuration extras</title><link href="https://www.devkoala.com/2020/ranger-configuration-extras.html" rel="alternate" type="text/html" title="Ranger configuration extras" /><published>2020-04-01T22:43:18+02:00</published><updated>2020-04-01T22:43:18+02:00</updated><id>https://www.devkoala.com/2020/ranger-configuration-extras</id><content type="html" xml:base="https://www.devkoala.com/2020/ranger-configuration-extras.html"><![CDATA[<h1 id="ranger-configuration-extras">Ranger configuration extras</h1>
-
-<p>Ranger is probably the single most powerful file manager application on any operating system.</p>
-
-<p>It can be customized to the point of practically being a system-wide remote, one tool that can do anything. In this regard, it’s a very neat extension of the command line in Linux.</p>
-
-<p>Because of that, almost every Ranger config file I’ve stumbled upon contains at least an interesting line or two. I’ve used the application for a few years already, but feel like there’s a lot that still needs attention. For example, a convenient way of dealing with archives of all sorts, or different file information views, depending on a particular need.</p>
-
-<p>Below are some of my favorite additions to the <em>rc.conf</em> file. You can usually find it in <em>~/.config/ranger/</em> folder. If it’s not there, run this command in the command line: <em>ranger –copy-config=all</em>, which should create it.</p>
-
-<p>Just paste the quoted lines wherever you see fit inside that file, but keep in mind that some of those commands invoke programs you will have to install.</p>
-
-<h2 id="keyboard-layout-change">Keyboard layout change</h2>
-
-<p>Using alternative keyboard layouts can be very painful for that person’s friends and family. If they sometimes need to operate on this person’s machine, after each session they might hate that person a little bit more.</p>
-
-<p>Dvorak and Colemak are the unsung heroes of filesystem encryption, making all attempts to search YouTube or find something on Google fruitless, unless someone’s brain knows the layout. Even with keycaps being changed accordingly.</p>
-
-<p>In order to help those poor people, we can set up an easy keyboard layout change to and from the basic QWERTY US layout to any we want. For that, we need to install <em>setxkbmap</em> with our package manager. For Ubuntu users, the command to paste in the command line is:</p>
-
-<blockquote>
-  <p>sudo apt-get install setxkbmap</p>
-</blockquote>
-
-<p>Then, insert these two lines to <em>rc.conf</em>:</p>
-
-<blockquote>
-  <p>map Ku shell setxkbmap -variant ,us<br />
-map Kc shell setxkbmap -variant colemak</p>
-</blockquote>
-
-<p><em>‘Ku’</em> and <em>“Kc’</em> are my key combinations. You can set them to whatever you have unmapped. Then you need to restart Ranger, and whenever you want to change the layout, you just use those key combinations.</p>
-
-<h2 id="mp3-file-tag-preview">MP3 file tag preview</h2>
-
-<p>Sometimes, it is convenient to check the content of an MP3 tag. For example, a track we have on the hard drive might just have the artist and title in its filename, but we want to quickly check from which album it is or which year it was released.</p>
-
-<p>Opening a browser for a Rate Your Music/Discogs/etc. check might take longer than getting to our music directory, quickly locating that file and pressing a key to see its tag contents.</p>
-
-<p>For that, we’re going to need a CLI tag viewer. I highly recommend <a href="https://github.com/nicfit/eyeD3">eyeD3</a>, available both as a CLI app and an importable Python library. So, first in the command line:</p>
-
-<blockquote>
-  <p>sudo apt install eyed3</p>
-</blockquote>
-
-<p>And in Ranger config file:</p>
-
-<blockquote>
-  <p>map T shell clear; eyeD3 %s; read -p “———-press ENTER to continue———–”</p>
-</blockquote>
-
-<p>We are making a 3-step operation here:</p>
-<ol>
-  <li>Clear the terminal window, so that tag information can be the only thing displayed, so we don’t have to strain our eyes looking for it.</li>
-  <li>Pass the selected file(s) to eyeD3 for tag preview.</li>
-  <li>Use <em>read</em> to display some information.</li>
-</ol>
-
-<p>We need step 3, <em>read</em> with <em>-p</em> option (prompt). It waits for user input, enabling us to view the tag before coming back to Ranger.</p>
-
-<p>Otherwise, we’d have to quit Ranger, display the tag, and start it again manually. Without the <em>-p</em> option, Ranger would display tag information and then instantly come back, requiring photographic memory coupled with Spiderman instincts to pick up the information we want. It would only be visible for a fraction of a second.</p>
-
-<p>Notice that you can select multiple desired files, just like you normally mark them for operations in Ranger, and for each of them, tag information will be displayed in vertical order. Very handy.</p>
-
-<h2 id="mp3-player-playback-control">MP3 player playback control</h2>
-
-<p>In my opinion, it is much better to have system-wide playback control shortcuts than narrowing it down to a specific application. This way, we can change tracks while the monitor is off and never have to worry about what’s focused, even if we spend the majority of time in our file manager.</p>
-
-<p>If you don’t have any free system-wide available key combinations for that purpose, you can let Ranger do the ordering. As long as your music player accepts playback commands from a terminal session (if it doesn’t, you need to change your music player).</p>
-
-<p>Ordering the player to start playback of hovered/selected file(s) is as simple as setting up your default music application in Ranger’s <em>rifle.conf</em> file. But maybe we want to enqueue instead of play?</p>
-
-<p>In this case, we have to check what playback control commands a particular player accepts. Most applications will give such information when starting up from a terminal window with <em>-h</em> (short for <em>‘help’</em>) added at the end.</p>
-
-<p>In DeadBeef, enqueuing is done with the <em>–queue</em> parameter. The entire command looks like this:</p>
-
-<blockquote>
-  <p>map de chain shell deadbeef –queue %s; mark_files all=True val=False</p>
-</blockquote>
-
-<p>You need to replace it with your player of choice and its equivalent command (which might very well be exactly the same).</p>
-
-<p>The second part is also important. Ranger has a nasty habit of leaving selections after operations and no way to change that behavior, as far as I know. There is an option to drop all selections when leaving a folder, but it doesn’t work in my version.</p>
-
-<p>It is not a problem though because we can slap the above <em>mark_files</em> command whenever we want to unselect after an operation and skip it whenever we don’t, giving us full control.</p>
-
-<h2 id="starting-twitch-streams">Starting Twitch streams</h2>
-
-<p><em>youtube-dl</em> is a great tool to download YouTube videos, but it can also be used in concert with <a href="https://mpv.io/">MPV</a> to play its videos or playback Twitch streams.</p>
-
-<p>For that, we of course first need to have both MPV and youtube-dl installed. Then, it’s as simple as adding one line for each stream to <em>rc.conf</em>:</p>
-
-<blockquote>
-  <p>map qan shell killall mpv; mpv https://www.twitch.tv/boxerpete &lt;/dev/null &amp;&gt;/dev/null &amp;</p>
-</blockquote>
-
-<p>The first part is optional and it kills all MPV instances. Since I want to play a stream now, first I want to end playback if something is already on, as I’m not going to watch two things at once.</p>
-
-<p>Then I’m starting MPV with the Twitch streamer URL address. The player automatically invokes youtube-dl and begins stream playback.</p>
-
-<p>In order not to freeze Ranger until stream playback is finished, which could be in 23 hours and 59 minutes in the case of a 24-hour stream, we need to order it to start as a separate process, hence the line ending.</p>
-
-<p>Or are you like me and sometimes watch beautiful places on webcams while working, to cheat yourself that you’re not sitting inside a dark cave until the work is done?</p>
-
-<blockquote>
-  <p>map qge shell mpv https://www.youtube.com/watch?v=yMSc-qqW3To –no-audio –no-resume-playback &lt;/dev/null &amp;&gt;/dev/null &amp;</p>
-</blockquote>
-
-<h2 id="open-with">Open with…</h2>
-
-<p>Default applications often don’t meet all our requirements for file handling. We might be using one application for the default action but also need another option for marginal cases.</p>
-
-<p>Take images, for example. For casual users, the default action could be to open them in an image viewer. Sometimes, we might need to edit them, carve something out, and send it to someone? It’s good to prepare for such cases:</p>
-
-<blockquote>
-  <p>map wp shell pinta %s&lt;/dev/null &amp;&gt;/dev/null &amp;</p>
-</blockquote>
-
-<p><a href="https://www.pinta-project.com/">Pinta</a> is a simple image editor for Linux. It is an equivalent of the old <em>Paint Shop Pro</em> on Windows, back before Corel bought them.</p>
-
-<p>For simple modifications like slicing particular areas out of an image, there is no point in starting any graphical powerhouse, as we’d waste a lot of time looking at the loading screen while the program computes stuff we will not need.</p>
-
-<p>Maybe I need to open a file in an editor I’m not using daily:</p>
-
-<blockquote>
-  <p>map us shell subl %s</p>
-</blockquote>
-
-<p>Sublime Text spawns a separate process by default, so it doesn’t require a command ending to make it so.</p>
-
-<p>Another use is to start a program with a specified geometry. I want to start the MPV player, but want it on my second 4:3 monitor:</p>
-
-<blockquote>
-  <p>map uv shell mpv –geometry=1280x1024+1920+0 %s&lt;/dev/null &amp;&gt;/dev/null &amp;</p>
-</blockquote>
-
-<p>We could add <em>–fs</em> before sending output to <em>/dev/null</em> to also start the program in full screen, but my experience is that it’s bugged and sometimes fullscreens on the first monitor, sometimes on the second.</p>
-
-<p>Omitting it and specifying geometry is successful 100% of the time and there is no practical difference. It can be annoying if someone often click-drags the player window by accident (fullscreen prevents moving the window around). But in this case, it’s just better to disable it, with the exception of someone using a mouse and click-dragging the MPV window by accident. If that is your problem, just add this line to your <em>mpv.conf</em>:</p>
-
-<blockquote>
-  <p>no-window-dragging</p>
-</blockquote>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="ranger" /><summary type="html"><![CDATA[Ranger configuration extras]]></summary></entry></feed>
+<p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>]]></content><author><name>Chris</name></author><category term="filemanager" /><category term="navigation" /><category term="ranger" /><summary type="html"><![CDATA[Setting up single navigation pane in Ranger and why it’s a good idea]]></summary></entry></feed>
