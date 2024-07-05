@@ -21,19 +21,23 @@
 
     <header>
     <div class="logo">
-        <a href="https://www.devkoala.com/">
+        <a href="http://localhost:4000/">
             <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
         </a>
     </div>
     
     <nav>
-        <a href="https://www.devkoala.com/about.html">about</a>
+        <a href="http://localhost:4000/about.html">about</a>
     </nav>
 </header>
 
     <main class="post">
       <article>
         <h1 id="setting-up-a-screen-capturing-script-in-linux">Setting up a screen capturing script in Linux</h1>
+
+<div class="intro">
+Screen capturing is an essential task for many Linux users, whether for creating tutorials, recording gameplay, or documenting technical issues. In this article, we will walk through setting up a simple yet effective screen capturing script in Linux. By following these steps, you'll be able to easily capture your screen activity and save it for later use. This guide is designed for both beginners and advanced users who want to streamline their screen capturing process.
+</div>
 
 <p>Microsoft Windows has evolved significantly from the days when pressing the “Print Screen” key simply copied the desktop image to the clipboard, requiring users to manually paste it into an image editor to save it. Today, Windows 10 offers the <em>Snipping Tool</em> and <em>Snip &amp; Sketch</em>, providing various methods to capture parts of the screen. Despite having two tools for the same task, which indicates some unfinished business, Microsoft has streamlined the screenshot process.</p>
 
@@ -141,6 +145,12 @@ bindsym Scroll_Lock exec “import -window root -crop 1920x1080+0+0 /location/to
 <p>Remember that binding a key or key combination directly in the window manager usually means no application can use it. Otherwise, one key could potentially execute multiple unrelated actions, leaving the user in a state of confusion.</p>
 
 <p>Window managers execute instructions they have for the key and don’t send the signal further. Programs don’t even know that the key was pressed.</p>
+
+<h2 id="final-word">Final word</h2>
+
+<p>Setting up a screen capturing script in Linux can significantly enhance your productivity by automating and simplifying the process. With the right tools and a well-crafted script, you can easily capture high-quality recordings of your screen activities. This approach not only saves time but also ensures consistency and reliability in your screen captures.</p>
+
+<p>Thank you for following along with this guide. I hope you found it helpful and that it empowers you to create effective screen recordings on your Linux system. Feel free to experiment with the script and tailor it to your specific needs. Happy capturing!</p>
 
       </article>
     </main>

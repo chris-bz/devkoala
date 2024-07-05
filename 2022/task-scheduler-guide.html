@@ -21,13 +21,13 @@
 
     <header>
     <div class="logo">
-        <a href="https://www.devkoala.com/">
+        <a href="http://localhost:4000/">
             <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
         </a>
     </div>
     
     <nav>
-        <a href="https://www.devkoala.com/about.html">about</a>
+        <a href="http://localhost:4000/about.html">about</a>
     </nav>
 </header>
 
@@ -59,7 +59,7 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
 
 <p>The initial screen might look like this, or somewhat similar, depending on which menu panels you have enabled or disabled:</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd1.png" alt="Task Scheduler main tab" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd1.png" alt="Task Scheduler main tab" /></p>
 
 <p>Right off the bat, you can see some limitations in the interface. Sorting tasks by column used to work on Windows 10, but it may not function now (at least in my experience). There’s also no search functionality.</p>
 
@@ -82,11 +82,11 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
 
 <p>In the right <em>Actions</em> panel, click <em>Create Task</em>. Alternatively, in the top program menu, click <em>Action</em> and select <em>Create Task</em> from the dropdown menu.</p>
 
-<h3 id="general">General</h3>
+<h2 id="tab-general">Tab: General</h2>
 
 <p>A window similar to the one pictured below will appear. It has 5 tabs, defaulting to the first one, <em>General</em>. Here are explanations for all the options. The one marked with an exclamation mark (!) is required to set up before continuing.</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd2.png" alt="Task Scheduler: Create Task: General" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd2.png" alt="Task Scheduler: Create Task: General" /></p>
 
 <ul>
   <li>
@@ -112,7 +112,7 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
   </li>
 </ul>
 
-<h3 id="triggers">Triggers</h3>
+<h2 id="tab-triggers">Tab: Triggers</h2>
 
 <p>This is where Task Scheduler really shines and makes Crontab look like child’s toy.</p>
 
@@ -120,13 +120,13 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
 
 <p>The most commonly used trigger, which is also the default, is <em>On the schedule</em>. We choose a specific date, or a daily/weekly/monthly cycle for the task to be executed.</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd3.png" alt="Task Scheduler: Create Task: Triggers" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd3.png" alt="Task Scheduler: Create Task: Triggers" /></p>
 
 <p>Often, we want the script to run whenever the computer is on, without concerning ourselves with dates and cycles. We can choose to start the task at logon or startup.</p>
 
 <p>A fantastic feature for power users and unique cases is <em>On an event</em>. For example, when a specific event is logged in the <em>Windows Event Viewer</em>, it could trigger our script to start.</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd4.png" alt="Task Scheduler: Create Task: New trigger" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd4.png" alt="Task Scheduler: Create Task: New trigger" /></p>
 
 <p>Workstation lock/unlock triggers are very useful in work environments when we want certain scripts to run only when the workstation is in use.</p>
 
@@ -152,33 +152,33 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
   </li>
 </ul>
 
-<h3 id="actions">Actions</h3>
+<h2 id="tab-actions">Tab: Actions</h2>
 
 <p>After going through various options and scheduling settings for our task, we now create the actual task that will be running.</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd5.png" alt="Task Scheduler: Create Task: Actions" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd5.png" alt="Task Scheduler: Create Task: Actions" /></p>
 
 <p>Here, everything is straightforward. We click on <em>Browse</em> and provide the location of the program to run. If we want to start a program with additional arguments, we specify them in the second field.</p>
 
 <p>The third box, <em>Start in (optional)</em> provides a directory where the program will start. This will be the context directory, useful for example when the program uses relative paths and we want it to have access to files in that particular directory.</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd6.png" alt="Task Scheduler: Create Task: New action" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd6.png" alt="Task Scheduler: Create Task: New action" /></p>
 
 <p>Another use is for log file generation. Starting in a specific directory could mean the script generates logs in that directory, which might be desired behavior.</p>
 
-<h3 id="conditions">Conditions</h3>
+<h2 id="tab-conditions">Tab: Conditions</h2>
 
 <p>Conditions are an extra set of <em>if</em> statements guarding the task. If any condition is not met, the task is prevented from running.</p>
 
 <p>All of the options are self-explanatory, so there’s no need to expand on any of them.</p>
 
-<p><img src="https://www.devkoala.com/assets/img/articles/task-scheduler-guide/taskschd7.png" alt="Task Scheduler: Create Task: Conditions" /></p>
+<p><img src="http://localhost:4000/assets/img/articles/task-scheduler-guide/taskschd7.png" alt="Task Scheduler: Create Task: Conditions" /></p>
 
 <p>One particularly useful feature is <em>“Start only if the following network connection is available”</em>. This is especially useful for users in countries where high-speed internet access is not yet common. A PC could be connected to low-speed internet, and for a few hours of the day, high-speed internet could become available.</p>
 
 <p>Task Scheduler could wait for the better option and only then execute the script to enable faster downloading of content. Another use case is waiting for a connection where there is no monthly download limit.</p>
 
-<h3 id="settings">Settings</h3>
+<h2 id="tab-settings">Tab: Settings</h2>
 
 <ul>
   <li>
@@ -201,7 +201,7 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
   </li>
 </ul>
 
-<h3 id="history">History</h3>
+<h2 id="tab-history">Tab: History</h2>
 
 <p>Finally, we have the task execution history. It is disabled by default, but enabling it won’t significantly impact system performance. It won’t create logs that consume much disk space, won’t cause excessive disk I/O, and won’t consume much processing power.</p>
 
@@ -209,7 +209,7 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
 
 <p>In general, when we are working on a complex system task whose development will take a while and it’s going to be executed many times during each working session, it is useful to enable history for easy execution status tracking.</p>
 
-<h3 id="last-run-result">Last Run Result</h3>
+<h2 id="last-run-result">Last Run Result</h2>
 
 <p>One poorly designed aspect of Task Scheduler is the execution codes, visible in the main task table.</p>
 
@@ -230,6 +230,12 @@ Task Scheduler is an essential tool for managing automated tasks in Windows, wit
   <li><strong>0x8007010B: Directory name is invalid</strong> - The task points to a directory that is invalid or does not exist.</li>
   <li><strong>0xC000013A: The application was terminated by Ctrl+C</strong> - The task was terminated by the user manually.</li>
 </ul>
+
+<h2 id="final-word">Final word</h2>
+
+<p>Task Scheduler is a powerful and versatile tool that can significantly enhance your Windows experience. Whether you’re a casual user looking to automate simple tasks or a power user seeking to orchestrate complex workflows, Task Scheduler offers the flexibility and features to meet your needs. By mastering its various settings and options, you can create sophisticated automated processes that save time, improve system efficiency, and ensure critical tasks are executed reliably.</p>
+
+<p>However, like any powerful tool, Task Scheduler requires careful use and management. It’s important to regularly review and maintain your scheduled tasks, ensuring they’re still necessary and functioning as intended. Pay attention to error codes and execution history to troubleshoot any issues that arise. With proper setup and monitoring, Task Scheduler can be an invaluable asset in your Windows toolkit, helping you streamline your work and make the most of your computer’s capabilities.</p>
 
       </article>
     </main>

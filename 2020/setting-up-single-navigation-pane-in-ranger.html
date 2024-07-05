@@ -21,19 +21,23 @@
 
     <header>
     <div class="logo">
-        <a href="https://www.devkoala.com/">
+        <a href="http://localhost:4000/">
             <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
         </a>
     </div>
     
     <nav>
-        <a href="https://www.devkoala.com/about.html">about</a>
+        <a href="http://localhost:4000/about.html">about</a>
     </nav>
 </header>
 
     <main class="post">
       <article>
         <h1 id="setting-up-single-navigation-pane-in-ranger-and-why-its-a-good-idea">Setting up single navigation pane in Ranger and why it’s a good idea</h1>
+
+<div class="intro">
+Navigating complex directory structures efficiently is crucial for any developer or system administrator, and Ranger, a powerful terminal-based file manager, excels at this task. In this article, I will guide you through setting up a single navigation pane in Ranger, ensuring a streamlined and focused file management experience. Whether you're new to Ranger or looking to optimize your workflow, this tutorial will provide you with the necessary steps and tips to enhance your productivity. Let's dive into configuring Ranger to suit your needs and make navigating your file system a breeze.
+</div>
 
 <p>By default, Ranger starts in a 3-pane view, which makes it unique but not very practical. Fortunately, this can be easily changed.</p>
 
@@ -70,7 +74,7 @@
 <p>You can find it in <em>~/.config/ranger</em> directory. If it’s not there, paste this command in console and run it:</p>
 
 <blockquote>
-  <p>ranger –copy-config=all</p>
+  <p>Ranger –copy-config=all</p>
 </blockquote>
 
 <p>Now both files should be there.</p>
@@ -194,6 +198,12 @@ map H history_go 1</p>
 <p>In a default config Ranger use, going back in history will mostly go to the directory from which we came, which will be one level higher or lower in the directory structure. Moving forward will do the opposite and will, of course, only work if we already went back in history (like redo in text editors).</p>
 
 <p>But when we have all sorts of <em>map [key(s)] cd /some/path</em> shortcuts and jump between them, those two bindings become way more powerful. And we can bookmark folders on the fly as well (<em>‘m’</em> saves the current folder to bookmarks, tilde and <em>‘`’</em> keys open a list of bookmarked folders).</p>
+
+<h2 id="final-word">Final word</h2>
+
+<p>Setting up a single navigation pane in Ranger is a small tweak that can significantly enhance your file management workflow. By reducing visual clutter and focusing on one pane, you can navigate directories with greater ease and efficiency. This setup not only simplifies your interaction with Ranger but also helps you stay focused on your tasks without unnecessary distractions. As you continue to customize and optimize Ranger to fit your unique needs, you’ll find that these small adjustments can lead to substantial improvements in your overall productivity.</p>
+
+<p>Thank you for following along with this guide. If you found it helpful, I encourage you to explore more customization options within Ranger and share your experiences. Feel free to reach out if you have any questions or if you need assistance with your projects. Happy navigating!</p>
 
       </article>
     </main>
