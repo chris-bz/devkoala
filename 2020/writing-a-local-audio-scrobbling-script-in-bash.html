@@ -21,19 +21,23 @@
 
     <header>
     <div class="logo">
-        <a href="http://localhost:4000/">
+        <a href="https://www.devkoala.com/">
             <img src="/assets/img/logo.png" alt="Koala sitting on a desk and attempting to eat a PC monitor">
         </a>
     </div>
     
     <nav>
-        <a href="http://localhost:4000/about.html">about</a>
+        <a href="https://www.devkoala.com/about.html">about</a>
     </nav>
 </header>
 
     <main class="post">
       <article>
         <h1 id="writing-a-local-audio-scrobbling-script-in-bash">Writing a local audio scrobbling script in Bash</h1>
+
+<div class="intro">
+In the world of music tracking, Last.fm has long been a dominant force. However, for those seeking more control over their listening data, local solutions can be appealing. This tutorial explores the creation of a Bash script for local audio scrobbling, offering an alternative to cloud-based services. We'll dive into the advantages of local tracking, the setup process using tools like DeadBeef and wmctrl, and the intricacies of crafting a reliable script. By the end, you'll have a customizable solution for preserving your musical journey right on your own machine.
+</div>
 
 <h2 id="lastfm-vs-local-scrobbling">Last.fm vs local scrobbling</h2>
 <p>Once merged with <strong>Audioscrobbler</strong>, <strong>Last.fm</strong> became the leading tool for tracking music history and probably remains so to this day, despite being considerably less popular now than it used to be.</p>
@@ -273,6 +277,11 @@
 <p>Yet another problem is logging playback from services like Spotify. Popular services of this kind support scrobbling to Last.fm. It will get logged the same as if we were listening through the music player. This script obviously doesn’t have that functionality.</p>
 
 <p>You can try to work around it, but it will most likely be a messy process. You can set up a script to monitor music streaming service applications and extract data from their titles instead, but maybe the customization options for title display are not built into those applications, and we’ll miss some of the data that we want, like track length.</p>
+
+<h2 id="final-note">Final note</h2>
+
+<p>This script serves as a foundation for personal music tracking, demonstrating the power of simple, targeted solutions in addressing specific needs. While it may not match the full feature set of commercial services, it offers a level of control and privacy that many users will appreciate.
+Consider this project a springboard for further exploration in data management and script writing. The skills demonstrated here – from bash scripting to system integration – are valuable in numerous programming scenarios.</p>
 
       </article>
     </main>
